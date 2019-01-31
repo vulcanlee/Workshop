@@ -135,11 +135,15 @@ namespace LOBCore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Account");
+
                     b.Property<int?>("DepartmentId");
 
                     b.Property<string>("Image");
 
                     b.Property<string>("Name");
+
+                    b.Property<string>("Password");
 
                     b.HasKey("Id");
 

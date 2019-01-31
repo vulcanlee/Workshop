@@ -66,7 +66,8 @@ namespace LOBCore
                  };
              });
 
-            services.AddEntityFrameworkSqlite().AddDbContext<Models.DatabaseContext>(options => options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection")));
+            services.AddEntityFrameworkSqlite().AddDbContext<Models.DatabaseContext>(options => 
+            options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

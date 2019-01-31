@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LOBCore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190131130502_InitialCreate")]
+    [Migration("20190131163111_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,11 +137,15 @@ namespace LOBCore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Account");
+
                     b.Property<int?>("DepartmentId");
 
                     b.Property<string>("Image");
 
                     b.Property<string>("Name");
+
+                    b.Property<string>("Password");
 
                     b.HasKey("Id");
 
