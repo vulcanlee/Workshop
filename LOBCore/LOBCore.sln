@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOBCore", "LOBCore\LOBCore.csproj", "{58868CE8-2D5A-49A0-98F5-5A6D56508DB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58868CE8-2D5A-49A0-98F5-5A6D56508DB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58868CE8-2D5A-49A0-98F5-5A6D56508DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58868CE8-2D5A-49A0-98F5-5A6D56508DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58868CE8-2D5A-49A0-98F5-5A6D56508DB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4A6FBAE-7F6A-491B-9432-B573B91AF802}
+	EndGlobalSection
+EndGlobal
