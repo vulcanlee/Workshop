@@ -12,7 +12,7 @@ namespace LOBCore.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Token { get; set; }
-        public LobUser User { get; set; }
+        public virtual LobUser User { get; set; }
         public OSType OSType { get; set; }
         public DateTime RegistrationTime { get; set; }
     }

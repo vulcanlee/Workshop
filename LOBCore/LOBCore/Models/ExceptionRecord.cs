@@ -16,7 +16,7 @@ namespace LOBCore.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public LobUser User { get; set; }
+        public virtual LobUser User { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string OSType { get; set; }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LOBCore.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -66,8 +67,10 @@ namespace LOBCore
                  };
              });
 
-            services.AddEntityFrameworkSqlite().AddDbContext<Models.DatabaseContext>(options => 
-            options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection")));
+            services.AddEntityFrameworkSqlite().AddDbContext<Models.DatabaseContext>(options =>
+            {
+                options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection"));
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -87,6 +90,7 @@ namespace LOBCore
 
             serviceProvider.GetRequiredService<Models.DatabaseContext>().Database.Migrate();
 
+            app.UseExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

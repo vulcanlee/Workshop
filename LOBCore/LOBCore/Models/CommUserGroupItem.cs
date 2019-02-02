@@ -11,7 +11,7 @@ namespace LOBCore.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public CommUserGroup CommUserGroup { get; set; }
+        public virtual CommUserGroup CommUserGroup { get; set; }
         public string Name { get; set; }
         public string Mobile { get; set; }
         public string Phone { get; set; }

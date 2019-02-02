@@ -11,11 +11,11 @@ namespace LOBCore.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public LobUser User { get; set; }
+        public virtual LobUser User { get; set; }
         public DateTime BeginTime { get; set; }
         public DateTime EndTime { get; set; }
         public int TotalHours { get; set; }
-        public LeaveFormType LeaveFormType { get; set; }
+        public virtual LeaveFormType LeaveFormType { get; set; }
         public string Description { get; set; }
     }
 }

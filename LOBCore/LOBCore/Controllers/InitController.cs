@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using LOBCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace LOBCore.Controllers
 {
@@ -22,11 +24,16 @@ namespace LOBCore.Controllers
         [HttpGet]
         public async Task<APIResult> Get()
         {
+            var foo = databaseContext.LobUsers.First();
+            var foo1 = databaseContext.LobUsers.ToList();
+            var bar = JsonConvert.SerializeObject(foo);
+
             await CleanDB();
             await CommUserGroupReset();
             await CommUserGroupItemReset();
             await DepartmentReset();
             await LobUserReset();
+
 
             var fooReslut = new APIResult()
             {
