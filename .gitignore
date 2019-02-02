@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /LOBCore/LOBCore/MyDatabase.db
+/LOBCore/LOBCore/Properties/PublishProfiles
