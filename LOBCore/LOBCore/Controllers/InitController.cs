@@ -15,24 +15,25 @@ namespace LOBCore.Controllers
     [ApiController]
     public class InitController : ControllerBase
     {
-        private readonly DatabaseContext databaseContext;
+        private readonly LOBDatabaseContext lobDatabaseContext;
 
-        public InitController(DatabaseContext databaseContext)
+        public InitController(LOBDatabaseContext lobDatabaseContext)
         {
-            this.databaseContext = databaseContext;
+            this.lobDatabaseContext = lobDatabaseContext;
         }
         [HttpGet]
         public async Task<APIResult> Get()
         {
-            var foo = databaseContext.LobUsers.First();
-            var foo1 = databaseContext.LobUsers.ToList();
-            var bar = JsonConvert.SerializeObject(foo);
+            //var foo = lobDatabaseContext.LobUsers.First();
+            //var foo1 = lobDatabaseContext.LobUsers.ToList();
+            //var bar = JsonConvert.SerializeObject(foo);
 
             await CleanDB();
             await CommUserGroupReset();
             await CommUserGroupItemReset();
             await DepartmentReset();
             await LobUserReset();
+            await LeaveFormTypeReset();
 
 
             var fooReslut = new APIResult()
@@ -40,18 +41,47 @@ namespace LOBCore.Controllers
                 Status = APIResultStatus.Success,
                 Message = "",
                 Token = "",
-                Payload = databaseContext.LobUsers
+                Payload = lobDatabaseContext.LobUsers
             };
             return fooReslut;
         }
 
         private async Task CleanDB()
         {
-            databaseContext.CommUserGroupItems.RemoveRange(databaseContext.CommUserGroupItems);
-            databaseContext.CommUserGroups.RemoveRange(databaseContext.CommUserGroups);
-            databaseContext.LobUsers.RemoveRange(databaseContext.LobUsers);
-            databaseContext.Departments.RemoveRange(databaseContext.Departments);
-            await databaseContext.SaveChangesAsync();
+            lobDatabaseContext.SystemEnvironment.RemoveRange(lobDatabaseContext.SystemEnvironment);
+            lobDatabaseContext.ExceptionRecords.RemoveRange(lobDatabaseContext.ExceptionRecords);
+            lobDatabaseContext.NotificationTokens.RemoveRange(lobDatabaseContext.NotificationTokens);
+            lobDatabaseContext.LeaveForms.RemoveRange(lobDatabaseContext.LeaveForms);
+            lobDatabaseContext.LeaveFormTypes.RemoveRange(lobDatabaseContext.LeaveFormTypes);
+            lobDatabaseContext.CommUserGroupItems.RemoveRange(lobDatabaseContext.CommUserGroupItems);
+            lobDatabaseContext.CommUserGroups.RemoveRange(lobDatabaseContext.CommUserGroups);
+            lobDatabaseContext.LobUsers.RemoveRange(lobDatabaseContext.LobUsers);
+            lobDatabaseContext.Departments.RemoveRange(lobDatabaseContext.Departments);
+            await lobDatabaseContext.SaveChangesAsync();
+        }
+
+        private async Task SystemEnvironmentReset()
+        {
+            var fooSystemEnvironment = new SystemEnvironment()
+            {
+                 AndroidVersion = "",
+                 iOSVersion = "",
+            };
+            lobDatabaseContext.SystemEnvironment.Add(fooSystemEnvironment);
+            await lobDatabaseContext.SaveChangesAsync();
+        }
+
+        private async Task LeaveFormTypeReset()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                LeaveFormType fooLeaveFormType = new LeaveFormType()
+                {
+                    Name = $"LeaveFormType{i}",
+                };
+                lobDatabaseContext.LeaveFormTypes.Add(fooLeaveFormType);
+            }
+            await lobDatabaseContext.SaveChangesAsync();
         }
 
         private async Task CommUserGroupReset()
@@ -63,9 +93,9 @@ namespace LOBCore.Controllers
                     Name = $"Department{i}",
                     Description = $"Department{i}"
                 };
-                databaseContext.CommUserGroups.Add(fooCommUserGroup);
+                lobDatabaseContext.CommUserGroups.Add(fooCommUserGroup);
             }
-            await databaseContext.SaveChangesAsync();
+            await lobDatabaseContext.SaveChangesAsync();
         }
 
         private async Task CommUserGroupItemReset()
@@ -73,7 +103,7 @@ namespace LOBCore.Controllers
             for (int i = 0; i <= 30; i++)
             {
                 var fooIdx = i % 3;
-                var fooCommUserGroup = databaseContext.CommUserGroups.FirstOrDefault(x => x.Name == $"Department{i}");
+                var fooCommUserGroup = lobDatabaseContext.CommUserGroups.FirstOrDefault(x => x.Name == $"Department{i}");
                 CommUserGroupItem fooUser = new CommUserGroupItem()
                 {
                     Name = $"Name{i}",
@@ -82,9 +112,9 @@ namespace LOBCore.Controllers
                     Mobile = $"0900567{i:d2}",
                     Phone = $"02123456{i:d2}",
                 };
-                databaseContext.CommUserGroupItems.Add(fooUser);
+                lobDatabaseContext.CommUserGroupItems.Add(fooUser);
             }
-            await databaseContext.SaveChangesAsync();
+            await lobDatabaseContext.SaveChangesAsync();
         }
 
         private async Task DepartmentReset()
@@ -95,9 +125,9 @@ namespace LOBCore.Controllers
                 {
                     Name = $"Department{i}",
                 };
-                databaseContext.Departments.Add(fooDepartment);
+                lobDatabaseContext.Departments.Add(fooDepartment);
             }
-            await databaseContext.SaveChangesAsync();
+            await lobDatabaseContext.SaveChangesAsync();
         }
 
         private async Task LobUserReset()
@@ -105,7 +135,7 @@ namespace LOBCore.Controllers
             for (int i = 1; i <= 50; i++)
             {
                 var fooIdx = (i - 1) % 7;
-                var fooDepartment = databaseContext.Departments.FirstOrDefault(x => x.Name == $"Department{fooIdx}");
+                var fooDepartment = lobDatabaseContext.Departments.FirstOrDefault(x => x.Name == $"Department{fooIdx}");
                 LobUser fooUser = new LobUser()
                 {
                     Account = $"user{i}",
@@ -114,9 +144,9 @@ namespace LOBCore.Controllers
                     Name = $"Account{i}",
                     Department = fooDepartment,
                 };
-                databaseContext.LobUsers.Add(fooUser);
+                lobDatabaseContext.LobUsers.Add(fooUser);
             }
-            await databaseContext.SaveChangesAsync();
+            await lobDatabaseContext.SaveChangesAsync();
         }
     }
 }

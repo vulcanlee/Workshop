@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LOBCore.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(LOBDatabaseContext))]
+    partial class LOBDatabaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
 
             modelBuilder.Entity("LOBCore.Models.CommUserGroup", b =>
                 {
@@ -170,6 +170,20 @@ namespace LOBCore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("NotificationTokens");
+                });
+
+            modelBuilder.Entity("LOBCore.Models.SystemEnvironment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AndroidVersion");
+
+                    b.Property<string>("iOSVersion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemEnvironment");
                 });
 
             modelBuilder.Entity("LOBCore.Models.CommUserGroupItem", b =>

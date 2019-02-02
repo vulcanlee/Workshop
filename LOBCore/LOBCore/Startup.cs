@@ -67,7 +67,7 @@ namespace LOBCore
                  };
              });
 
-            services.AddEntityFrameworkSqlite().AddDbContext<Models.DatabaseContext>(options =>
+            services.AddEntityFrameworkSqlite().AddDbContext<Models.LOBDatabaseContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection"));
             });
@@ -88,7 +88,7 @@ namespace LOBCore
                 app.UseHsts();
             }
 
-            serviceProvider.GetRequiredService<Models.DatabaseContext>().Database.Migrate();
+            serviceProvider.GetRequiredService<Models.LOBDatabaseContext>().Database.Migrate();
 
             app.UseExceptionMiddleware();
             app.UseHttpsRedirection();

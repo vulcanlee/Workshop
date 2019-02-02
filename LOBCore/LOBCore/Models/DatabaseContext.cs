@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LOBCore.Models
 {
-    public class DatabaseContext : DbContext
+    public class LOBDatabaseContext : DbContext
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual DbSet<LobUser> LobUsers { get; set; }
@@ -19,7 +19,8 @@ namespace LOBCore.Models
         public virtual DbSet<CommUserGroup> CommUserGroups { get; set; }
         public virtual DbSet<CommUserGroupItem> CommUserGroupItems { get; set; }
         public virtual DbSet<NotificationToken> NotificationTokens { get; set; }
-        public DatabaseContext(DbContextOptions<DatabaseContext> options)
+        public virtual DbSet<SystemEnvironment> SystemEnvironment { get; set; }
+        public LOBDatabaseContext(DbContextOptions<LOBDatabaseContext> options)
                : base(options)
         {
         }

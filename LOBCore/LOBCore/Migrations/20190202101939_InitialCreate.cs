@@ -48,6 +48,20 @@ namespace LOBCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SystemEnvironment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AndroidVersion = table.Column<string>(nullable: true),
+                    iOSVersion = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemEnvironment", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CommUserGroupItems",
                 columns: table => new
                 {
@@ -215,6 +229,9 @@ namespace LOBCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "NotificationTokens");
+
+            migrationBuilder.DropTable(
+                name: "SystemEnvironment");
 
             migrationBuilder.DropTable(
                 name: "CommUserGroups");
