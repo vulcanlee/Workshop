@@ -5,14 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.Models
+namespace LOBCore.Entities
 {
-    public class SystemEnvironment
+    public class LobUser
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string AndroidVersion { get; set; }
-        public string iOSVersion { get; set; }
-
+        public string Account { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public string Image { get; set; }
+        public virtual Department Department { get; set; }
     }
 }

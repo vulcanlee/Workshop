@@ -11,6 +11,12 @@ namespace LOBCore.Controllers
     [ApiController]
     public class RemoteSourceController : ControllerBase
     {
+        [Route("Sample")]
+        [HttpGet]
+        public string Sample()
+        {
+            return $"來自遠端 ASP.NET Core Web API 服務的資料";
+        }
         [Route("Source1")]
         [HttpGet]
         public async Task<string> Source1()

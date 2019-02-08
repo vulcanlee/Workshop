@@ -5,13 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.Models
+namespace LOBCore.Entities
 {
-    public class CommUserGroup
+    public class SystemEnvironment
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string AndroidVersion { get; set; }
+        public string iOSVersion { get; set; }
+
     }
 }

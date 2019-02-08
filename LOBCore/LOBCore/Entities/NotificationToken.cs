@@ -5,16 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.Models
+namespace LOBCore.Entities
 {
-    public class LobUser
+    public class NotificationToken
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Account { get; set; }
-        public string Password { get; set; }
-        public string Name { get; set; }
-        public string Image { get; set; }
-        public virtual Department Department { get; set; }
+        public string Token { get; set; }
+        public virtual LobUser User { get; set; }
+        public OSType OSType { get; set; }
+        public DateTime RegistrationTime { get; set; }
     }
 }
