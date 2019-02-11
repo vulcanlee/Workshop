@@ -5,16 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.Entities
+namespace LOBCore.DataAccesses.Entities
 {
-    public class LobUser
+    public class CommUserGroupItem
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Account { get; set; }
-        public string Password { get; set; }
+        public virtual CommUserGroup CommUserGroup { get; set; }
         public string Name { get; set; }
-        public string Image { get; set; }
-        public virtual Department Department { get; set; }
+        public string Mobile { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
     }
 }

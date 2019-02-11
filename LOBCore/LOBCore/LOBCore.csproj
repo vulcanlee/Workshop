@@ -8,6 +8,7 @@
   <ItemGroup>
     <Folder Include="Domains\" />
     <Folder Include="Models\" />
+    <Folder Include="Extensions\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

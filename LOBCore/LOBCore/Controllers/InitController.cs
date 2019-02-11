@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LOBCore.Models;
+using LOBCore.DataAccesses;
+using LOBCore.DataAccesses.Entities;
+using LOBCore.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -103,7 +105,7 @@ namespace LOBCore.Controllers
             for (int i = 0; i <= 30; i++)
             {
                 var fooIdx = i % 3;
-                var fooCommUserGroup = lobDatabaseContext.CommUserGroups.FirstOrDefault(x => x.Name == $"Department{i}");
+                var fooCommUserGroup = lobDatabaseContext.CommUserGroups.FirstOrDefault(x => x.Name == $"Department{fooIdx}");
                 CommUserGroupItem fooUser = new CommUserGroupItem()
                 {
                     Name = $"Name{i}",

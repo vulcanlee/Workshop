@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LOBCore.DataAccesses;
+using LOBCore.DTOs;
 using LOBCore.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +34,7 @@ namespace LOBCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<APIResult>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              .AddJwtBearer(options =>
              {
@@ -48,15 +51,21 @@ namespace LOBCore
                  };
                  options.Events = new JwtBearerEvents()
                  {
-                     OnAuthenticationFailed = context =>
-                     {
-                         context.NoResult();
+                     //OnChallenge = context =>
+                     //{
+                     //    return Task.CompletedTask;
+                     //},
+                     //OnMessageReceived = context =>
+                     //{
+                     //    return Task.CompletedTask;
+                     //},
+                     //OnAuthenticationFailed = context =>
+                     //{
+                     //    context.NoResult();
 
-                         context.Response.StatusCode = 401;
-                         context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
-                         Debug.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-                         return Task.CompletedTask;
-                     },
+                     //    context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "JWT token is incorrectly formatted";
+                     //    return Task.CompletedTask;
+                     //},
                      OnTokenValidated = context =>
                      {
                          Console.WriteLine("OnTokenValidated: " +
@@ -67,7 +76,7 @@ namespace LOBCore
                  };
              });
 
-            services.AddEntityFrameworkSqlite().AddDbContext<Models.LOBDatabaseContext>(options =>
+            services.AddEntityFrameworkSqlite().AddDbContext<LOBDatabaseContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection"));
             });
@@ -88,10 +97,11 @@ namespace LOBCore
                 app.UseHsts();
             }
 
-            serviceProvider.GetRequiredService<Models.LOBDatabaseContext>().Database.Migrate();
+            serviceProvider.GetRequiredService<LOBDatabaseContext>().Database.Migrate();
 
             app.UseExceptionMiddleware();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

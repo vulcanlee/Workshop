@@ -1,4 +1,4 @@
-﻿using LOBCore.Entities;
+﻿using LOBCore.DataAccesses.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.Datas
+namespace LOBCore.DataAccesses
 {
     public class LOBDatabaseContext : DbContext
     {
