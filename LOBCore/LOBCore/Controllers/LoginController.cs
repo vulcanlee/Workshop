@@ -55,7 +55,7 @@ namespace LOBCore.Controllers
         [HttpPost]
         public async Task<APIResult> Post(LoginRequestDTO loginRequestDTO)
         {
-            var fooUser = await context.LobUsers.Include(x=>x.Department).FirstOrDefaultAsync(x => x.Account == loginRequestDTO.Account && x.Password == loginRequestDTO.Password);
+            var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Account == loginRequestDTO.Account && x.Password == loginRequestDTO.Password);
             if (fooUser != null)
             {
                 var claims = new[]
@@ -71,15 +71,27 @@ namespace LOBCore.Controllers
                     issuer: configuration["Tokens:ValidIssuer"],
                     audience: configuration["Tokens:ValidAudience"],
                     claims: claims,
-                    //expires: DateTime.Now.AddDays(Convert.ToDouble(configuration["JwtExpireDays"])),
-                    expires: DateTime.Now.AddDays(10),
-                    notBefore:DateTime.Now.AddSeconds(-30),
+                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireDays"])),
+                    //expires: DateTime.UtcNow.AddMinutes(-5),
+                    notBefore: DateTime.UtcNow.AddMinutes(-6),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                                 (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
                             SecurityAlgorithms.HmacSha512)
                 );
                 apiResult.Status = APIResultStatus.Success;
                 apiResult.Token = new JwtSecurityTokenHandler().WriteToken(token);
+                LoginResponseDTO LoginResponseDTO = new LoginResponseDTO()
+                {
+                    Account = fooUser.Account,
+                    Id = fooUser.Id,
+                    Name = fooUser.Name,
+                    Image = fooUser.Image,
+                    Department = new DepartmentDTO()
+                    {
+                        Id = fooUser.Department.Id,
+                    }
+                };
+                apiResult.Payload = LoginResponseDTO;
             }
             else
             {

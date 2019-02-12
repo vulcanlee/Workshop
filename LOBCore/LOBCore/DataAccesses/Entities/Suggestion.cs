@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace LOBCore.DataAccesses.Entities
 {
-    public class SystemEnvironment
+    public class Suggestion
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string AppName { get; set; }
-        public string AndroidVersion { get; set; }
-        public string AndroidUrl { get; set; }
-        public string iOSVersion { get; set; }
-        public string iOSUrl { get; set; }
-
+        public virtual LobUser User { get; set; }
+        public DateTime SubmitTime { get; set; }
+        public string Subject { get; set; }
+        public string Message { get; set; }
     }
 }

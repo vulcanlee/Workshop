@@ -19,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace LOBCore
 {
@@ -59,13 +61,29 @@ namespace LOBCore
                      //{
                      //    return Task.CompletedTask;
                      //},
-                     //OnAuthenticationFailed = context =>
-                     //{
-                     //    context.NoResult();
+                     OnAuthenticationFailed = async context =>
+                     {
+                         context.NoResult();
 
-                     //    context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "JWT token is incorrectly formatted";
-                     //    return Task.CompletedTask;
-                     //},
+                         //if (context.Exception is SecurityTokenExpiredException)
+                         if (context.Exception != null)
+                         {
+                             APIResult foo = new APIResult()
+                             {
+                                 Status = APIResultStatus.TokenFailure,
+                                 Message = context.Exception.Message
+                             };
+                             context.Response.ContentType = "application/json";
+                             //context.Response.StatusCode = StatusCodes.Status402PaymentRequired;
+                             await context.Response.WriteAsync(JsonConvert.SerializeObject(foo));
+                         }
+
+                         //context.NoResult();
+                         //context.Response.StatusCode = 500;
+                         //context.Response.ContentType = "text/plain";
+                         //context.Response.WriteAsync(c.Exception.ToString()).Wait();
+                         //return Task.CompletedTask;
+                     },
                      OnTokenValidated = context =>
                      {
                          Console.WriteLine("OnTokenValidated: " +

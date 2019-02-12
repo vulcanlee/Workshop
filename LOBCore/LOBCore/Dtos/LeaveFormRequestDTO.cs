@@ -15,19 +15,4 @@ namespace LOBCore.DTOs
         public string Description { get; set; }
     }
 
-    public class UserDTO
-    {
-        public int Id { get; set; }
-        public DepartmentDTO Department { get; set; }
-    }
-    public class DepartmentDTO
-    {
-        public int Id { get; set; }
-    }
-
-    public class LeaveFormTypeDTO
-    {
-        public int Id { get; set; }
-    }
-
 }

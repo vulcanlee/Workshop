@@ -53,8 +53,11 @@ namespace LOBCore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    AppName = table.Column<string>(nullable: true),
                     AndroidVersion = table.Column<string>(nullable: true),
-                    iOSVersion = table.Column<string>(nullable: true)
+                    AndroidUrl = table.Column<string>(nullable: true),
+                    iOSVersion = table.Column<string>(nullable: true),
+                    iOSUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -172,13 +175,36 @@ namespace LOBCore.Migrations
                     Token = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: true),
                     OSType = table.Column<int>(nullable: false),
-                    RegistrationTime = table.Column<DateTime>(nullable: false)
+                    RegistrationTime = table.Column<DateTime>(nullable: false),
+                    Invalid = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NotificationTokens", x => x.Id);
                     table.ForeignKey(
                         name: "FK_NotificationTokens_LobUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "LobUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suggestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(nullable: true),
+                    SubmitTime = table.Column<DateTime>(nullable: false),
+                    Subject = table.Column<string>(nullable: true),
+                    Message = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suggestions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Suggestions_LobUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "LobUsers",
                         principalColumn: "Id",
@@ -214,6 +240,11 @@ namespace LOBCore.Migrations
                 name: "IX_NotificationTokens_UserId",
                 table: "NotificationTokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Suggestions_UserId",
+                table: "Suggestions",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -229,6 +260,9 @@ namespace LOBCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "NotificationTokens");
+
+            migrationBuilder.DropTable(
+                name: "Suggestions");
 
             migrationBuilder.DropTable(
                 name: "SystemEnvironment");

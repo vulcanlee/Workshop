@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.DataAccesses.Entities
+namespace LOBCore.DTOs
 {
-    public class ExceptionRecord
+    public class ExceptionRecordRequestDTO
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public virtual LobUser User { get; set; }
+        public virtual UserDTO User { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string OSType { get; set; }

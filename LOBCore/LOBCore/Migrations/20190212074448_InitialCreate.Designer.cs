@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LOBCore.Migrations
 {
     [DbContext(typeof(LOBDatabaseContext))]
-    [Migration("20190211045152_InitialCreate")]
+    [Migration("20190212074448_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,6 +159,8 @@ namespace LOBCore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Invalid");
+
                     b.Property<int>("OSType");
 
                     b.Property<DateTime>("RegistrationTime");
@@ -174,12 +176,38 @@ namespace LOBCore.Migrations
                     b.ToTable("NotificationTokens");
                 });
 
+            modelBuilder.Entity("LOBCore.DataAccesses.Entities.Suggestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("Subject");
+
+                    b.Property<DateTime>("SubmitTime");
+
+                    b.Property<int?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Suggestions");
+                });
+
             modelBuilder.Entity("LOBCore.DataAccesses.Entities.SystemEnvironment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AndroidUrl");
+
                     b.Property<string>("AndroidVersion");
+
+                    b.Property<string>("AppName");
+
+                    b.Property<string>("iOSUrl");
 
                     b.Property<string>("iOSVersion");
 
@@ -221,6 +249,13 @@ namespace LOBCore.Migrations
                 });
 
             modelBuilder.Entity("LOBCore.DataAccesses.Entities.NotificationToken", b =>
+                {
+                    b.HasOne("LOBCore.DataAccesses.Entities.LobUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("LOBCore.DataAccesses.Entities.Suggestion", b =>
                 {
                     b.HasOne("LOBCore.DataAccesses.Entities.LobUser", "User")
                         .WithMany()

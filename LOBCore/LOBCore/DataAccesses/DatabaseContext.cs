@@ -21,7 +21,8 @@ namespace LOBCore.DataAccesses
         public virtual DbSet<CommUserGroupItem> CommUserGroupItems { get; set; }
         public virtual DbSet<NotificationToken> NotificationTokens { get; set; }
         public virtual DbSet<SystemEnvironment> SystemEnvironment { get; set; }
-        public LOBDatabaseContext(DbContextOptions<LOBDatabaseContext> options)
+         public virtual DbSet<Suggestion> Suggestions { get; set; }
+       public LOBDatabaseContext(DbContextOptions<LOBDatabaseContext> options)
                : base(options)
         {
         }

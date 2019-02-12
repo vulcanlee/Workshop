@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
+using LOBCore.DTOs;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace LOBCore.Controllers
 {
@@ -18,112 +20,154 @@ namespace LOBCore.Controllers
     public class ExceptionRecordsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
+        private readonly APIResult apiResult;
+        int UserID;
 
-        public ExceptionRecordsController(LOBDatabaseContext context)
+        public ExceptionRecordsController(LOBDatabaseContext context, APIResult apiResult)
         {
             _context = context;
+            this.apiResult = apiResult;
         }
 
         // GET: api/ExceptionRecords
         [HttpGet]
-        public IEnumerable<ExceptionRecord> GetExceptionRecords()
+        public async Task<APIResult> GetExceptionRecords()
         {
-            return _context.ExceptionRecords;
+            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
+            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
+            if (fooUser != null)
+            {
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = "沒有發現指定的該使用者資料";
+                return apiResult;
+            }
+
+            List<ExceptionRecordResponseDTO> ExceptionRecordResponseDTO = new List<ExceptionRecordResponseDTO>();
+            var fooList = await _context.ExceptionRecords.Include(x=>x.User)
+                .Where(x => x.User.Id == fooUser.Id).OrderByDescending(x=>x.ExceptionTime).Take(100).ToListAsync();
+            foreach (var item in fooList)
+            {
+                ExceptionRecordResponseDTO fooObject = new ExceptionRecordResponseDTO()
+                {
+                    Id = item.Id,
+                    User = new UserDTO()
+                    {
+                        Id = item.User.Id
+                    },
+                    CallStack = item.CallStack,
+                    DeviceModel = item.DeviceModel,
+                    DeviceName = item.DeviceName,
+                    ExceptionTime = item.ExceptionTime,
+                    Message = item.Message,
+                    OSType = item.OSType,
+                    OSVersion = item.OSVersion,
+                };
+                ExceptionRecordResponseDTO.Add(fooObject);
+            }
+            apiResult.Payload = ExceptionRecordResponseDTO;
+            return apiResult;
         }
 
         // GET: api/ExceptionRecords/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetExceptionRecord([FromRoute] int id)
+        public async Task<APIResult> GetExceptionRecord([FromRoute] int id)
         {
+            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                //return BadRequest(ModelState);
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
+                return apiResult;
             }
 
-            var exceptionRecord = await _context.ExceptionRecords.FindAsync(id);
-
+            var exceptionRecord = await _context.ExceptionRecords.Include(x=>x.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (exceptionRecord == null)
             {
-                return NotFound();
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = $"沒有發現指定的例外異常紀錄";
+                return apiResult;
+            }
+            else if (exceptionRecord.User.Id != UserID)
+            {
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = $"你沒有權限查看其他使用者的的例外異常紀錄";
+                return apiResult;
             }
 
-            return Ok(exceptionRecord);
-        }
-
-        // PUT: api/ExceptionRecords/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutExceptionRecord([FromRoute] int id, [FromBody] ExceptionRecord exceptionRecord)
-        {
-            if (!ModelState.IsValid)
+            ExceptionRecordResponseDTO fooObject = new ExceptionRecordResponseDTO()
             {
-                return BadRequest(ModelState);
-            }
-
-            if (id != exceptionRecord.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(exceptionRecord).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ExceptionRecordExists(id))
+                Id = exceptionRecord.Id,
+                User = new UserDTO()
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                    Id = exceptionRecord.User.Id
+                },
+                CallStack = exceptionRecord.CallStack,
+                DeviceModel = exceptionRecord.DeviceModel,
+                DeviceName = exceptionRecord.DeviceName,
+                ExceptionTime = exceptionRecord.ExceptionTime,
+                Message = exceptionRecord.Message,
+                OSType = exceptionRecord.OSType,
+                OSVersion = exceptionRecord.OSVersion,
+            };
+            apiResult.Payload = fooObject;
 
-            return NoContent();
+            return apiResult;
         }
 
         // POST: api/ExceptionRecords
         [HttpPost]
-        public async Task<IActionResult> PostExceptionRecord([FromBody] ExceptionRecord exceptionRecord)
+        public async Task<APIResult> PostExceptionRecord([FromBody] ExceptionRecordRequestDTO exceptionRecord)
         {
+            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                //return BadRequest(ModelState);
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
+                return apiResult;
             }
-
-            _context.ExceptionRecords.Add(exceptionRecord);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetExceptionRecord", new { id = exceptionRecord.Id }, exceptionRecord);
-        }
-
-        // DELETE: api/ExceptionRecords/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteExceptionRecord([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
+            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
+            if (fooUser != null)
             {
-                return BadRequest(ModelState);
+                ExceptionRecord fooExceptionRecordObject = new ExceptionRecord()
+                {
+                    User = fooUser,
+                    CallStack = exceptionRecord.CallStack,
+                    DeviceModel = exceptionRecord.DeviceModel,
+                    DeviceName = exceptionRecord.DeviceName,
+                    ExceptionTime = exceptionRecord.ExceptionTime,
+                    Message = exceptionRecord.Message,
+                    OSType = exceptionRecord.OSType,
+                    OSVersion = exceptionRecord.OSVersion,
+                };
+                _context.ExceptionRecords.Add(fooExceptionRecordObject);
+                await _context.SaveChangesAsync();
+                ExceptionRecordResponseDTO fooObject = new ExceptionRecordResponseDTO()
+                {
+                    User = new UserDTO()
+                    {
+                        Id = fooUser.Id
+                    },
+                    CallStack = exceptionRecord.CallStack,
+                    DeviceModel = exceptionRecord.DeviceModel,
+                    DeviceName = exceptionRecord.DeviceName,
+                    ExceptionTime = exceptionRecord.ExceptionTime,
+                    Message = exceptionRecord.Message,
+                    OSType = exceptionRecord.OSType,
+                    OSVersion = exceptionRecord.OSVersion,
+                };
+                apiResult.Payload = fooObject;
             }
-
-            var exceptionRecord = await _context.ExceptionRecords.FindAsync(id);
-            if (exceptionRecord == null)
+            else
             {
-                return NotFound();
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = "沒有發現指定的該使用者資料";
+                return apiResult;
             }
 
-            _context.ExceptionRecords.Remove(exceptionRecord);
-            await _context.SaveChangesAsync();
-
-            return Ok(exceptionRecord);
-        }
-
-        private bool ExceptionRecordExists(int id)
-        {
-            return _context.ExceptionRecords.Any(e => e.Id == id);
+            return apiResult;
         }
     }
 }

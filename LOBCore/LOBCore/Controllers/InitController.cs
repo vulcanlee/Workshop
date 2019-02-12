@@ -51,6 +51,7 @@ namespace LOBCore.Controllers
         private async Task CleanDB()
         {
             lobDatabaseContext.SystemEnvironment.RemoveRange(lobDatabaseContext.SystemEnvironment);
+            lobDatabaseContext.Suggestions.RemoveRange(lobDatabaseContext.Suggestions);
             lobDatabaseContext.ExceptionRecords.RemoveRange(lobDatabaseContext.ExceptionRecords);
             lobDatabaseContext.NotificationTokens.RemoveRange(lobDatabaseContext.NotificationTokens);
             lobDatabaseContext.LeaveForms.RemoveRange(lobDatabaseContext.LeaveForms);
@@ -66,8 +67,11 @@ namespace LOBCore.Controllers
         {
             var fooSystemEnvironment = new SystemEnvironment()
             {
-                 AndroidVersion = "",
-                 iOSVersion = "",
+                AppName = $"LOB 應用練習專案",
+                AndroidVersion = "1.0.0.0",
+                AndroidUrl = "",
+                iOSVersion = "1.0.0.0",
+                iOSUrl = "",
             };
             lobDatabaseContext.SystemEnvironment.Add(fooSystemEnvironment);
             await lobDatabaseContext.SaveChangesAsync();
