@@ -11,6 +11,7 @@ using LOBCore.DTOs;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using LOBCore.Extensions;
 
 namespace LOBCore.Controllers
 {
@@ -40,26 +41,7 @@ namespace LOBCore.Controllers
                 .Include(x => x.User).ThenInclude(x => x.Department)
                 .Where(x => x.User.Id == UserID))
             {
-                LeaveFormResponseDTO fooObject = new LeaveFormResponseDTO()
-                {
-                    BeginTime = item.BeginTime,
-                    EndTime = item.EndTime,
-                    Description = item.Description,
-                    Id = item.Id,
-                    TotalHours = item.TotalHours,
-                    user = new UserDTO()
-                    {
-                        Id = item.User.Id,
-                        Department = new DepartmentDTO()
-                        {
-                            Id = item.User.Department.Id
-                        }
-                    },
-                    leaveFormType = new LeaveFormTypeDTO()
-                    {
-                        Id = item.LeaveFormType.Id
-                    }
-                };
+                LeaveFormResponseDTO fooObject = item.ToLeaveFormResponseDTO(); 
                 fooLeaveFormResponseDTO.Add(fooObject);
             }
             return fooLeaveFormResponseDTO;
@@ -93,26 +75,7 @@ namespace LOBCore.Controllers
                 return apiResult;
             }
 
-            apiResult.Payload = new LeaveFormResponseDTO()
-            {
-                BeginTime = leaveForm.BeginTime,
-                EndTime = leaveForm.EndTime,
-                Description = leaveForm.Description,
-                Id = leaveForm.Id,
-                TotalHours = leaveForm.TotalHours,
-                leaveFormType = new LeaveFormTypeDTO()
-                {
-                    Id = leaveForm.LeaveFormType.Id
-                },
-                user = new UserDTO()
-                {
-                    Id = leaveForm.User.Id,
-                    Department = new DepartmentDTO()
-                    {
-                        Id = leaveForm.User.Department.Id
-                    }
-                }
-            };
+            apiResult.Payload = leaveForm.ToLeaveFormResponseDTO();
             return apiResult;
         }
 
@@ -178,7 +141,8 @@ namespace LOBCore.Controllers
                     apiResult.Message = $"紀錄更新時，發生同時存取衝突";
                     return apiResult;
                 }
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 apiResult.Status = APIResultStatus.Failure;
                 apiResult.Message = $"紀錄更新時，發生例外異常 {ex.Message}";
@@ -207,24 +171,10 @@ namespace LOBCore.Controllers
                 var fooLeaveFormType = await _context.LeaveFormTypes.FirstOrDefaultAsync(x => x.Id == leaveForm.leaveFormType.Id);
                 if (fooLeaveFormType != null)
                 {
-                    LeaveForm fooLeaveForm = new LeaveForm()
-                    {
-                        BeginTime = leaveForm.BeginTime,
-                        EndTime = leaveForm.EndTime,
-                        Description = leaveForm.Description,
-                        TotalHours = leaveForm.TotalHours,
-                        User = fooUser,
-                        LeaveFormType = fooLeaveFormType,
-                    };
+                    LeaveForm fooLeaveForm = leaveForm.ToLeaveForm(fooUser, fooLeaveFormType);
                     _context.LeaveForms.Add(fooLeaveForm);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                    await _context.SaveChangesAsync();
+                    apiResult.Payload = leaveForm;
                 }
                 else
                 {
@@ -255,8 +205,8 @@ namespace LOBCore.Controllers
                 return apiResult;
             }
 
-            var leaveForm = await _context.LeaveForms.Include(x=>x.LeaveFormType)
-                .Include(x => x.User).ThenInclude(x=>x.Department)
+            var leaveForm = await _context.LeaveForms.Include(x => x.LeaveFormType)
+                .Include(x => x.User).ThenInclude(x => x.Department)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (leaveForm == null)
             {
@@ -274,26 +224,7 @@ namespace LOBCore.Controllers
             _context.LeaveForms.Remove(leaveForm);
             await _context.SaveChangesAsync();
 
-            apiResult.Payload = new LeaveFormResponseDTO()
-            {
-                 BeginTime = leaveForm.BeginTime,
-                 EndTime = leaveForm.EndTime,
-                  Description = leaveForm.Description,
-                   Id = leaveForm.Id,
-                    TotalHours = leaveForm.TotalHours,
-                     leaveFormType = new LeaveFormTypeDTO()
-                     {
-                          Id = leaveForm.LeaveFormType.Id
-                     },
-                      user = new UserDTO()
-                      {
-                           Id = leaveForm.User.Id,
-                           Department = new DepartmentDTO()
-                           {
-                                Id = leaveForm.User.Department.Id
-                           }
-                      }
-            };
+            apiResult.Payload = leaveForm.ToLeaveFormResponseDTO();
             return apiResult;
         }
 

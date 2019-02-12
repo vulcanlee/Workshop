@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using LOBCore.Extensions;
 
 namespace LOBCore.Controllers
 {
@@ -104,19 +105,7 @@ namespace LOBCore.Controllers
                             SecurityAlgorithms.HmacSha512)
                 );
 
-                LoginResponseDTO LoginResponseDTO = new LoginResponseDTO()
-                {
-                    Account = fooUser.Account,
-                    Id = fooUser.Id,
-                    Name = fooUser.Name,
-                    Image = fooUser.Image,
-                    Department = new DepartmentDTO()
-                    {
-                        Id = fooUser.Department.Id,
-                    },
-                    Token = apiResult.Token,
-                    RefreshToken = new JwtSecurityTokenHandler().WriteToken(tokenRefresh),
-                };
+                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh));
                 apiResult.Payload = LoginResponseDTO;
             }
             else
@@ -187,19 +176,7 @@ namespace LOBCore.Controllers
                             SecurityAlgorithms.HmacSha512)
                 );
 
-                LoginResponseDTO LoginResponseDTO = new LoginResponseDTO()
-                {
-                    Account = fooUser.Account,
-                    Id = fooUser.Id,
-                    Name = fooUser.Name,
-                    Image = fooUser.Image,
-                    Department = new DepartmentDTO()
-                    {
-                        Id = fooUser.Department.Id,
-                    },
-                    Token = apiResult.Token,
-                    RefreshToken = new JwtSecurityTokenHandler().WriteToken(tokenRefresh),
-                };
+                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh));
                 apiResult.Payload = LoginResponseDTO;
             }
 
