@@ -29,6 +29,41 @@ namespace LOBCore.Controllers
             this.apiResult = apiResult;
         }
 
+        // GET: api/Suggestions
+        [HttpGet]
+        public async Task<APIResult> GetSuggestions()
+        {
+            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
+            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
+            if (fooUser == null)
+            {
+                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Message = "沒有發現指定的該使用者資料";
+                return apiResult;
+            }
+            List<NotificationTokenResponseDTO> NotificationTokenResponseDTO = new List<NotificationTokenResponseDTO>();
+            var fooList = await _context.NotificationTokens.Include(x => x.User)
+                .Where(x => x.User.Id == fooUser.Id).OrderByDescending(x => x.RegistrationTime).Take(100).ToListAsync();
+            foreach (var item in fooList)
+            {
+                NotificationTokenResponseDTO fooObject = new NotificationTokenResponseDTO()
+                {
+                    Id = item.Id,
+                    User = new UserDTO()
+                    {
+                        Id = item.User.Id
+                    },
+                    Invalid = item.Invalid,
+                    OSType = item.OSType,
+                    RegistrationTime = item.RegistrationTime,
+                    Token = item.Token,
+                };
+                NotificationTokenResponseDTO.Add(fooObject);
+            }
+            apiResult.Payload = NotificationTokenResponseDTO;
+            return apiResult;
+        }
+
         // POST: api/NotificationTokens
         [HttpPost]
         public async Task<APIResult> PostNotificationToken([FromBody] NotificationTokenRequestDTO notificationToken)
@@ -43,7 +78,7 @@ namespace LOBCore.Controllers
             }
 
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser != null)
+            if (fooUser == null)
             {
                 apiResult.Status = APIResultStatus.Failure;
                 apiResult.Message = "沒有發現指定的該使用者資料";

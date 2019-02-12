@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using LOBCore.DTOs;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace LOBCore.Controllers
 {
@@ -29,8 +30,9 @@ namespace LOBCore.Controllers
         [HttpGet]
         public async Task<APIResult> GetSuggestions()
         {
+            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser != null)
+            if (fooUser == null)
             {
                 apiResult.Status = APIResultStatus.Failure;
                 apiResult.Message = "沒有發現指定的該使用者資料";
@@ -62,6 +64,7 @@ namespace LOBCore.Controllers
         [HttpPost]
         public async Task<APIResult> PostSuggestion([FromBody] SuggestionRequestDTO suggestionRequestDTO)
         {
+            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             if (!ModelState.IsValid)
             {
                 apiResult.Status = APIResultStatus.Failure;
@@ -69,7 +72,7 @@ namespace LOBCore.Controllers
                 return apiResult;
             }
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser != null)
+            if (fooUser == null)
             {
                 apiResult.Status = APIResultStatus.Failure;
                 apiResult.Message = "沒有發現指定的該使用者資料";

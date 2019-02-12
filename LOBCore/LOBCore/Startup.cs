@@ -53,14 +53,14 @@ namespace LOBCore
                  };
                  options.Events = new JwtBearerEvents()
                  {
-                     //OnChallenge = context =>
-                     //{
-                     //    return Task.CompletedTask;
-                     //},
-                     //OnMessageReceived = context =>
-                     //{
-                     //    return Task.CompletedTask;
-                     //},
+                     OnChallenge = context =>
+                     {
+                         return Task.CompletedTask;
+                     },
+                     OnMessageReceived = context =>
+                     {
+                         return Task.CompletedTask;
+                     },
                      OnAuthenticationFailed = async context =>
                      {
                          context.NoResult();

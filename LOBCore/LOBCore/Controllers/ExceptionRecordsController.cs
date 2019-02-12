@@ -35,7 +35,7 @@ namespace LOBCore.Controllers
         {
             UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser != null)
+            if (fooUser == null)
             {
                 apiResult.Status = APIResultStatus.Failure;
                 apiResult.Message = "沒有發現指定的該使用者資料";
