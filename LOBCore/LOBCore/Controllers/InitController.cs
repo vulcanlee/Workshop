@@ -36,7 +36,7 @@ namespace LOBCore.Controllers
             await DepartmentReset();
             await LobUserReset();
             await LeaveFormTypeReset();
-
+            await SystemEnvironmentReset();
 
             var fooReslut = new APIResult()
             {

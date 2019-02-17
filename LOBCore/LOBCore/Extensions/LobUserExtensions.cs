@@ -9,7 +9,8 @@ namespace LOBCore.Extensions
 {
     public static class LobUserExtensions
     {
-        public static LoginResponseDTO ToLoginResponseDTO(this LobUser lobUser, string token, string refreshToken)
+        public static LoginResponseDTO ToLoginResponseDTO(this LobUser lobUser, string token, string refreshToken,
+            string tokenExpireMinutes, string refreshTokenExpireDays)
         {
             LoginResponseDTO LoginResponseDTO = new LoginResponseDTO()
             {
@@ -22,7 +23,9 @@ namespace LOBCore.Extensions
                     Id = lobUser.Department.Id,
                 },
                 Token = token,
+                TokenExpireMinutes = Convert.ToInt32(tokenExpireMinutes),
                 RefreshToken = refreshToken,
+                RefreshTokenExpireDays = Convert.ToInt32(refreshTokenExpireDays),
             };
             return LoginResponseDTO;
         }

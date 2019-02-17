@@ -45,11 +45,11 @@ namespace LOBCore
                      ValidateIssuer = true,
                      ValidateAudience = true,
                      ValidateLifetime = true,
+                     RequireExpirationTime = true,
                      ValidateIssuerSigningKey = true,
                      ValidIssuer = Configuration["Tokens:ValidIssuer"],
                      ValidAudience = Configuration["Tokens:ValidAudience"],
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:IssuerSigningKey"])),
-                     RequireExpirationTime = true,
                  };
                  options.Events = new JwtBearerEvents()
                  {

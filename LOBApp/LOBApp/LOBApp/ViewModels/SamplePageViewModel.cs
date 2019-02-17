@@ -8,6 +8,7 @@ namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
     using LOBApp.Helpers.Storages;
+    using LOBApp.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
@@ -24,8 +25,11 @@ namespace LOBApp.ViewModels
             this.navigationService = navigationService;
             TestCommand = new DelegateCommand(async () =>
             {
-               await StorageUtility.WriteToDataFileAsync("MyFolder/Data", "MyFile.txt", "除了具備現代化語言 (C#) 的彈性和簡潔、.NET 基底類別庫 (BCL) 的強大功能，以及兩個頂級的 IDE (Visual Studio for Mac 和 Visual Studio) 之外，Xamarin.iOS 還可讓開發人員使用 Objective-C 和 Xcode 中可用的相同 UI 控制項來建立原生 iOS 應用程式。 此系列介紹如何設定及安裝 Xamarin.iOS，並說明 Xamarin.iOS 開發的基本概念。");
-                var foo = await StorageUtility.ReadFromDataFileAsync("MyFolder/Data", "MyFile.txt");
+                //await StorageUtility.WriteToDataFileAsync("MyFolder/Data", "MyFile.txt", "除了具備現代化語言 (C#) 的彈性和簡潔、.NET 基底類別庫 (BCL) 的強大功能，以及兩個頂級的 IDE (Visual Studio for Mac 和 Visual Studio) 之外，Xamarin.iOS 還可讓開發人員使用 Objective-C 和 Xcode 中可用的相同 UI 控制項來建立原生 iOS 應用程式。 此系列介紹如何設定及安裝 Xamarin.iOS，並說明 Xamarin.iOS 開發的基本概念。");
+                // var foo = await StorageUtility.ReadFromDataFileAsync("MyFolder/Data", "MyFile.txt");
+
+                LoginManager loginManager = new LoginManager();
+                var foo = await loginManager.GetAsync(new DTOs.LoginRequestDTO { Account = "user1", Password = "password1" });
             });
         }
 

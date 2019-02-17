@@ -4,6 +4,7 @@ using LOBApp.ViewModels;
 using LOBApp.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using LOBApp.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace LOBApp
@@ -23,14 +24,18 @@ namespace LOBApp
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/SamplePage");
+            await NavigationService.NavigateAsync("/SplashPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<SystemStatusManager>();
+            containerRegistry.Register<LoginManager>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<SamplePage, SamplePageViewModel>();
+            containerRegistry.RegisterForNavigation<SplashPage, SplashPageViewModel>();
+            containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
         }
     }
 }

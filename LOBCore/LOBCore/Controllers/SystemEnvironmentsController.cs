@@ -12,7 +12,7 @@ using LOBCore.DTOs;
 
 namespace LOBCore.Controllers
 {
-    [Authorize(Roles = "User")]
+    [AllowAnonymous]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
@@ -35,8 +35,12 @@ namespace LOBCore.Controllers
             var fooObject = await _context.SystemEnvironment.FirstAsync();
             if(fooObject!=null)
             {
+                SystemEnvironmentResponseDTO.Id = fooObject.Id;
+                SystemEnvironmentResponseDTO.AppName = fooObject.AppName;
                 SystemEnvironmentResponseDTO.AndroidVersion = fooObject.AndroidVersion;
+                SystemEnvironmentResponseDTO.AndroidUrl = fooObject.AndroidUrl;
                 SystemEnvironmentResponseDTO.iOSVersion = fooObject.iOSVersion;
+                SystemEnvironmentResponseDTO.iOSUrl = fooObject.iOSUrl;
                 apiResult.Payload = SystemEnvironmentResponseDTO;
             }
             else

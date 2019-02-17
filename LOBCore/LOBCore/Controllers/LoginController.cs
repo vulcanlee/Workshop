@@ -75,9 +75,8 @@ namespace LOBCore.Controllers
                     issuer: configuration["Tokens:ValidIssuer"],
                     audience: configuration["Tokens:ValidAudience"],
                     claims: claims,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireDays"])),
-                    //expires: DateTime.UtcNow.AddMinutes(-5),
-                    notBefore: DateTime.UtcNow.AddMinutes(-6),
+                    expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(configuration["Tokens:JwtExpireMinutes"])),
+                    notBefore: DateTime.UtcNow.AddMinutes(-5),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                                 (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
                             SecurityAlgorithms.HmacSha512)
@@ -97,15 +96,16 @@ namespace LOBCore.Controllers
                     issuer: configuration["Tokens:ValidIssuer"],
                     audience: configuration["Tokens:ValidAudience"],
                     claims: claimsRefresh,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireDays"])).AddDays(3),
-                    //expires: DateTime.UtcNow.AddMinutes(-5),
-                    notBefore: DateTime.UtcNow.AddMinutes(-6),
+                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])),
+                    notBefore: DateTime.UtcNow.AddMinutes(-5),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                                 (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
                             SecurityAlgorithms.HmacSha512)
                 );
 
-                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh));
+                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
+                    apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh),
+                    configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
                 apiResult.Payload = LoginResponseDTO;
             }
             else
@@ -145,9 +145,8 @@ namespace LOBCore.Controllers
                     issuer: configuration["Tokens:ValidIssuer"],
                     audience: configuration["Tokens:ValidAudience"],
                     claims: claims,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireDays"])),
-                    //expires: DateTime.UtcNow.AddMinutes(-5),
-                    notBefore: DateTime.UtcNow.AddMinutes(-6),
+                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireMinutes"])),
+                    notBefore: DateTime.UtcNow.AddMinutes(-5),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                                 (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
                             SecurityAlgorithms.HmacSha512)
@@ -168,15 +167,16 @@ namespace LOBCore.Controllers
                     issuer: configuration["Tokens:ValidIssuer"],
                     audience: configuration["Tokens:ValidAudience"],
                     claims: claims,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireDays"])).AddDays(3),
-                    //expires: DateTime.UtcNow.AddMinutes(-5),
-                    notBefore: DateTime.UtcNow.AddMinutes(-6),
+                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])).AddDays(3),
+                    notBefore: DateTime.UtcNow.AddMinutes(-5),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                                 (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
                             SecurityAlgorithms.HmacSha512)
                 );
 
-                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh));
+                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
+                    apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh),
+                    configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
                 apiResult.Payload = LoginResponseDTO;
             }
 

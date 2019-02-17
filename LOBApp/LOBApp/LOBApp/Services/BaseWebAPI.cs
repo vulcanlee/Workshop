@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LOBApp.Services
@@ -44,7 +45,6 @@ namespace LOBApp.Services
         /// </summary>
         public string 資料檔案名稱 { get; set; }
 
-        public string ResponseCookie { get; set; }
 
         #region 系統用到的訊息字串
         public static readonly string APIInternalError = "System Exception = null, Result = null";
@@ -112,11 +112,12 @@ namespace LOBApp.Services
         /// <param name="dic">所要傳遞的參數 Dictionary </param>
         /// <param name="httpMethod">Get Or Post</param>
         /// <returns></returns>
-        protected virtual async Task<APIResult> GetItemsFromNetAsync(Dictionary<string, string> dic, HttpMethod httpMethod,
-            bool 要傳送Cookie = false)
+        protected virtual async Task<APIResult> SendAsync(Dictionary<string, string> dic, HttpMethod httpMethod,
+            CancellationToken token = default(CancellationToken))
         {
             this.managerResult = new APIResult();
             APIResult mr = this.managerResult;
+            string jsonPayload = "";
 
             //檢查網路狀態
             if (UtilityHelper.IsConnected() == false)
@@ -126,24 +127,29 @@ namespace LOBApp.Services
                 return mr;
             }
 
+            if (dic.ContainsKey(LOBGlobal.JSONDataKeyName))
+            {
+                jsonPayload = dic[LOBGlobal.JSONDataKeyName];
+                dic.Remove(LOBGlobal.JSONDataKeyName);
+            }
+
             HttpClientHandler handler = new HttpClientHandler();
 
             using (HttpClient client = new HttpClient(handler))
             {
                 try
                 {
-                    ResponseCookie = "";
                     //client.Timeout = TimeSpan.FromMinutes(3);
-                    string FooUrl = $"{host}{url}";
-                    UriBuilder ub = new UriBuilder(FooUrl);
+                    string fooQueryString = dic.ToQueryString();
+                    string fooUrl = $"{host}{url}" + fooQueryString;
+                    UriBuilder ub = new UriBuilder(fooUrl);
                     HttpResponseMessage response = null;
 
                     #region  Get Or Post
                     if (httpMethod == HttpMethod.Get)
                     {
                         // 使用 Get 方式來呼叫
-                        var foo = ub.Uri + dic.ToQueryString();
-                        response = await client.GetAsync(ub.Uri + dic.ToQueryString());
+                        response = await client.GetAsync(ub.Uri, token);
                     }
                     else if (httpMethod == HttpMethod.Post)
                     {
@@ -151,17 +157,31 @@ namespace LOBApp.Services
                         if (EncodingType == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
-                            response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent());
-                        }
-                        else if (EncodingType == EnctypeMethod.XML)
-                        {
-                            response = await client.PostAsync(ub.Uri, new StringContent(dic["XML"], Encoding.UTF8, "application/xml"));
+                            response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent(), token);
                         }
                         else if (EncodingType == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
-                            response = await client.PostAsync(ub.Uri, new StringContent(dic["JSON"], Encoding.UTF8, "application/json"));
+                            response = await client.PostAsync(ub.Uri, new StringContent(jsonPayload, Encoding.UTF8, "application/json"), token);
                         }
+                    }
+                    else if (httpMethod == HttpMethod.Put)
+                    {
+                        // 使用 Post 方式來呼叫
+                        if (EncodingType == EnctypeMethod.FORMURLENCODED)
+                        {
+                            // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
+                            response = await client.PutAsync(ub.Uri, dic.ToFormUrlEncodedContent(), token);
+                        }
+                        else if (EncodingType == EnctypeMethod.JSON)
+                        {
+                            client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
+                            response = await client.PutAsync(ub.Uri, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
+                        }
+                    }
+                    else if (httpMethod == HttpMethod.Delete)
+                    {
+                        response = await client.DeleteAsync(ub.Uri, token);
                     }
                     else
                     {
@@ -174,22 +194,24 @@ namespace LOBApp.Services
                     {
                         String strResult = await response.Content.ReadAsStringAsync();
 
-                        switch (response.StatusCode)
+                        if (response.IsSuccessStatusCode == true)
                         {
-                            case HttpStatusCode.OK:
-                                Items = JsonConvert.DeserializeObject<T>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            mr = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            if (mr.Status == APIResultStatus.Success)
+                            {
+                                var fooDataString = mr.Payload.ToString();
+                                Items = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
                                 if (Items == null)
                                 {
                                     Items = (T)Activator.CreateInstance(typeof(T));
                                 }
                                 await this.WriteToFileAsync();
-                                mr.Status = APIResultStatus.Success;
-                                break;
-
-                            default:
-                                mr.Status = APIResultStatus.Failure;
-                                mr.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content);
-                                break;
+                            }
+                        }
+                        else
+                        {
+                            mr.Status = APIResultStatus.Failure;
+                            mr.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content);
                         }
                     }
                     else
@@ -239,9 +261,8 @@ namespace LOBApp.Services
         /// <summary>
         /// 將物件資料寫入到檔案中
         /// </summary>
-        public virtual async Task WriteToFileAsync(bool 需要加解密 = false)
+        public virtual async Task WriteToFileAsync()
         {
-            需要加解密 = 資料加密處理;
             string data = JsonConvert.SerializeObject(this.Items);
             await StorageUtility.WriteToDataFileAsync(this.現在資料夾名稱, this.資料檔案名稱, data);
         }

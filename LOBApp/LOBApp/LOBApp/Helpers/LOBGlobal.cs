@@ -7,5 +7,6 @@ namespace LOBApp.Helpers
     public class LOBGlobal
     {
         public static string APIHost = "";
+        public static string JSONDataKeyName = "";
     }
 }
