@@ -1,6 +1,7 @@
 ﻿using LOBApp.DTOs;
 using LOBApp.Helpers;
 using LOBApp.Helpers.WebAPIs;
+using LOBApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,19 +12,23 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class LeaveFormTypesManager : BaseWebAPI<LeaveFormTypeResponseDTO>
+    public class LeaveFormTypesManager : BaseWebAPI<List<LeaveFormTypeResponseDTO>>
     {
-        public LeaveFormTypesManager()
+        private readonly AppStatus appStatus;
+
+        public LeaveFormTypesManager(AppStatus appStatus)
             : base()
         {
             //資料檔案名稱 = "SampleRepository.txt";
             //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/LeaveFormTypes";
             this.host = "https://lobworkshop.azurewebsites.net";
+            this.appStatus = appStatus;
         }
 
         public async Task<APIResult> GetAsync()
         {
+            Token = appStatus.SystemStatus.Token;
             EncodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
@@ -37,7 +42,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(leaveFormRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

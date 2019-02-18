@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace LOBApp.Services
         /// </summary>
         public string url { get; set; }
         public EnctypeMethod EncodingType { get; set; }
-
+        public string Token { get; set; } = "";
         /// <summary>
         /// 資料夾名稱
         /// </summary>
@@ -144,6 +145,12 @@ namespace LOBApp.Services
                     string fooUrl = $"{host}{url}" + fooQueryString;
                     UriBuilder ub = new UriBuilder(fooUrl);
                     HttpResponseMessage response = null;
+
+                    if(string.IsNullOrEmpty(Token)==false)
+                    {
+                        client.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("Bearer", Token);
+                    }
 
                     #region  Get Or Post
                     if (httpMethod == HttpMethod.Get)

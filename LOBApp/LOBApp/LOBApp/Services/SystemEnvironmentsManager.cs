@@ -22,7 +22,7 @@ namespace LOBApp.Services
             this.host = "https://lobworkshop.azurewebsites.net";
         }
 
-        public async Task<APIResult> GetAsync(LoginRequestDTO loginRequestDTO)
+        public async Task<APIResult> GetAsync()
         {
             EncodingType = EnctypeMethod.JSON;
 
@@ -37,7 +37,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
 
             return mr;
         }

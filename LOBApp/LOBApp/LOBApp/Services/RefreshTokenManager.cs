@@ -12,23 +12,23 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class DepartmentsManager : BaseWebAPI<List<DepartmentResponseDTO>>
+    public class RefreshTokenManager : BaseWebAPI<LoginResponseDTO>
     {
         private readonly AppStatus appStatus;
 
-        public DepartmentsManager(AppStatus appStatus)
+        public RefreshTokenManager(AppStatus appStatus)
             : base()
         {
             //資料檔案名稱 = "SampleRepository.txt";
             //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
-            this.url = "/api/Departments";
+            this.url = "/api/Login/RefreshToken";
             this.host = "https://lobworkshop.azurewebsites.net";
             this.appStatus = appStatus;
         }
 
         public async Task<APIResult> GetAsync()
         {
-            Token = appStatus.SystemStatus.Token;
+            Token = appStatus.SystemStatus.RefreshToken;
             EncodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
@@ -39,7 +39,7 @@ namespace LOBApp.Services
             //dic.Add(Global.getName(() => memberSignIn_QS.app), memberSignIn_QS.app);
             //dic.AddItem<string>(() => 查詢資料QueryString.strHospCode);
             //dic.Add("Price", SetMemberSignUpVM.Price.ToString());
-            //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(exceptionRecordRequestDTO));
+            //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
             var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);

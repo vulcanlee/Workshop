@@ -5,6 +5,8 @@ using LOBApp.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using LOBApp.Services;
+using LOBApp.Helpers.ManagerHelps;
+using LOBApp.Models;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace LOBApp
@@ -31,6 +33,18 @@ namespace LOBApp
         {
             containerRegistry.Register<SystemStatusManager>();
             containerRegistry.Register<LoginManager>();
+            containerRegistry.Register<DepartmentsManager>();
+            containerRegistry.Register<CommUserGroupItemsManager>();
+            containerRegistry.Register<CommUserGroupsManager>();
+            containerRegistry.Register<ExceptionRecordsManager>();
+            containerRegistry.Register<LeaveFormsManager>();
+            containerRegistry.Register<LeaveFormTypesManager>();
+            containerRegistry.Register<NotificationTokensManager>();
+            containerRegistry.Register<SuggestionsManager>();
+            containerRegistry.Register<SystemEnvironmentsManager>();
+            containerRegistry.Register<RefreshTokenManager>();
+            containerRegistry.Register<RecordCacheHelper>();
+            containerRegistry.RegisterSingleton<AppStatus>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<SamplePage, SamplePageViewModel>();

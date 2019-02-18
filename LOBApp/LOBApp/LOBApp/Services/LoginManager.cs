@@ -1,6 +1,7 @@
 ﻿using LOBApp.DTOs;
 using LOBApp.Helpers;
 using LOBApp.Helpers.WebAPIs;
+using LOBApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace LOBApp.Services
             this.host = "https://lobworkshop.azurewebsites.net";
         }
 
-        public async Task<APIResult> GetAsync(LoginRequestDTO loginRequestDTO)
+        public async Task<APIResult> PostAsync(LoginRequestDTO loginRequestDTO)
         {
             EncodingType = EnctypeMethod.JSON;
 

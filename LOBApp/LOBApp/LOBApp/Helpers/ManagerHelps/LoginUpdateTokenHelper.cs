@@ -1,4 +1,5 @@
 ﻿using LOBApp.DTOs;
+using LOBApp.Models;
 using LOBApp.Services;
 using Prism.Services;
 using System;
@@ -11,9 +12,10 @@ namespace LOBApp.Helpers.ManagerHelps
     public class LoginUpdateTokenHelper
     {
         public static async Task<bool> UserLoginAsync(IPageDialogService dialogService,
-            LoginManager loginManager, SystemStatusManager systemStatusManager, LoginRequestDTO loginRequestDTO)
+            LoginManager loginManager, SystemStatusManager systemStatusManager, LoginRequestDTO loginRequestDTO,
+            AppStatus appStatus)
         {
-            var fooResult = await loginManager.GetAsync(loginRequestDTO);
+            var fooResult = await loginManager.PostAsync(loginRequestDTO);
             if (fooResult.Status != APIResultStatus.Success)
             {
                 await dialogService.DisplayAlertAsync("發生錯誤", fooResult.Message, "確定");
@@ -27,7 +29,9 @@ namespace LOBApp.Helpers.ManagerHelps
             systemStatusManager.Items.TokenExpireMinutes = loginManager.Items.TokenExpireMinutes;
             systemStatusManager.Items.RefreshTokenExpireDays = loginManager.Items.RefreshTokenExpireDays;
             systemStatusManager.Items.SetExpireDatetime();
+
             //await systemStatusManager.WriteToFileAsync();
+            await AppStatusHelper.WriteAndUpdateAppStatus(systemStatusManager, appStatus);
 
             return true;
         }

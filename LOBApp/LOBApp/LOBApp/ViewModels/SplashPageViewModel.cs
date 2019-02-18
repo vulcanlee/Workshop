@@ -4,10 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
+    using Acr.UserDialogs;
+    using LOBApp.Helpers.ManagerHelps;
     using LOBApp.Helpers.Utilities;
+    using LOBApp.Models;
     using LOBApp.Services;
     using Prism.Events;
     using Prism.Navigation;
@@ -19,13 +23,20 @@ namespace LOBApp.ViewModels
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
         private readonly SystemStatusManager systemStatusManager;
+        private readonly SystemEnvironmentsManager systemEnvironmentsManager;
+        private readonly RecordCacheHelper recordCacheHelper;
+        private readonly AppStatus appStatus;
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            SystemStatusManager systemStatusManager)
+            SystemStatusManager systemStatusManager, SystemEnvironmentsManager systemEnvironmentsManager,
+            RecordCacheHelper recordCacheHelper, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
             this.systemStatusManager = systemStatusManager;
+            this.systemEnvironmentsManager = systemEnvironmentsManager;
+            this.recordCacheHelper = recordCacheHelper;
+            this.appStatus = appStatus;
             CancellationCommand = new DelegateCommand(() =>
             {
 
@@ -38,10 +49,8 @@ namespace LOBApp.ViewModels
 
         public async void OnNavigatedTo(INavigationParameters parameters)
         {
-            await systemStatusManager.ReadFromFileAsync();
-            //systemStatusManager.Items.IsLogin = false;
-            //await systemStatusManager.WriteToFileAsync();
-            if (systemStatusManager.Items.IsLogin == false)
+            await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusManager, appStatus);
+            if (appStatus.SystemStatus.IsLogin == false)
             {
                 await navigationService.NavigateAsync("/LoginPage");
                 return;
@@ -54,6 +63,10 @@ namespace LOBApp.ViewModels
                 return ;
             }
 
+            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，查詢tag資訊...", null, null, true, MaskType.Black))
+            {
+                await recordCacheHelper.RefreshAsync(fooIProgressDialog);
+            }
             #endregion
         }
 

@@ -29,7 +29,7 @@ namespace LOBApp.ViewModels
                 // var foo = await StorageUtility.ReadFromDataFileAsync("MyFolder/Data", "MyFile.txt");
 
                 LoginManager loginManager = new LoginManager();
-                var foo = await loginManager.GetAsync(new DTOs.LoginRequestDTO { Account = "user1", Password = "password1" });
+                var foo = await loginManager.PostAsync(new DTOs.LoginRequestDTO { Account = "user1", Password = "password1" });
             });
         }
 

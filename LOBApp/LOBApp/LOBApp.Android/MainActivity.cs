@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Prism;
@@ -17,6 +18,9 @@ namespace LOBApp.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            #region 擴充套件初始化
+            UserDialogs.Init(this);
+            #endregion
             LoadApplication(new App(new AndroidInitializer()));
         }
     }

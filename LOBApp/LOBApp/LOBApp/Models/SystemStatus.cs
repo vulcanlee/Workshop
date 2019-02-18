@@ -17,8 +17,8 @@ namespace LOBApp.Models
 
         public void SetExpireDatetime()
         {
-            TokenExpireDatetime = DateTime.UtcNow.AddMinutes(TokenExpireMinutes);
-            RefreshTokenExpireDatetime = DateTime.UtcNow.AddDays(RefreshTokenExpireDays);
+            TokenExpireDatetime = LoginedTime.AddMinutes(TokenExpireMinutes);
+            RefreshTokenExpireDatetime = LoginedTime.AddDays(RefreshTokenExpireDays);
         }
     }
 }

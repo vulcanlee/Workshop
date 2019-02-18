@@ -22,6 +22,8 @@ namespace LOBApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            #region 擴充套件初始化
+            #endregion
             LoadApplication(new App(new iOSInitializer()));
 
             return base.FinishedLaunching(app, options);

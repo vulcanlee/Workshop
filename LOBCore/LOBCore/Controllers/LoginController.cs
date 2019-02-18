@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using LOBCore.Extensions;
+using LOBCore.DataAccesses.Entities;
 
 namespace LOBCore.Controllers
 {
@@ -62,49 +63,12 @@ namespace LOBCore.Controllers
             var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Account == loginRequestDTO.Account && x.Password == loginRequestDTO.Password);
             if (fooUser != null)
             {
-                var claims = new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
-                    new Claim(ClaimTypes.Name, fooUser.Account),
-                    new Claim(ClaimTypes.Role, "User"),
-                    new Claim(ClaimTypes.Role, $"Dept{fooUser.Department.Id}"),
-                };
-
-                var token = new JwtSecurityToken
-                (
-                    issuer: configuration["Tokens:ValidIssuer"],
-                    audience: configuration["Tokens:ValidAudience"],
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(configuration["Tokens:JwtExpireMinutes"])),
-                    notBefore: DateTime.UtcNow.AddMinutes(-5),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                                (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
-                            SecurityAlgorithms.HmacSha512)
-                );
                 apiResult.Status = APIResultStatus.Success;
-                apiResult.Token = new JwtSecurityTokenHandler().WriteToken(token);
-
-                var claimsRefresh = new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
-                    new Claim(ClaimTypes.Name, fooUser.Account),
-                    new Claim(ClaimTypes.Role, "RefreshToken"),
-                };
-
-                var tokenRefresh = new JwtSecurityToken
-                (
-                    issuer: configuration["Tokens:ValidIssuer"],
-                    audience: configuration["Tokens:ValidAudience"],
-                    claims: claimsRefresh,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])),
-                    notBefore: DateTime.UtcNow.AddMinutes(-5),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                                (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
-                            SecurityAlgorithms.HmacSha512)
-                );
+                apiResult.Token = GenerateToken(fooUser);
+                string refreshToken = GenerateRefreshToken(fooUser);
 
                 LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
-                    apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh),
+                    apiResult.Token, refreshToken,
                     configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
                 apiResult.Payload = LoginResponseDTO;
             }
@@ -132,55 +96,71 @@ namespace LOBCore.Controllers
             }
             else
             {
-                var claims = new[]
-                {
+                apiResult.Status = APIResultStatus.Success;
+                apiResult.Token = GenerateToken(fooUser);
+                string refreshToken = GenerateRefreshToken(fooUser);
+
+                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
+                    apiResult.Token, refreshToken,
+                    configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
+                apiResult.Payload = LoginResponseDTO;
+            }
+
+            return apiResult;
+        }
+
+        public string GenerateToken(LobUser fooUser)
+        {
+            var claims = new[]
+{
                     new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, fooUser.Account),
                     new Claim(ClaimTypes.Role, "User"),
                     new Claim(ClaimTypes.Role, $"Dept{fooUser.Department.Id}"),
                 };
 
-                var token = new JwtSecurityToken
-                (
-                    issuer: configuration["Tokens:ValidIssuer"],
-                    audience: configuration["Tokens:ValidAudience"],
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtExpireMinutes"])),
-                    notBefore: DateTime.UtcNow.AddMinutes(-5),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                                (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
-                            SecurityAlgorithms.HmacSha512)
-                );
-                apiResult.Status = APIResultStatus.Success;
-                apiResult.Token = new JwtSecurityTokenHandler().WriteToken(token);
+            var token = new JwtSecurityToken
+            (
+                issuer: configuration["Tokens:ValidIssuer"],
+                audience: configuration["Tokens:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(configuration["Tokens:JwtExpireMinutes"])),
+                //notBefore: DateTime.Now.AddMinutes(-5),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey
+                            (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
+                        SecurityAlgorithms.HmacSha512)
+            );
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-                var claimsRefresh = new[]
+            return tokenString;
+
+        }
+
+        public string GenerateRefreshToken(LobUser fooUser)
+        {
+            var claims = new[]
 {
                     new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, fooUser.Account),
                     new Claim(ClaimTypes.Role, "User"),
-                    new Claim(ClaimTypes.Role, "RefreshToken"),
+                    new Claim(ClaimTypes.Role, $"RefreshToken"),
                 };
 
-                var tokenRefresh = new JwtSecurityToken
-                (
-                    issuer: configuration["Tokens:ValidIssuer"],
-                    audience: configuration["Tokens:ValidAudience"],
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])).AddDays(3),
-                    notBefore: DateTime.UtcNow.AddMinutes(-5),
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                                (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
-                            SecurityAlgorithms.HmacSha512)
-                );
+            var token = new JwtSecurityToken
+            (
+                issuer: configuration["Tokens:ValidIssuer"],
+                audience: configuration["Tokens:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])),
+                //notBefore: DateTime.Now.AddMinutes(-5),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey
+                            (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
+                        SecurityAlgorithms.HmacSha512)
+            );
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-                LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
-                    apiResult.Token, new JwtSecurityTokenHandler().WriteToken(tokenRefresh),
-                    configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
-                apiResult.Payload = LoginResponseDTO;
-            }
+            return tokenString;
 
-            return apiResult;
         }
     }
 }

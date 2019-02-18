@@ -9,6 +9,7 @@ namespace LOBApp.ViewModels
     using System.ComponentModel;
     using LOBApp.DTOs;
     using LOBApp.Helpers.ManagerHelps;
+    using LOBApp.Models;
     using LOBApp.Services;
     using Prism.Events;
     using Prism.Navigation;
@@ -23,14 +24,17 @@ namespace LOBApp.ViewModels
         private readonly IPageDialogService dialogService;
         private readonly LoginManager loginManager;
         private readonly SystemStatusManager systemStatusManager;
+        private readonly AppStatus appStatus;
 
         public LoginPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            LoginManager loginManager, SystemStatusManager systemStatusManager)
+            LoginManager loginManager, SystemStatusManager systemStatusManager,
+            AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
             this.loginManager = loginManager;
             this.systemStatusManager = systemStatusManager;
+            this.appStatus = appStatus;
             LoginCommand = new DelegateCommand(async() =>
             {
                 LoginRequestDTO loginRequestDTO = new LoginRequestDTO()
@@ -39,7 +43,7 @@ namespace LOBApp.ViewModels
                     Password = Password,
                 };
                 var fooResult = await LoginUpdateTokenHelper.UserLoginAsync(dialogService, loginManager, systemStatusManager,
-                    loginRequestDTO);
+                    loginRequestDTO, appStatus);
                 if (fooResult == false)
                     return;
 
