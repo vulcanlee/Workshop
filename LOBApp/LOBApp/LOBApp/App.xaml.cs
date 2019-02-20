@@ -7,6 +7,8 @@ using Xamarin.Forms.Xaml;
 using LOBApp.Services;
 using LOBApp.Helpers.ManagerHelps;
 using LOBApp.Models;
+using System;
+using LOBApp.DTOs;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace LOBApp
@@ -26,8 +28,14 @@ namespace LOBApp
         {
             InitializeComponent();
 
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                {
+                    var foo = 1;
+                };
+
             await NavigationService.NavigateAsync("/SplashPage");
         }
+
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {

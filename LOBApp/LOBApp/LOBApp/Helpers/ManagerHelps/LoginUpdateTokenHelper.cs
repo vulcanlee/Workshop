@@ -16,12 +16,15 @@ namespace LOBApp.Helpers.ManagerHelps
             AppStatus appStatus)
         {
             var fooResult = await loginManager.PostAsync(loginRequestDTO);
-            if (fooResult.Status != APIResultStatus.Success)
+            if (fooResult.Status != true)
             {
                 await dialogService.DisplayAlertAsync("發生錯誤", fooResult.Message, "確定");
                 return false;
             }
 
+            systemStatusManager.Items.UserID = loginManager.Items.Id;
+            systemStatusManager.Items.Account = loginManager.Items.Account;
+            systemStatusManager.Items.Department = loginManager.Items.Department;
             systemStatusManager.Items.IsLogin = true;
             systemStatusManager.Items.LoginedTime = DateTime.Now;
             systemStatusManager.Items.Token = loginManager.Items.Token;

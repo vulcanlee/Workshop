@@ -25,7 +25,7 @@ namespace LOBApp.Helpers.ManagerHelps
             {
                 #region Token 已經失效了，需要更新
                 var fooResult = await refreshTokenManager.GetAsync();
-                if (fooResult.Status != APIResultStatus.Success)
+                if (fooResult.Status != true)
                 {
                     await dialogService.DisplayAlertAsync("發生錯誤", fooResult.Message, "確定");
                     return false;

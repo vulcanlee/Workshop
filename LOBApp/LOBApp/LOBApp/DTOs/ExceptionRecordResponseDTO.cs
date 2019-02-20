@@ -8,7 +8,6 @@ namespace LOBApp.DTOs
     public class ExceptionRecordResponseDTO
     {
         public int Id { get; set; }
-        public virtual UserDTO User { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string OSType { get; set; }

@@ -63,18 +63,18 @@ namespace LOBCore.Controllers
             var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Account == loginRequestDTO.Account && x.Password == loginRequestDTO.Password);
             if (fooUser != null)
             {
-                apiResult.Status = APIResultStatus.Success;
-                apiResult.Token = GenerateToken(fooUser);
+                apiResult.Status = true;
+                string token = GenerateToken(fooUser);
                 string refreshToken = GenerateRefreshToken(fooUser);
 
                 LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
-                    apiResult.Token, refreshToken,
+                    token, refreshToken,
                     configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
                 apiResult.Payload = LoginResponseDTO;
             }
             else
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = "帳號或密碼不正確";
             }
 
@@ -90,18 +90,18 @@ namespace LOBCore.Controllers
             var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = "沒有發現指定的該使用者資料";
                 return apiResult;
             }
             else
             {
-                apiResult.Status = APIResultStatus.Success;
-                apiResult.Token = GenerateToken(fooUser);
+                apiResult.Status = true;
+                string token = GenerateToken(fooUser);
                 string refreshToken = GenerateRefreshToken(fooUser);
 
                 LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
-                    apiResult.Token, refreshToken,
+                    token, refreshToken,
                     configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
                 apiResult.Payload = LoginResponseDTO;
             }

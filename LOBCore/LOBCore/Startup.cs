@@ -70,7 +70,7 @@ namespace LOBCore
                          {
                              APIResult foo = new APIResult()
                              {
-                                 Status = APIResultStatus.TokenFailure,
+                                 Status = false,
                                  Message = context.Exception.Message
                              };
                              context.Response.ContentType = "application/json";

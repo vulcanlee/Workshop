@@ -40,9 +40,8 @@ namespace LOBCore.Controllers
 
             var fooReslut = new APIResult()
             {
-                Status = APIResultStatus.Success,
+                Status = true,
                 Message = "",
-                Token = "",
                 Payload = lobDatabaseContext.LobUsers
             };
             return fooReslut;

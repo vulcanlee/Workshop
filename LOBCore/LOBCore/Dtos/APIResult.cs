@@ -5,12 +5,6 @@ using System.Threading.Tasks;
 
 namespace LOBCore.DTOs
 {
-    public enum APIResultStatus
-    {
-        Success,
-        Failure,
-        TokenFailure
-    }
     /// <summary>
     /// 呼叫 API 回傳的制式格式
     /// </summary>
@@ -19,11 +13,7 @@ namespace LOBCore.DTOs
         /// <summary>
         /// 此次呼叫 API 是否成功
         /// </summary>
-        public APIResultStatus Status { get; set; } = APIResultStatus.Success;
-        /// <summary>
-        /// 存取權杖
-        /// </summary>
-        public string Token { get; set; } = "";
+        public bool Status { get; set; } = false;
         /// <summary>
         /// 呼叫 API 失敗的錯誤訊息
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using LOBApp.DTOs;
 using LOBApp.Helpers;
 using LOBApp.Helpers.WebAPIs;
+using LOBApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,19 +12,23 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class ExceptionRecordsManager : BaseWebAPI<ExceptionRecordResponseDTO>
+    public class ExceptionRecordsManager : BaseWebAPI<List<ExceptionRecordResponseDTO>>
     {
-        public ExceptionRecordsManager()
+        private readonly AppStatus appStatus;
+
+        public ExceptionRecordsManager(AppStatus appStatus)
             : base()
         {
             //資料檔案名稱 = "SampleRepository.txt";
             //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/ExceptionRecords";
             this.host = "https://lobworkshop.azurewebsites.net";
+            this.appStatus = appStatus;
         }
 
-        public async Task<APIResult> GetAsync(ExceptionRecordRequestDTO exceptionRecordRequestDTO)
+        public async Task<APIResult> GetAsync(List<ExceptionRecordRequestDTO> exceptionRecordRequestDTO)
         {
+            Token = appStatus.SystemStatus.Token;
             EncodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數

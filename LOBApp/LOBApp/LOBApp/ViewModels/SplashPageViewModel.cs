@@ -63,7 +63,7 @@ namespace LOBApp.ViewModels
                 return ;
             }
 
-            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，查詢tag資訊...", null, null, true, MaskType.Black))
+            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
                 await recordCacheHelper.RefreshAsync(fooIProgressDialog);
             }

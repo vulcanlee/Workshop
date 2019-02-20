@@ -34,7 +34,7 @@ namespace LOBCore.Middlewares
 
                 APIResult fooAPIResult = new APIResult()
                 {
-                    Status = APIResultStatus.Failure,
+                    Status = false,
                     Message = $"發生例外異常 {ex.Message}{Environment.NewLine}{ex.StackTrace}",
                 };
 

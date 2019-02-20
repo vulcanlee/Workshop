@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LOBApp.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,9 @@ namespace LOBApp.Models
 {
     public class SystemStatus
     {
+        public int UserID { get; set; }
+        public string Account { get; set; }
+        public DepartmentDTO Department { get; set; }
         public bool IsLogin { get; set; }
         public DateTime LoginedTime { get; set; }
         public string Token { get; set; }

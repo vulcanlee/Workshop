@@ -8,7 +8,7 @@ namespace LOBCore.BusinessObjects.Factories
 {
     public static class APIResultFactory
     {
-        public static APIResult Build(APIResultStatus aPIResultStatus)
+        public static APIResult Build(bool aPIResultStatus)
         {
             APIResult foo = new APIResult()
             {

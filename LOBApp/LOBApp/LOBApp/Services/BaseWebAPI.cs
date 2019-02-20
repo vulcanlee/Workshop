@@ -123,7 +123,7 @@ namespace LOBApp.Services
             //檢查網路狀態
             if (UtilityHelper.IsConnected() == false)
             {
-                mr.Status = APIResultStatus.Failure;
+                mr.Status = false;
                 mr.Message = "無網路連線可用，請檢查網路狀態";
                 return mr;
             }
@@ -204,7 +204,7 @@ namespace LOBApp.Services
                         if (response.IsSuccessStatusCode == true)
                         {
                             mr = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                            if (mr.Status == APIResultStatus.Success)
+                            if (mr.Status == true)
                             {
                                 var fooDataString = mr.Payload.ToString();
                                 Items = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
@@ -217,20 +217,20 @@ namespace LOBApp.Services
                         }
                         else
                         {
-                            mr.Status = APIResultStatus.Failure;
+                            mr.Status = false;
                             mr.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content);
                         }
                     }
                     else
                     {
-                        mr.Status = APIResultStatus.Failure;
+                        mr.Status = false;
                         mr.Message = APIInternalError;
                     }
                     #endregion
                 }
                 catch (Exception ex)
                 {
-                    mr.Status = APIResultStatus.Failure;
+                    mr.Status = false;
                     mr.Message = ex.Message;
                 }
             }
@@ -241,9 +241,8 @@ namespace LOBApp.Services
         /// <summary>
         /// 將物件資料從檔案中讀取出來
         /// </summary>
-        public virtual async Task ReadFromFileAsync(bool 需要加解密 = false)
+        public virtual async Task ReadFromFileAsync()
         {
-            需要加解密 = 資料加密處理;
             Items = (T)Activator.CreateInstance(typeof(T));
 
             string data = await StorageUtility.ReadFromDataFileAsync(this.現在資料夾名稱, this.資料檔案名稱);

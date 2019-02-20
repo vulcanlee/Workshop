@@ -45,7 +45,7 @@ namespace LOBCore.Controllers
             }
             else
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = $"系統環境資料表內沒有任何紀錄存在";
             }
 

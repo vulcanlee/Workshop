@@ -4,6 +4,9 @@ using Android.Content.PM;
 using Android.OS;
 using Prism;
 using Prism.Ioc;
+using System;
+using LOBApp.DTOs;
+using LOBApp.Services;
 
 namespace LOBApp.Droid
 {
@@ -15,6 +18,12 @@ namespace LOBApp.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                var foo = 1;
+            };
+            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
@@ -23,7 +32,18 @@ namespace LOBApp.Droid
             #endregion
             LoadApplication(new App(new AndroidInitializer()));
         }
+
+        private async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            //ExceptionRecordsManager fooExceptionRecordsManager = new ExceptionRecordsManager();
+            //await fooExceptionRecordsManager.ReadFromFileAsync();
+            //ExceptionRecordResponseDTO fooObject = new ExceptionRecordResponseDTO()
+            //{
+            //    //CallStack = e.
+            //};
+        }
     }
+
 
     public class AndroidInitializer : IPlatformInitializer
     {
