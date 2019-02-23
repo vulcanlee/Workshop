@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
 using System.IdentityModel.Tokens.Jwt;
+using LOBCore.DataTransferObject.DTOs;
 
 namespace LOBCore.Controllers
 {
@@ -31,13 +31,14 @@ namespace LOBCore.Controllers
 
         // GET: api/Suggestions
         [HttpGet]
+
         public async Task<APIResult> GetSuggestions()
         {
             UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = "沒有發現指定的該使用者資料";
                 return apiResult;
             }
@@ -54,7 +55,7 @@ namespace LOBCore.Controllers
                         Id = item.User.Id
                     },
                     Invalid = item.Invalid,
-                    OSType = item.OSType,
+                    OSType = (OSTypeDTO)Enum.Parse(typeof(OSTypeDTO), item.OSType.ToString()),
                     RegistrationTime = item.RegistrationTime,
                     Token = item.Token,
                 };
@@ -72,7 +73,7 @@ namespace LOBCore.Controllers
             if (!ModelState.IsValid)
             {
                 //return BadRequest(ModelState);
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
                 return apiResult;
             }
@@ -80,14 +81,14 @@ namespace LOBCore.Controllers
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = "沒有發現指定的該使用者資料";
                 return apiResult;
             }
 
             NotificationToken NotificationToken = new NotificationToken()
             {
-                OSType = notificationToken.OSType,
+                OSType = (OSType)Enum.Parse(typeof(OSType), notificationToken.OSType.ToString()),
                 RegistrationTime = notificationToken.RegistrationTime,
                 Token = notificationToken.Token,
                 User = fooUser,

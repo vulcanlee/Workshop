@@ -1,0 +1,27 @@
+﻿using LOBCore.BusinessObjects.Factories;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.Helpers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace LOBCore.Filters
+{
+    public class ValidateModelAttribute : ActionFilterAttribute, IActionFilter, IOrderedFilter
+    {
+        public int Order { get; set; } = 0;
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (!context.ModelState.IsValid)
+            {
+                var apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                  ErrorMessageEnum.傳送過來的資料有問題, payload:context.ModelState);
+                context.Result = new BadRequestObjectResult(apiResult);
+            }
+        }
+    }
+}

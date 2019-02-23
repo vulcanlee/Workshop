@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -19,16 +21,14 @@ namespace LOBCore.Controllers
     public class LeaveFormTypesController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
 
-        public LeaveFormTypesController(LOBDatabaseContext context, APIResult apiResult)
+        public LeaveFormTypesController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
         [HttpGet]
-        public APIResult GetLeaveFormTypes()
+        public IActionResult GetLeaveFormTypes()
         {
             List<LeaveFormTypeResponseDTO> LeaveFormTypeResponseDTO = new List<LeaveFormTypeResponseDTO>();
             foreach (var item in _context.LeaveFormTypes)
@@ -40,8 +40,9 @@ namespace LOBCore.Controllers
                 };
                 LeaveFormTypeResponseDTO.Add(fooObject);
             }
-            apiResult.Payload = LeaveFormTypeResponseDTO;
-            return apiResult;
+            APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: LeaveFormTypeResponseDTO);
+            return Ok(apiResult);
         }
     }
 }

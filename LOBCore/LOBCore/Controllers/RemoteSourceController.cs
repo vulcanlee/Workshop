@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LOBCore.DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,22 @@ namespace LOBCore.Controllers
         public string Sample()
         {
             return $"來自遠端 ASP.NET Core Web API 服務的資料";
+        }
+        [Route("DemoBadRequest")]
+        [HttpGet]
+        public IActionResult DemoBadRequest()
+        {
+            APIResult fooResult = new APIResult();
+            fooResult.Payload = new NotificationTokenResponseDTO();
+            return BadRequest(fooResult);
+        }
+        [Route("DemoUnauthorized")]
+        [HttpGet]
+        public IActionResult DemoUnauthorized()
+        {
+            APIResult fooResult = new APIResult();
+            fooResult.Payload = new NotificationTokenResponseDTO();
+            return StatusCode(StatusCodes.Status401Unauthorized, fooResult);
         }
         [Route("Source1")]
         [HttpGet]

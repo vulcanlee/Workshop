@@ -119,7 +119,7 @@ namespace LOBCore.Migrations
                     UserId = table.Column<int>(nullable: true),
                     DeviceName = table.Column<string>(nullable: true),
                     DeviceModel = table.Column<string>(nullable: true),
-                    OSType = table.Column<string>(nullable: true),
+                    OSType = table.Column<int>(nullable: false),
                     OSVersion = table.Column<string>(nullable: true),
                     Message = table.Column<string>(nullable: true),
                     CallStack = table.Column<string>(nullable: true),

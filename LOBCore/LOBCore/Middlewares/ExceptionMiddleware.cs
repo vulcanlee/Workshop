@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LOBCore.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -24,21 +25,20 @@ namespace LOBCore.Middlewares
 
             try
             {
+                var ModelState = httpContext.Features;
                 await _next(httpContext);
             }
             catch (Exception ex)
             {
                 httpContext.Response.Clear();
-                httpContext.Response.StatusCode = StatusCodes.Status200OK;
+                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 httpContext.Response.ContentType = "application/json";
 
-                APIResult fooAPIResult = new APIResult()
-                {
-                    Status = false,
-                    Message = $"發生例外異常 {ex.Message}{Environment.NewLine}{ex.StackTrace}",
-                };
+                APIResult apiResult = APIResultFactory.Build(false, StatusCodes.Status500InternalServerError,
+                    Helpers.ErrorMessageEnum.Exception,
+                    exceptionMessage:$"({ex.GetType().Name}), {ex.Message}{Environment.NewLine}{ex.StackTrace}");
 
-                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(fooAPIResult));
+                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(apiResult));
             }
         }
     }

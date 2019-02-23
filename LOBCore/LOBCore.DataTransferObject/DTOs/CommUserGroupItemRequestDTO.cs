@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.DTOs
+namespace LOBCore.DataTransferObject.DTOs
 {
-    public class DepartmentResponseDTO
+    public class CommUserGroupItemRequestDTO
     {
         public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

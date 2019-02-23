@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -19,17 +21,15 @@ namespace LOBCore.Controllers
     public class SystemEnvironmentsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
 
-        public SystemEnvironmentsController(LOBDatabaseContext context, APIResult apiResult)
+        public SystemEnvironmentsController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
         // GET: api/SystemEnvironments
         [HttpGet]
-        public async Task<APIResult> GetSystemEnvironment()
+        public async Task<IActionResult> GetSystemEnvironment()
         {
             SystemEnvironmentResponseDTO SystemEnvironmentResponseDTO = new SystemEnvironmentResponseDTO();
             var fooObject = await _context.SystemEnvironment.FirstAsync();
@@ -41,15 +41,17 @@ namespace LOBCore.Controllers
                 SystemEnvironmentResponseDTO.AndroidUrl = fooObject.AndroidUrl;
                 SystemEnvironmentResponseDTO.iOSVersion = fooObject.iOSVersion;
                 SystemEnvironmentResponseDTO.iOSUrl = fooObject.iOSUrl;
-                apiResult.Payload = SystemEnvironmentResponseDTO;
+                APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                    ErrorMessageEnum.None, payload: SystemEnvironmentResponseDTO);
+                return Ok(apiResult);
             }
             else
             {
-                apiResult.Status = false;
-                apiResult.Message = $"系統環境資料表內沒有任何紀錄存在";
+                APIResult apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有任何符合資料存在);
+                return NotFound(apiResult);
             }
 
-            return apiResult;
         }
     }
 }

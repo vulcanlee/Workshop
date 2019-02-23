@@ -1,4 +1,6 @@
-﻿using LOBCore.DTOs;
+﻿using LOBCore.DataTransferObject.DTOs;
+using LOBCore.Helpers;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +10,27 @@ namespace LOBCore.BusinessObjects.Factories
 {
     public static class APIResultFactory
     {
-        public static APIResult Build(bool aPIResultStatus)
+        public static APIResult Build(bool aPIResultStatus,
+            int statusCodes = StatusCodes.Status200OK, ErrorMessageEnum errorMessageEnum = ErrorMessageEnum.None,
+            object payload = null, string exceptionMessage = "")
         {
-            APIResult foo = new APIResult()
+            APIResult apiResult = new APIResult()
             {
-                 Status = aPIResultStatus
+                Status = aPIResultStatus,
+                ErrorCode = (int)errorMessageEnum,
+                Message = (errorMessageEnum == ErrorMessageEnum.None) ? "" : $"錯誤代碼 {(int)errorMessageEnum}, {ErrorMessageMapping.Instance.GetErrorMessage(errorMessageEnum)}",
+                HTTPStatus = statusCodes,
+                Payload = payload,
             };
-            return foo;
+            if (apiResult.ErrorCode == (int)ErrorMessageEnum.Exception)
+            {
+                apiResult.Message = $"{apiResult.Message}{exceptionMessage}";
+            }
+            else if (string.IsNullOrEmpty(exceptionMessage) == false)
+            {
+                apiResult.Message = $"{exceptionMessage}";
+            }
+            return apiResult;
         }
     }
 }

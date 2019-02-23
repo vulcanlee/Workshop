@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using LOBCore.DataAccesses;
-using LOBCore.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using LOBCore.Extensions;
 using LOBCore.DataAccesses.Entities;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.Helpers;
+using LOBCore.BusinessObjects.Factories;
 
 namespace LOBCore.Controllers
 {
@@ -25,95 +27,72 @@ namespace LOBCore.Controllers
     {
         private readonly IConfiguration configuration;
         private readonly LOBDatabaseContext context;
-        private readonly APIResult apiResult;
         int UserID;
 
-        public LoginController(IConfiguration configuration, LOBDatabaseContext context, APIResult APIResult)
+        public LoginController(IConfiguration configuration, LOBDatabaseContext context)
         {
             this.configuration = configuration;
             this.context = context;
-            apiResult = APIResult;
         }
-        //[HttpGet]
-        //public async Task<IActionResult> Get()
-        //{
-        //    var claims = new[]
-        //    {
-        //        new Claim(JwtRegisteredClaimNames.NameId, "vulcan.lee@vulcan.net"),
-        //        new Claim(ClaimTypes.Role, "Admin"),
-        //    };
-
-        //    var token = new JwtSecurityToken
-        //    (
-        //        issuer: configuration["Tokens:ValidIssuer"],
-        //        audience: configuration["Tokens:ValidAudience"],
-        //        claims: claims,
-        //        expires: DateTime.Now.AddDays(Convert.ToDouble(configuration["JwtExpireDays"])),
-        //        signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-        //        (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
-        //        SecurityAlgorithms.HmacSha512)
-        //    );
-
-        //    return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
-        //}
         [AllowAnonymous]
         [HttpPost]
-        public async Task<APIResult> Post(LoginRequestDTO loginRequestDTO)
+        public async Task<IActionResult> Post(LoginRequestDTO loginRequestDTO)
         {
             var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Account == loginRequestDTO.Account && x.Password == loginRequestDTO.Password);
-            if (fooUser != null)
+            if (fooUser == null)
             {
-                apiResult.Status = true;
+                APIResult apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                    ErrorMessageEnum.帳號或密碼不正確);
+                return BadRequest(apiResult);
+            }
+            else
+            {
                 string token = GenerateToken(fooUser);
                 string refreshToken = GenerateRefreshToken(fooUser);
 
                 LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
                     token, refreshToken,
                     configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
-                apiResult.Payload = LoginResponseDTO;
-            }
-            else
-            {
-                apiResult.Status = false;
-                apiResult.Message = "帳號或密碼不正確";
+                APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                    ErrorMessageEnum.None, payload: LoginResponseDTO);
+                return Ok(apiResult);
             }
 
-            return apiResult;
         }
 
         [Authorize(Roles = "RefreshToken")]
         [Route("RefreshToken")]
         [HttpGet]
-        public async Task<APIResult> RefreshToken()
+        public async Task<IActionResult> RefreshToken()
         {
             UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                APIResult apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                    ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
             }
             else
             {
-                apiResult.Status = true;
                 string token = GenerateToken(fooUser);
                 string refreshToken = GenerateRefreshToken(fooUser);
 
                 LoginResponseDTO LoginResponseDTO = fooUser.ToLoginResponseDTO(
                     token, refreshToken,
                     configuration["Tokens:JwtExpireMinutes"], configuration["Tokens:JwtRefreshExpireDays"]);
-                apiResult.Payload = LoginResponseDTO;
+                APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                    ErrorMessageEnum.None, payload: LoginResponseDTO);
+                return Ok(apiResult);
             }
 
-            return apiResult;
         }
 
         public string GenerateToken(LobUser fooUser)
         {
             var claims = new[]
 {
-                    new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
+                    //new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, fooUser.Account),
                     new Claim(ClaimTypes.Role, "User"),
                     new Claim(ClaimTypes.Role, $"Dept{fooUser.Department.Id}"),

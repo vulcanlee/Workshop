@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -19,15 +21,13 @@ namespace LOBCore.Controllers
     public class CommUserGroupsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
 
-        public CommUserGroupsController(LOBDatabaseContext context, APIResult apiResult)
+        public CommUserGroupsController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
-        public async Task<APIResult> GetCommUserGroups()
+        public async Task<IActionResult> GetCommUserGroups()
         {
             List<CommUserGroupResponseDTO> CommUserGroupResponseDTO = new List<CommUserGroupResponseDTO>();
             foreach (var item in await _context.CommUserGroups.ToListAsync())
@@ -39,8 +39,9 @@ namespace LOBCore.Controllers
                 };
                 CommUserGroupResponseDTO.Add(fooObject);
             }
-            apiResult.Payload = CommUserGroupResponseDTO;
-            return apiResult;
+            APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: CommUserGroupResponseDTO);
+            return Ok(apiResult);
         }
     }
 }

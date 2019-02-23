@@ -1,4 +1,4 @@
-﻿namespace LOBCore.DTOs
+﻿namespace LOBCore.DataTransferObject.DTOs
 {
     public class DepartmentDTO
     {

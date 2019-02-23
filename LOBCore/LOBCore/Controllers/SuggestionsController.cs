@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
-using LOBCore.DTOs;
 using System.IdentityModel.Tokens.Jwt;
+using LOBCore.DataTransferObject.DTOs;
 
 namespace LOBCore.Controllers
 {
@@ -34,7 +34,7 @@ namespace LOBCore.Controllers
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = "沒有發現指定的該使用者資料";
                 return apiResult;
             }
@@ -67,14 +67,14 @@ namespace LOBCore.Controllers
             UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
             if (!ModelState.IsValid)
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
                 return apiResult;
             }
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = APIResultStatus.Failure;
+                apiResult.Status = false;
                 apiResult.Message = "沒有發現指定的該使用者資料";
                 return apiResult;
             }

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LOBCore.DTOs
+namespace LOBCore.DataTransferObject.DTOs
 {
-    public class ExceptionRecordRequestDTO
+    public class ExceptionRecordResponseDTO
     {
         public int Id { get; set; }
-        public virtual UserDTO User { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
-        public string OSType { get; set; }
+        public OSTypeDTO OSType { get; set; }
         public string OSVersion { get; set; }
         public string Message { get; set; }
         public string CallStack { get; set; }

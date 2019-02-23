@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.Helpers;
+using LOBCore.BusinessObjects.Factories;
 
 namespace LOBCore.Controllers
 {
@@ -19,16 +21,14 @@ namespace LOBCore.Controllers
     public class DepartmentsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
 
-        public DepartmentsController(LOBDatabaseContext context, APIResult apiResult)
+        public DepartmentsController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
         [HttpGet]
-        public APIResult GetDepartments()
+        public IActionResult GetDepartments()
         {
             List<DepartmentResponseDTO> DepartmentResponseDTO = new List<DepartmentResponseDTO>();
             foreach (var item in _context.Departments)
@@ -40,8 +40,9 @@ namespace LOBCore.Controllers
                 };
                 DepartmentResponseDTO.Add(fooObject);
             }
-            apiResult.Payload = DepartmentResponseDTO;
-            return apiResult;
+            APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: DepartmentResponseDTO);
+            return Ok(apiResult);
         }
 
     }

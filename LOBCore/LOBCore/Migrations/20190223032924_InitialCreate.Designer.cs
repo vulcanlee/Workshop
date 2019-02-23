@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LOBCore.Migrations
 {
     [DbContext(typeof(LOBDatabaseContext))]
-    [Migration("20190212074448_InitialCreate")]
+    [Migration("20190223032924_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace LOBCore.Migrations
 
                     b.Property<string>("Message");
 
-                    b.Property<string>("OSType");
+                    b.Property<int>("OSType");
 
                     b.Property<string>("OSVersion");
 

@@ -1,5 +1,5 @@
 ﻿using LOBCore.DataAccesses.Entities;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

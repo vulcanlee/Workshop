@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LOBCore.DataAccesses;
-using LOBCore.DTOs;
 using LOBCore.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +20,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
 
 namespace LOBCore
 {
@@ -61,28 +62,28 @@ namespace LOBCore
                      {
                          return Task.CompletedTask;
                      },
-                     OnAuthenticationFailed = async context =>
+                     OnAuthenticationFailed = context =>
                      {
                          context.NoResult();
-
-                         //if (context.Exception is SecurityTokenExpiredException)
                          if (context.Exception != null)
                          {
-                             APIResult foo = new APIResult()
+                             APIResult apiResult;
+                             if (context.Exception is SecurityTokenExpiredException)
                              {
-                                 Status = false,
-                                 Message = context.Exception.Message
-                             };
+                                 apiResult = APIResultFactory.Build(false, StatusCodes.Status401Unauthorized,
+                                  Helpers.ErrorMessageEnum.SecurityTokenExpiredException);
+                             }
+                             else
+                             {
+                                 apiResult = APIResultFactory.Build(false, StatusCodes.Status401Unauthorized,
+                                  Helpers.ErrorMessageEnum.Exception,
+                                  exceptionMessage: $"({context.Exception.GetType().Name}), {context.Exception.Message}");
+                             }
+                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                              context.Response.ContentType = "application/json";
-                             //context.Response.StatusCode = StatusCodes.Status402PaymentRequired;
-                             await context.Response.WriteAsync(JsonConvert.SerializeObject(foo));
+                             context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult)).Wait();
                          }
-
-                         //context.NoResult();
-                         //context.Response.StatusCode = 500;
-                         //context.Response.ContentType = "text/plain";
-                         //context.Response.WriteAsync(c.Exception.ToString()).Wait();
-                         //return Task.CompletedTask;
+                         return Task.CompletedTask;
                      },
                      OnTokenValidated = context =>
                      {
@@ -99,7 +100,9 @@ namespace LOBCore
                 options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection"));
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(config=>
+            {
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

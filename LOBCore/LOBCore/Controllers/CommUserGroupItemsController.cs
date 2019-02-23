@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -19,22 +21,13 @@ namespace LOBCore.Controllers
     public class CommUserGroupItemsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
 
-        public CommUserGroupItemsController(LOBDatabaseContext context, APIResult apiResult)
+        public CommUserGroupItemsController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
-        // GET: api/CommUserGroupItems
-        [HttpGet]
-        //public IEnumerable<CommUserGroupItem> GetCommUserGroupItems()
-        //{
-        //    return _context.CommUserGroupItems;
-        //}
-
-        public async Task<APIResult> GetCommUserGroupItems(CommUserGroupItemRequestDTO CommUserGroupItemRequestDTO)
+        public async Task<IActionResult> GetCommUserGroupItems(CommUserGroupItemRequestDTO CommUserGroupItemRequestDTO)
         {
             List<CommUserGroupItemResponseDTO> CommUserGroupItemResponseDTO = new List<CommUserGroupItemResponseDTO>();
             foreach (var item in await _context.CommUserGroupItems.Include(x => x.CommUserGroup).Where(x => x.CommUserGroup.Id == CommUserGroupItemRequestDTO.Id).ToListAsync())
@@ -49,8 +42,9 @@ namespace LOBCore.Controllers
                 };
                 CommUserGroupItemResponseDTO.Add(fooObject);
             }
-            apiResult.Payload = CommUserGroupItemResponseDTO;
-            return apiResult;
+            APIResult apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: CommUserGroupItemResponseDTO);
+            return Ok(apiResult);
         }
     }
 }

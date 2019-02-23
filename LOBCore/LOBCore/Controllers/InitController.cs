@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
-using LOBCore.DTOs;
+using LOBCore.DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

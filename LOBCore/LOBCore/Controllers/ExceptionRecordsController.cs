@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
-using LOBCore.DTOs;
 using System.IdentityModel.Tokens.Jwt;
+using LOBCore.DataTransferObject.DTOs;
 
 namespace LOBCore.Controllers
 {
@@ -56,7 +56,7 @@ namespace LOBCore.Controllers
                     DeviceName = item.DeviceName,
                     ExceptionTime = item.ExceptionTime,
                     Message = item.Message,
-                    OSType = item.OSType,
+                    OSType = (OSTypeDTO)Enum.Parse(typeof(OSTypeDTO), item.OSType.ToString()),
                     OSVersion = item.OSVersion,
                 };
                 fooObject.Add(fooNode);
@@ -90,7 +90,7 @@ namespace LOBCore.Controllers
                         DeviceName = item.DeviceName,
                         ExceptionTime = item.ExceptionTime,
                         Message = item.Message,
-                        OSType = item.OSType,
+                        OSType = (OSType)Enum.Parse(typeof(OSType), item.OSType.ToString()),
                         OSVersion = item.OSVersion,
                     };
                     _context.ExceptionRecords.Add(fooExceptionRecordObject);

@@ -79,7 +79,7 @@ namespace LOBCore.Migrations
 
                     b.Property<string>("Message");
 
-                    b.Property<string>("OSType");
+                    b.Property<int>("OSType");
 
                     b.Property<string>("OSVersion");
 
