@@ -12,7 +12,7 @@ namespace LOBCore.BusinessObjects.Factories
     {
         public static APIResult Build(bool aPIResultStatus,
             int statusCodes = StatusCodes.Status200OK, ErrorMessageEnum errorMessageEnum = ErrorMessageEnum.None,
-            object payload = null, string exceptionMessage = "")
+            object payload = null, string exceptionMessage = "", bool replaceExceptionMessage = true)
         {
             APIResult apiResult = new APIResult()
             {
@@ -28,7 +28,14 @@ namespace LOBCore.BusinessObjects.Factories
             }
             else if (string.IsNullOrEmpty(exceptionMessage) == false)
             {
-                apiResult.Message = $"{exceptionMessage}";
+                if (replaceExceptionMessage == true)
+                {
+                    apiResult.Message = $"{exceptionMessage}";
+                }
+                else
+                {
+                    apiResult.Message += $"{exceptionMessage}";
+                }
             }
             return apiResult;
         }

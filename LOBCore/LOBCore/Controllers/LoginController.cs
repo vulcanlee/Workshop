@@ -92,7 +92,7 @@ namespace LOBCore.Controllers
         {
             var claims = new[]
 {
-                    //new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sid, fooUser.Id.ToString()),
                     new Claim(ClaimTypes.Name, fooUser.Account),
                     new Claim(ClaimTypes.Role, "User"),
                     new Claim(ClaimTypes.Role, $"Dept{fooUser.Department.Id}"),

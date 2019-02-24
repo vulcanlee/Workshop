@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>c0d839ca-b06b-4310-ac4a-907200c217cc</UserSecretsId>
   </PropertyGroup>
 
@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" PrivateAssets="All" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>

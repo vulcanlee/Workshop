@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using LOBCore.DataTransferObject.DTOs;
 using LOBCore.BusinessObjects.Factories;
 using Microsoft.Extensions.DependencyInjection;
+using LOBCore.Filters;
 
 namespace LOBCore
 {
@@ -103,19 +104,13 @@ namespace LOBCore
 
             services.AddMvc(config =>
             {
-                //var aa = config.Filters.ToList();
+                config.Filters.Add<ValidateModelAttribute>();
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //.ConfigureApiBehaviorOptions(options =>
-            //{
-            //    options.SuppressConsumesConstraintForFormFileParameters = true;
-            //    options.SuppressInferBindingSourcesForParameters = true;
-            //    options.SuppressModelStateInvalidFilter = true;
-            //    options.SuppressMapClientErrors = true;
-
-            //    options.ClientErrorMapping[404].Link =
-            //        "https://httpstatuses.com/404";
-            //});
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
