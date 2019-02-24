@@ -115,8 +115,8 @@ namespace LOBCore.Controllers
         }
 
         // PUT: api/LeaveForms/5
-        [HttpPut]
-        public async Task<IActionResult> PutLeaveForm([FromBody] LeaveFormRequestDTO leaveForm)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutLeaveForm([FromRoute] int id, [FromBody] LeaveFormRequestDTO leaveForm)
         {
             var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
             if (claimSID == null)
@@ -138,6 +138,13 @@ namespace LOBCore.Controllers
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
                  ErrorMessageEnum.傳送過來的資料有問題, exceptionMessage: $"傳送過來的資料有問題 {ModelState}");
+                return BadRequest(apiResult);
+            }
+
+            if (leaveForm.id != id)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.紀錄更新所指定ID不一致);
                 return BadRequest(apiResult);
             }
 
