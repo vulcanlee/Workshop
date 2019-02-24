@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using LOBCore.DataTransferObject.DTOs;
 using LOBCore.BusinessObjects.Factories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LOBCore
 {
@@ -100,9 +101,21 @@ namespace LOBCore
                 options.UseSqlite(Configuration.GetConnectionString("MyDatabaseConnection"));
             });
 
-            services.AddMvc(config=>
+            services.AddMvc(config =>
             {
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                //var aa = config.Filters.ToList();
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //.ConfigureApiBehaviorOptions(options =>
+            //{
+            //    options.SuppressConsumesConstraintForFormFileParameters = true;
+            //    options.SuppressInferBindingSourcesForParameters = true;
+            //    options.SuppressModelStateInvalidFilter = true;
+            //    options.SuppressMapClientErrors = true;
+
+            //    options.ClientErrorMapping[404].Link =
+            //        "https://httpstatuses.com/404";
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

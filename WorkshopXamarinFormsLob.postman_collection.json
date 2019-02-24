@@ -1,0 +1,938 @@
+{
+	"info": {
+		"_postman_id": "ec390350-3fd6-47e4-a1e9-f92880b57326",
+		"name": "WorkshopXamarinFormsLob",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "系統",
+			"item": [
+				{
+					"name": "Init",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Init",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Init"
+							]
+						},
+						"description": "資料庫相關紀錄重新初始化"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "使用者",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"account\": \"user1\",\r\n  \"password\": \"password1\"\r\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/Login",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login/RefreshToken",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NTA5MjMxMTUsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.fVzH4ZO1Y_slL0zKGFHMqu9v7a0WmMXa3UWNcyacnGbXEJbbcQw15qM9nZtgQCyXqqRa6rfmKOFq6n4l_SQe9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Login/RefreshToken",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Login",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "查詢相關",
+			"item": [
+				{
+					"name": "Departments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Departments",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Departments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemEnvironment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/SystemEnvironments",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"SystemEnvironments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CommUserGroups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/CommUserGroups",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"CommUserGroups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CommUserGroupItems",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/CommUserGroupItems",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"CommUserGroupItems"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LeaveFormTypes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveFormTypes",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveFormTypes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "請假單",
+			"item": [
+				{
+					"name": "LeaveForms 列出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveForms",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LeaveForm 刪除",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveForms/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForms",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LeaveForm 查詢",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveForms/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForms",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LeaveForms 新增",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"id\":0,\r\n   \"beginTime\":\"2019-01-01T00:00:00\",\r\n   \"endTime\":\"2020-01-01T00:00:00\",\r\n   \"totalHours\":8,\r\n   \"leaveFormType\":{\r\n      \"id\":2\r\n   },\r\n   \"description\":\"中樂透頭獎，請事假一年\"\r\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveForms",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LeaveForms 修改",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"id\": 1,\n            \"user\": {\n                \"id\": 1,\n                \"department\": {\n                    \"id\": 1\n                }\n            },\n            \"beginTime\": \"2019-01-01T00:00:00\",\n            \"endTime\": \"2020-01-01T00:00:00\",\n            \"totalHours\": 8,\n            \"leaveFormType\": {\n                \"id\": 2\n            },\n            \"description\": \"XXX中樂透頭獎，請事假一年\"\n        }\n"
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveForms",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForms"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "建議與例外異常",
+			"item": [
+				{
+					"name": "Suggestions 列出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Suggestions",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Suggestions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suggestions 新增",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"user\": {\r\n  \"id\": 1,\r\n  \"department\": {\r\n  \"id\": 1\r\n}\r\n},\r\n  \"submitTime\": \"2019-01-22T00:00:00\",\r\n  \"subject\": \"經常發生問題\",\r\n  \"message\": \"執行速度很慢\"\r\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/Suggestions",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Suggestions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "推播權杖",
+			"item": [
+				{
+					"name": "NotificationTokens 新增",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n  \"id\": 0,\r\n  \"token\": \"... Token Channel ...\",\r\n  \"user\": {\r\n  \"id\": 0,\r\n  \"department\": {\r\n  \"id\": 0\r\n}\r\n},\r\n  \"osType\": 0,\r\n  \"registrationTime\": \"2019-01-18T00:00:00\",\r\n  \"invalid\": false\r\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/NotificationTokens",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"NotificationTokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NotificationTokens 列出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/NotificationTokens",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"NotificationTokens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "練習用",
+			"item": [
+				{
+					"name": "{{Host}}/api/RemoteSource/Source2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/DemoBadRequest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/DemoBadRequest",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"DemoBadRequest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/DemoUnauthorized",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/DemoUnauthorized",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"DemoUnauthorized"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{Host}}/api/RemoteSource/Source1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source1"
+							]
+						},
+						"description": "取得原端資料1 (延遲 1 秒)"
+					},
+					"response": []
+				},
+				{
+					"name": "{{Host}}/api/RemoteSource/Source3",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{Host}}/api/RemoteSource/Source4",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source4",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "JWTToken 練習用",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiJ1c2VyMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJ1c2VyMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJVc2VyIiwiRGVwdDEiXSwiZXhwIjoxNTUyMjg3MDg1LCJpc3MiOiJYYW1hcmluRm9ybXNXUy52dWxjYW4ubmV0IiwiYXVkIjoiWGFtYXJpbi5Gb3JtcyBBcHAifQ.K2dxH5qtVPt7HoJTw7FXReXaZsdErc58EkNm2csem3q9C2Zou4uVtjJ9S3ezfqjhECphxPyRuTqet_MgRR5GvQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/JWTToken",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"JWTToken"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "cf769e05-fce8-4566-92a2-625c8305f605",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "7a761198-3bf9-4548-b7f5-765932abaf64",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "45ecc545-62d9-46e3-b37b-85b4ce801eb3",
+			"key": "Host",
+			"value": "https://localhost:5001",
+			"type": "string"
+		},
+		{
+			"id": "5aae78ab-4c5b-4228-9830-4251b3434174",
+			"key": "Host",
+			"value": "https://lobworkshop.azurewebsites.net",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "0b16bfbd-001a-4150-8c14-77182ebe2f6b",
+			"key": "Token",
+			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
+			"type": "string"
+		},
+		{
+			"id": "cce64989-eef3-464e-8ebc-b413b5c30ce5",
+			"key": "RefreshToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
