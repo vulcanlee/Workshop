@@ -10,6 +10,8 @@ using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -20,32 +22,37 @@ namespace LOBCore.Controllers
     public class ExceptionRecordsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
+        APIResult apiResult;
         int UserID;
 
-        public ExceptionRecordsController(LOBDatabaseContext context, APIResult apiResult)
+        public ExceptionRecordsController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
         // GET: api/ExceptionRecords
         [HttpGet]
-        public async Task<APIResult> GetExceptionRecords()
+        public async Task<IActionResult> GetExceptionRecords()
         {
-            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
+            }
+            UserID = Convert.ToInt32(claimSID);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
             }
 
-            List<ExceptionRecordResponseDTO> ExceptionRecordResponseDTO = new List<ExceptionRecordResponseDTO>();
             var fooList = await _context.ExceptionRecords.Include(x => x.User)
                 .Where(x => x.User.Id == fooUser.Id).OrderByDescending(x => x.ExceptionTime).Take(100).ToListAsync();
-            List<ExceptionRecordResponseDTO> fooObject = new List<ExceptionRecordResponseDTO>();
+            List<ExceptionRecordResponseDTO> ExceptionRecordResponseDTOs = new List<ExceptionRecordResponseDTO>();
             foreach (var item in fooList)
             {
                 ExceptionRecordResponseDTO fooNode = new ExceptionRecordResponseDTO()
@@ -59,69 +66,68 @@ namespace LOBCore.Controllers
                     OSType = (OSTypeDTO)Enum.Parse(typeof(OSTypeDTO), item.OSType.ToString()),
                     OSVersion = item.OSVersion,
                 };
-                fooObject.Add(fooNode);
+                ExceptionRecordResponseDTOs.Add(fooNode);
             }
-            apiResult.Payload = fooObject;
-            return apiResult;
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: ExceptionRecordResponseDTOs);
+            return Ok(apiResult);
         }
 
         // POST: api/ExceptionRecords
         [HttpPost]
-        public async Task<APIResult> PostExceptionRecord([FromBody] List<ExceptionRecordRequestDTO> exceptionRecords)
+        public async Task<IActionResult> PostExceptionRecord([FromBody] List<ExceptionRecordRequestDTO> exceptionRecords)
         {
-            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
-            if (!ModelState.IsValid)
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
             {
-                //return BadRequest(ModelState);
-                apiResult.Status = false;
-                apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
             }
+            UserID = Convert.ToInt32(claimSID);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser != null)
+            if (fooUser == null)
             {
-                foreach (var item in exceptionRecords)
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
+            }
+
+            foreach (var item in exceptionRecords)
+            {
+                ExceptionRecord fooExceptionRecordObject = new ExceptionRecord()
                 {
-                    ExceptionRecord fooExceptionRecordObject = new ExceptionRecord()
-                    {
-                        User = fooUser,
-                        CallStack = item.CallStack,
-                        DeviceModel = item.DeviceModel,
-                        DeviceName = item.DeviceName,
-                        ExceptionTime = item.ExceptionTime,
-                        Message = item.Message,
-                        OSType = (OSType)Enum.Parse(typeof(OSType), item.OSType.ToString()),
-                        OSVersion = item.OSVersion,
-                    };
-                    _context.ExceptionRecords.Add(fooExceptionRecordObject);
-                }
-
-                await _context.SaveChangesAsync();
-                List<ExceptionRecordResponseDTO> fooObject = new List<ExceptionRecordResponseDTO>();
-                //foreach (var item in exceptionRecords)
-                //{
-                //    var foo = new ExceptionRecordResponseDTO()
-                //    {
-                //        CallStack = item.CallStack,
-                //        DeviceModel = item.DeviceModel,
-                //        DeviceName = item.DeviceName,
-                //        ExceptionTime = item.ExceptionTime,
-                //        Message = item.Message,
-                //        OSType = item.OSType,
-                //        OSVersion = item.OSVersion,
-                //    };
-                //    fooObject.Add(foo);
-                //}
-                apiResult.Payload = fooObject;
+                    User = fooUser,
+                    CallStack = item.CallStack,
+                    DeviceModel = item.DeviceModel,
+                    DeviceName = item.DeviceName,
+                    ExceptionTime = item.ExceptionTime,
+                    Message = item.Message,
+                    OSType = (OSType)Enum.Parse(typeof(OSType), item.OSType.ToString()),
+                    OSVersion = item.OSVersion,
+                };
+                _context.ExceptionRecords.Add(fooExceptionRecordObject);
             }
-            else
+
+            await _context.SaveChangesAsync();
+            List<ExceptionRecordResponseDTO> ExceptionRecordResponseDTOs = new List<ExceptionRecordResponseDTO>();
+            foreach (var item in exceptionRecords)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                var foo = new ExceptionRecordResponseDTO()
+                {
+                    CallStack = item.CallStack,
+                    DeviceModel = item.DeviceModel,
+                    DeviceName = item.DeviceName,
+                    ExceptionTime = item.ExceptionTime,
+                    Message = item.Message,
+                    OSType = item.OSType,
+                    OSVersion = item.OSVersion,
+                };
+                ExceptionRecordResponseDTOs.Add(foo);
             }
-
-            return apiResult;
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: ExceptionRecordResponseDTOs);
+            return Ok(apiResult);
         }
     }
 }

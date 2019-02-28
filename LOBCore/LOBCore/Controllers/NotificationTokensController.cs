@@ -10,6 +10,8 @@ using LOBCore.DataAccesses.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -20,29 +22,36 @@ namespace LOBCore.Controllers
     public class NotificationTokensController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
+        APIResult apiResult;
         int UserID;
 
-        public NotificationTokensController(LOBDatabaseContext context, APIResult apiResult)
+        public NotificationTokensController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
         // GET: api/Suggestions
         [HttpGet]
 
-        public async Task<APIResult> GetSuggestions()
+        public async Task<IActionResult> GetSuggestions()
         {
-            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
+            }
+            UserID = Convert.ToInt32(claimSID);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
             }
-            List<NotificationTokenResponseDTO> NotificationTokenResponseDTO = new List<NotificationTokenResponseDTO>();
+
+            List<NotificationTokenResponseDTO> NotificationTokenResponseDTOs = new List<NotificationTokenResponseDTO>();
             var fooList = await _context.NotificationTokens.Include(x => x.User)
                 .Where(x => x.User.Id == fooUser.Id).OrderByDescending(x => x.RegistrationTime).Take(100).ToListAsync();
             foreach (var item in fooList)
@@ -59,31 +68,31 @@ namespace LOBCore.Controllers
                     RegistrationTime = item.RegistrationTime,
                     Token = item.Token,
                 };
-                NotificationTokenResponseDTO.Add(fooObject);
+                NotificationTokenResponseDTOs.Add(fooObject);
             }
-            apiResult.Payload = NotificationTokenResponseDTO;
-            return apiResult;
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: NotificationTokenResponseDTOs);
+            return Ok(apiResult);
         }
 
         // POST: api/NotificationTokens
         [HttpPost]
-        public async Task<APIResult> PostNotificationToken([FromBody] NotificationTokenRequestDTO notificationToken)
+        public async Task<IActionResult> PostNotificationToken([FromBody] NotificationTokenRequestDTO notificationToken)
         {
-            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
-            if (!ModelState.IsValid)
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
             {
-                //return BadRequest(ModelState);
-                apiResult.Status = false;
-                apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
             }
-
+            UserID = Convert.ToInt32(claimSID);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
             }
 
             NotificationToken NotificationToken = new NotificationToken()
@@ -103,8 +112,9 @@ namespace LOBCore.Controllers
                 Token = notificationToken.Token,
                 User = new UserDTO() { Id = fooUser.Id },
             };
-            apiResult.Payload = NotificationTokenResponseDTO;
-            return apiResult;
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: NotificationTokenResponseDTO);
+            return Ok(apiResult);
         }
     }
 }

@@ -9,6 +9,8 @@ using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using LOBCore.DataTransferObject.DTOs;
+using LOBCore.BusinessObjects.Factories;
+using LOBCore.Helpers;
 
 namespace LOBCore.Controllers
 {
@@ -17,28 +19,35 @@ namespace LOBCore.Controllers
     public class SuggestionsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
-        private readonly APIResult apiResult;
         int UserID;
+        APIResult apiResult;
 
-        public SuggestionsController(LOBDatabaseContext context, APIResult apiResult)
+        public SuggestionsController(LOBDatabaseContext context)
         {
             _context = context;
-            this.apiResult = apiResult;
         }
 
         // GET: api/Suggestions
         [HttpGet]
-        public async Task<APIResult> GetSuggestions()
+        public async Task<IActionResult> GetSuggestions()
         {
-            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
+            }
+            UserID = Convert.ToInt32(claimSID);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
             }
-            List<SuggestionResponseDTO> SuggestionResponseDTO = new List<SuggestionResponseDTO>();
+
+            List<SuggestionResponseDTO> SuggestionResponseDTOs = new List<SuggestionResponseDTO>();
             var fooList = await _context.Suggestions.Include(x => x.User)
                 .Where(x => x.User.Id == fooUser.Id).OrderByDescending(x => x.SubmitTime).Take(100).ToListAsync();
             foreach (var item in fooList)
@@ -54,29 +63,31 @@ namespace LOBCore.Controllers
                     SubmitTime = item.SubmitTime,
                     Message = item.Message,
                 };
-                SuggestionResponseDTO.Add(fooObject);
+                SuggestionResponseDTOs.Add(fooObject);
             }
-            apiResult.Payload = SuggestionResponseDTO;
-            return apiResult;
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: SuggestionResponseDTOs);
+            return Ok(apiResult);
         }
 
         // POST: api/Suggestions
         [HttpPost]
-        public async Task<APIResult> PostSuggestion([FromBody] SuggestionRequestDTO suggestionRequestDTO)
+        public async Task<IActionResult> PostSuggestion([FromBody] SuggestionRequestDTO suggestionRequestDTO)
         {
-            UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
-            if (!ModelState.IsValid)
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = $"傳送過來的資料有問題 {ModelState}";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
             }
+            UserID = Convert.ToInt32(claimSID);
             var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {
-                apiResult.Status = false;
-                apiResult.Message = "沒有發現指定的該使用者資料";
-                return apiResult;
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
             }
 
             Suggestion fooObject = new Suggestion()
@@ -96,8 +107,9 @@ namespace LOBCore.Controllers
                 SubmitTime = fooObject.SubmitTime,
                 User = new UserDTO() { Id = fooUser.Id },
             };
-            apiResult.Payload = SuggestionResponseDTO;
-            return apiResult;
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: SuggestionResponseDTO);
+            return Ok(apiResult);
         }
     }
 }

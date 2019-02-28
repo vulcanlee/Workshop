@@ -156,6 +156,48 @@
 					"response": []
 				},
 				{
+					"name": "LeaveFormTypes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveFormTypes",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveFormTypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "SystemEnvironment",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -276,48 +318,6 @@
 							"path": [
 								"api",
 								"CommUserGroupItems"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "LeaveFormTypes",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{Host}}/api/LeaveFormTypes",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"LeaveFormTypes"
 							]
 						}
 					},
@@ -552,16 +552,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "        {\n            \"id\": 1,\n            \"user\": {\n                \"id\": 1,\n                \"department\": {\n                    \"id\": 1\n                }\n            },\n            \"beginTime\": \"2019-01-01T00:00:00\",\n            \"endTime\": \"2020-01-01T00:00:00\",\n            \"totalHours\": 8,\n            \"leaveFormType\": {\n                \"id\": 2\n            },\n            \"description\": \"XXX中樂透頭獎，請事假一年\"\n        }\n"
+							"raw": "{\n            \"id\": 3,\n            \"user\": {\n                \"id\": 1,\n                \"department\": {\n                    \"id\": 1\n                }\n            },\n            \"beginTime\": \"2019-01-01T00:00:00\",\n            \"endTime\": \"2020-01-01T00:00:00\",\n            \"totalHours\": 82,\n            \"leaveFormType\": {\n                \"id\": 2\n            },\n            \"description\": \"中樂透頭獎，請事假一年\"\n        }"
 						},
 						"url": {
-							"raw": "{{Host}}/api/LeaveForms",
+							"raw": "{{Host}}/api/LeaveForms/3",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
-								"LeaveForms"
+								"LeaveForms",
+								"3"
 							]
 						}
 					},
@@ -648,6 +649,87 @@
 							"path": [
 								"api",
 								"Suggestions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExceptionRecords 列出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecords",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecords"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExceptionRecords 新增",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n  \"id\": 0,\n  \"user\": {\n  \"id\": 1,\n  \"department\": null\n  },\n  \"deviceName\": \"Name\",\n  \"deviceModel\": \"Model\",\n  \"osType\": 0,\n  \"osVersion\": \"1.1.1.0\",\n  \"message\": \"message...\",\n  \"callStack\": \"callstack...\",\n  \"exceptionTime\": \"0001-01-01T00:00:00\"\n},\n\t{\n  \"id\": 0,\n  \"user\": {\n  \"id\": 1,\n  \"department\": null\n  },\n  \"deviceName\": \"Name\",\n  \"deviceModel\": \"Model\",\n  \"osType\": 0,\n  \"osVersion\": \"1.1.1.0\",\n  \"message\": \"message...\",\n  \"callStack\": \"callstack...\",\n  \"exceptionTime\": \"0001-01-01T00:00:00\"\n}\n]"
+						},
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecords",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecords"
 							]
 						}
 					},
@@ -949,26 +1031,26 @@
 	],
 	"variable": [
 		{
-			"id": "1bad09b7-734d-40d1-9e01-1c1aaac111c3",
+			"id": "ca9149f1-7bd0-4d69-ab44-813181318b46",
 			"key": "Host",
 			"value": "https://localhost:5001",
 			"type": "string"
 		},
 		{
-			"id": "109068a7-c463-4e59-81b3-2ebff0d5d8b0",
+			"id": "d1694931-c0ec-46a5-a595-6f2f9b081ecc",
 			"key": "Host",
 			"value": "https://lobworkshop.azurewebsites.net",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "00ebdf9b-b19f-479d-a34f-d74ede8022ea",
+			"id": "377b3476-3f81-4637-af26-138fac6998ae",
 			"key": "Token",
 			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
 			"type": "string"
 		},
 		{
-			"id": "c5776fad-d064-4223-ac9e-b248fa0da074",
+			"id": "6bfde439-cfa7-437c-9bd4-57e9fc2a5990",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"
