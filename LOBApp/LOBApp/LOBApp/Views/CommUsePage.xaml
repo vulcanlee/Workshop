@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="LOBApp.Views.CommUsePage"
+             Title="通訊群組">
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0"
+        >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Picker
+            Grid.Row="0" Grid.Column="0"
+            HorizontalOptions="Fill" VerticalOptions="Center"
+            Title="選擇通訊群組"
+            ItemsSource="{Binding CommUserItemsSource}"
+            SelectedItem="{Binding CommUserSelectedItem}"
+            ItemDisplayBinding="{Binding Name}"
+            />
+        <ListView
+            Grid.Row="1"
+            ItemsSource="{Binding CommUserItemItemsSource}"
+            HasUnevenRows="True"
+            SelectedItem="{Binding CommUserItemSelectedItem}"
+            SeparatorVisibility="None"
+            >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid
+                            RowSpacing="0" ColumnSpacing="0"
+                            >
+                            <BoxView
+                                Color="White"/>
+                            <StackLayout
+                                Spacing="0"
+                                >
+                                <Label
+                                    Text="{Binding Name}"/>
+                                <Label
+                                    Text="{Binding Mobile}"/>
+                                <Label
+                                    Text="{Binding Phone}"/>
+                                <Label
+                                    Text="{Binding Email}"/>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

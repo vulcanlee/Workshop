@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="LOBApp.Views.LeaveFormPage"
+             Title="請假單清單">
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0"
+        >
+        <ListView
+            ItemsSource="{Binding LeaveFormItemsSource}"
+            HasUnevenRows="True"
+            SelectedItem="{Binding LeaveFormSelectedItem}"
+            SeparatorVisibility="None"
+            >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid
+                            RowSpacing="0" ColumnSpacing="0"
+                            >
+                            <BoxView
+                                Color="White"/>
+                            <StackLayout
+                                Spacing="0"
+                                >
+                                <Label
+                                    Text="{Binding Description}"/>
+                                <Label
+                                    Text="{Binding TotalHours}"/>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+</ContentPage>

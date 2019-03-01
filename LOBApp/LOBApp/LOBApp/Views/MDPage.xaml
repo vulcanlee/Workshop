@@ -8,6 +8,7 @@
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">
             <StackLayout Padding="20">
+                <Button Text="首頁" Command="{Binding HomeCommand}" />
                 <Button Text="群組通訊清單" Command="{Binding UserGroupCommand}" />
                 <Button Text="請假單" Command="{Binding LeaveFormCommand}" />
                 <Button Text="登出" Command="{Binding LogoutCommand}" />

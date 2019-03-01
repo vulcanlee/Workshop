@@ -98,6 +98,13 @@ namespace LOBApp.Helpers.ManagerHelps
                 await dialogService.DisplayAlertAsync("更新部門資料中 發生錯誤", fooAPIResult.Message, "確定");
                 return false;
             }
+            progressDialog.Title = $"更新通訊群組資料中";
+            fooAPIResult = await commUserGroupsManager.GetAsync();
+            if (fooAPIResult.Status != true)
+            {
+                await dialogService.DisplayAlertAsync("更新部門資料中 發生錯誤", fooAPIResult.Message, "確定");
+                return false;
+            }
 
             return true;
         }

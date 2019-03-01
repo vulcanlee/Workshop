@@ -61,6 +61,8 @@ namespace LOBApp
             containerRegistry.RegisterForNavigation<MDPage, MDPageViewModel>();
             containerRegistry.RegisterForNavigation<NaviPage, NaviPageViewModel>();
             containerRegistry.RegisterForNavigation<HomePage, HomePageViewModel>();
+            containerRegistry.RegisterForNavigation<CommUsePage, CommUsePageViewModel>();
+            containerRegistry.RegisterForNavigation<LeaveFormPage, LeaveFormPageViewModel>();
         }
     }
 }

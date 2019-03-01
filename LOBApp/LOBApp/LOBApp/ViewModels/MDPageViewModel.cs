@@ -23,7 +23,8 @@ namespace LOBApp.ViewModels
         private readonly SystemStatusManager systemStatusManager;
         private readonly AppStatus appStatus;
 
-        public DelegateCommand UserGroupCommand { get; set; }
+         public DelegateCommand HomeCommand { get; set; }
+       public DelegateCommand UserGroupCommand { get; set; }
         public DelegateCommand LeaveFormCommand { get; set; }
         public DelegateCommand LogoutCommand { get; set; }
         public MDPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
@@ -35,13 +36,17 @@ namespace LOBApp.ViewModels
             this.loginManager = loginManager;
             this.systemStatusManager = systemStatusManager;
             this.appStatus = appStatus;
+            HomeCommand = new DelegateCommand(async () =>
+            {
+                await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
+            });
             UserGroupCommand = new DelegateCommand(async () =>
             {
-
+                await navigationService.NavigateAsync("/MDPage/NaviPage/CommUsePage");
             });
             LeaveFormCommand = new DelegateCommand(async () =>
             {
-
+                await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
             });
             LogoutCommand = new DelegateCommand(async () =>
             {
