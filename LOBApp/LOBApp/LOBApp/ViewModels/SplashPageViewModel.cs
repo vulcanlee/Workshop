@@ -60,13 +60,14 @@ namespace LOBApp.ViewModels
             if (UtilityHelper.IsConnected() == false)
             {
                 await dialogService.DisplayAlertAsync("警告", "無網路連線可用，請檢查網路狀態", "確定");
-                return ;
+                return;
             }
 
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
                 await recordCacheHelper.RefreshAsync(fooIProgressDialog);
             }
+            await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
             #endregion
         }
 

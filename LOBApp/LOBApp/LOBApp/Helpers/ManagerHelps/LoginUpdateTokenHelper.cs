@@ -38,5 +38,30 @@ namespace LOBApp.Helpers.ManagerHelps
 
             return true;
         }
+        public static async Task<bool> UserLogoutAsync(IPageDialogService dialogService,
+         LoginManager loginManager, SystemStatusManager systemStatusManager, 
+         AppStatus appStatus)
+        {
+            await systemStatusManager.ReadFromFileAsync();
+            await loginManager.ReadFromFileAsync();
+            loginManager.SingleItem = new LoginResponseDTO();
+            await loginManager.WriteToFileAsync();
+
+            systemStatusManager.SingleItem.UserID = loginManager.SingleItem.Id;
+            systemStatusManager.SingleItem.Account = loginManager.SingleItem.Account;
+            systemStatusManager.SingleItem.Department = loginManager.SingleItem.Department;
+            systemStatusManager.SingleItem.IsLogin = false;
+            systemStatusManager.SingleItem.LoginedTime = DateTime.Now;
+            systemStatusManager.SingleItem.Token = loginManager.SingleItem.Token;
+            systemStatusManager.SingleItem.RefreshToken = loginManager.SingleItem.RefreshToken;
+            systemStatusManager.SingleItem.TokenExpireMinutes = loginManager.SingleItem.TokenExpireMinutes;
+            systemStatusManager.SingleItem.RefreshTokenExpireDays = loginManager.SingleItem.RefreshTokenExpireDays;
+            systemStatusManager.SingleItem.SetExpireDatetime();
+
+            //await systemStatusManager.WriteToFileAsync();
+            await AppStatusHelper.WriteAndUpdateAppStatus(systemStatusManager, appStatus);
+
+            return true;
+        }
     }
 }

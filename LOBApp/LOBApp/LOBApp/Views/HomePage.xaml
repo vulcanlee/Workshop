@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="LOBApp.Views.HomePage"
+             Title="LOB 首頁">
+
+    <StackLayout
+        Orientation="Vertical"
+        Spacing="0"
+        Margin="20"
+        >
+        <Label
+            Text="{Binding AppName}"
+            HorizontalOptions="Center"
+            FontSize="24"
+            TextColor="#868686"
+            />
+        <StackLayout
+            Orientation="Vertical"
+            Spacing="0"
+            IsVisible="{Binding IsAndroidPlatform}"
+            Margin="0,50,0,0"
+            >
+            <Label
+                Text="Android 版本"
+                FontSize="16"
+                TextColor="#333333"
+                />
+            <Label
+                Text="{Binding AndroidVersion}"
+                FontSize="18"
+                TextColor="#333333"
+                />
+        </StackLayout>
+        <StackLayout
+            Orientation="Vertical"
+            Spacing="0"
+            IsVisible="{Binding IsiOSPlatform}"
+            >
+            <Label
+                Text="iOS 版本"
+                FontSize="16"
+                TextColor="#333333"
+                />
+            <Label
+                Text="{Binding iOSVersion}"
+                FontSize="18"
+                TextColor="#333333"
+                />
+        </StackLayout>
+    </StackLayout>
+  
+</ContentPage>

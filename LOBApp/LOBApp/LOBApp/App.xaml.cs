@@ -58,6 +58,9 @@ namespace LOBApp
             containerRegistry.RegisterForNavigation<SamplePage, SamplePageViewModel>();
             containerRegistry.RegisterForNavigation<SplashPage, SplashPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
+            containerRegistry.RegisterForNavigation<MDPage, MDPageViewModel>();
+            containerRegistry.RegisterForNavigation<NaviPage, NaviPageViewModel>();
+            containerRegistry.RegisterForNavigation<HomePage, HomePageViewModel>();
         }
     }
 }

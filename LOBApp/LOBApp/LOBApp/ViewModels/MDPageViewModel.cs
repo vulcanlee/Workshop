@@ -7,26 +7,26 @@ using System.Linq;
 namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
-    using LOBApp.DTOs;
     using LOBApp.Helpers.ManagerHelps;
     using LOBApp.Models;
     using LOBApp.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
-    public class LoginPageViewModel : INotifyPropertyChanged, INavigationAware
+    public class MDPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public string Account { get; set; }
-        public string Password { get; set; }
-        public DelegateCommand LoginCommand { get; set; }
+
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
         private readonly LoginManager loginManager;
         private readonly SystemStatusManager systemStatusManager;
         private readonly AppStatus appStatus;
 
-        public LoginPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
+        public DelegateCommand UserGroupCommand { get; set; }
+        public DelegateCommand LeaveFormCommand { get; set; }
+        public DelegateCommand LogoutCommand { get; set; }
+        public MDPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LoginManager loginManager, SystemStatusManager systemStatusManager,
             AppStatus appStatus)
         {
@@ -35,20 +35,20 @@ namespace LOBApp.ViewModels
             this.loginManager = loginManager;
             this.systemStatusManager = systemStatusManager;
             this.appStatus = appStatus;
-            LoginCommand = new DelegateCommand(async () =>
+            UserGroupCommand = new DelegateCommand(async () =>
             {
-                LoginRequestDTO loginRequestDTO = new LoginRequestDTO()
-                {
-                    Account = Account,
-                    Password = Password,
-                };
-                var fooResult = await LoginUpdateTokenHelper.UserLoginAsync(dialogService, loginManager, systemStatusManager,
-                    loginRequestDTO, appStatus);
-                if (fooResult == false)
-                    return;
 
-                //await dialogService.DisplayAlertAsync("Info", "登入成功", "OK");
-                await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
+            });
+            LeaveFormCommand = new DelegateCommand(async () =>
+            {
+
+            });
+            LogoutCommand = new DelegateCommand(async () =>
+            {
+                var fooResult = await LoginUpdateTokenHelper.UserLogoutAsync(dialogService, loginManager, systemStatusManager,
+                    appStatus);
+                if (fooResult == true)
+                    await navigationService.NavigateAsync("/LoginPage");
             });
         }
 
@@ -56,13 +56,8 @@ namespace LOBApp.ViewModels
         {
         }
 
-        public async void OnNavigatedTo(INavigationParameters parameters)
+        public void OnNavigatedTo(INavigationParameters parameters)
         {
-#if DEBUG
-            Account = "user1";
-            Password = "password1";
-#endif
-            await systemStatusManager.ReadFromFileAsync();
         }
 
         public void OnNavigatingTo(INavigationParameters parameters)
