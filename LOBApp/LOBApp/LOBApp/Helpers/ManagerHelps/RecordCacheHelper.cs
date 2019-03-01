@@ -20,11 +20,14 @@ namespace LOBApp.Helpers.ManagerHelps
         private readonly RefreshTokenManager refreshTokenManager;
         private readonly LeaveFormTypesManager leaveFormTypesManager;
         private readonly ExceptionRecordsManager exceptionRecordsManager;
+        private readonly CommUserGroupItemsManager commUserGroupItemsManager;
+        private readonly CommUserGroupsManager commUserGroupsManager;
 
         public RecordCacheHelper(IPageDialogService dialogService, DepartmentsManager departmentsManager,
             SystemEnvironmentsManager systemEnvironmentsManager,
             SystemStatusManager systemStatusManager, AppStatus appStatus, RefreshTokenManager refreshTokenManager,
-            LeaveFormTypesManager leaveFormTypesManager, ExceptionRecordsManager exceptionRecordsManager)
+            LeaveFormTypesManager leaveFormTypesManager, ExceptionRecordsManager exceptionRecordsManager,
+            CommUserGroupItemsManager commUserGroupItemsManager, CommUserGroupsManager commUserGroupsManager)
         {
             this.dialogService = dialogService;
             this.departmentsManager = departmentsManager;
@@ -34,6 +37,8 @@ namespace LOBApp.Helpers.ManagerHelps
             this.refreshTokenManager = refreshTokenManager;
             this.leaveFormTypesManager = leaveFormTypesManager;
             this.exceptionRecordsManager = exceptionRecordsManager;
+            this.commUserGroupItemsManager = commUserGroupItemsManager;
+            this.commUserGroupsManager = commUserGroupsManager;
         }
 
         public async Task<bool> RefreshAsync(IProgressDialog progressDialog)
@@ -47,27 +52,30 @@ namespace LOBApp.Helpers.ManagerHelps
             }
             progressDialog.Title = $"回報例外異常資料中";
             await exceptionRecordsManager.ReadFromFileAsync();
-            List<ExceptionRecordRequestDTO> fooExceptionRecordRequestDTOList = new List<ExceptionRecordRequestDTO>();
-            foreach (var item in exceptionRecordsManager.Items)
+            if (exceptionRecordsManager.Items.Count > 0)
             {
-                ExceptionRecordRequestDTO fooExceptionRecordRequestDTO = new ExceptionRecordRequestDTO()
+                List<ExceptionRecordRequestDTO> fooExceptionRecordRequestDTOList = new List<ExceptionRecordRequestDTO>();
+                foreach (var item in exceptionRecordsManager.Items)
                 {
-                    CallStack = item.CallStack,
-                    DeviceModel = item.DeviceModel,
-                    DeviceName = item.DeviceName,
-                    ExceptionTime = item.ExceptionTime,
-                    Message = item.Message,
-                    OSType = item.OSType,
-                    OSVersion = item.OSVersion,
-                    User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
-                };
-                fooExceptionRecordRequestDTOList.Add(fooExceptionRecordRequestDTO);
-            }
-            fooAPIResult = await exceptionRecordsManager.GetAsync(fooExceptionRecordRequestDTOList);
-            if (fooAPIResult.Status != true)
-            {
-                await dialogService.DisplayAlertAsync("回報例外異常資料中 發生錯誤", fooAPIResult.Message, "確定");
-                return false;
+                    ExceptionRecordRequestDTO fooExceptionRecordRequestDTO = new ExceptionRecordRequestDTO()
+                    {
+                        CallStack = item.CallStack,
+                        DeviceModel = item.DeviceModel,
+                        DeviceName = item.DeviceName,
+                        ExceptionTime = item.ExceptionTime,
+                        Message = item.Message,
+                        OSType = item.OSType,
+                        OSVersion = item.OSVersion,
+                        User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
+                    };
+                    fooExceptionRecordRequestDTOList.Add(fooExceptionRecordRequestDTO);
+                }
+                fooAPIResult = await exceptionRecordsManager.PostAsync(fooExceptionRecordRequestDTOList);
+                if (fooAPIResult.Status != true)
+                {
+                    await dialogService.DisplayAlertAsync("回報例外異常資料中 發生錯誤", fooAPIResult.Message, "確定");
+                    return false;
+                }
             }
             progressDialog.Title = $"更新系統最新狀態資料中";
             fooAPIResult = await systemEnvironmentsManager.GetAsync();

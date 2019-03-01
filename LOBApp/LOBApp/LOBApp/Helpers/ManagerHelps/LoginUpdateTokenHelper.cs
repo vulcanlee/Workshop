@@ -22,16 +22,16 @@ namespace LOBApp.Helpers.ManagerHelps
                 return false;
             }
 
-            systemStatusManager.Items.UserID = loginManager.Items.Id;
-            systemStatusManager.Items.Account = loginManager.Items.Account;
-            systemStatusManager.Items.Department = loginManager.Items.Department;
-            systemStatusManager.Items.IsLogin = true;
-            systemStatusManager.Items.LoginedTime = DateTime.Now;
-            systemStatusManager.Items.Token = loginManager.Items.Token;
-            systemStatusManager.Items.RefreshToken = loginManager.Items.RefreshToken;
-            systemStatusManager.Items.TokenExpireMinutes = loginManager.Items.TokenExpireMinutes;
-            systemStatusManager.Items.RefreshTokenExpireDays = loginManager.Items.RefreshTokenExpireDays;
-            systemStatusManager.Items.SetExpireDatetime();
+            systemStatusManager.SingleItem.UserID = loginManager.SingleItem.Id;
+            systemStatusManager.SingleItem.Account = loginManager.SingleItem.Account;
+            systemStatusManager.SingleItem.Department = loginManager.SingleItem.Department;
+            systemStatusManager.SingleItem.IsLogin = true;
+            systemStatusManager.SingleItem.LoginedTime = DateTime.Now;
+            systemStatusManager.SingleItem.Token = loginManager.SingleItem.Token;
+            systemStatusManager.SingleItem.RefreshToken = loginManager.SingleItem.RefreshToken;
+            systemStatusManager.SingleItem.TokenExpireMinutes = loginManager.SingleItem.TokenExpireMinutes;
+            systemStatusManager.SingleItem.RefreshTokenExpireDays = loginManager.SingleItem.RefreshTokenExpireDays;
+            systemStatusManager.SingleItem.SetExpireDatetime();
 
             //await systemStatusManager.WriteToFileAsync();
             await AppStatusHelper.WriteAndUpdateAppStatus(systemStatusManager, appStatus);

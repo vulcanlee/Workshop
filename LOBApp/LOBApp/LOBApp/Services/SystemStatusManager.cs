@@ -17,6 +17,7 @@ namespace LOBApp.Services
         public SystemStatusManager()
             : base()
         {
+            isCollection = false;
         }
     }
 }

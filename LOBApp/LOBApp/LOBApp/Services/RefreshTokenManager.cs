@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class RefreshTokenManager : BaseWebAPI<LoginResponseDTO>
+    public class RefreshTokenManager : CRUDBaseWebAPI<LoginResponseDTO>
     {
         private readonly AppStatus appStatus;
 
@@ -24,12 +24,14 @@ namespace LOBApp.Services
             this.url = "/api/Login/RefreshToken";
             this.host = "https://lobworkshop.azurewebsites.net";
             this.appStatus = appStatus;
+            isCollection = false;
         }
 
         public async Task<APIResult> GetAsync()
         {
-            Token = appStatus.SystemStatus.RefreshToken;
-            EncodingType = EnctypeMethod.JSON;
+            token = appStatus.SystemStatus.RefreshToken;
+            encodingType = EnctypeMethod.JSON;
+            needSave = true;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -42,7 +44,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            var mr = await this.GetAsync(dic, CancellationToken.None);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

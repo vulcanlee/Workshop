@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class DepartmentsManager : BaseWebAPI<List<DepartmentResponseDTO>>
+    public class DepartmentsManager : CRUDBaseWebAPI<DepartmentResponseDTO>
     {
         private readonly AppStatus appStatus;
 
@@ -26,10 +26,11 @@ namespace LOBApp.Services
             this.appStatus = appStatus;
         }
 
-        public async Task<APIResult> GetAsync()
+        public async Task<APIResult> GetAsync(CancellationToken ctoken = default(CancellationToken))
         {
-            Token = appStatus.SystemStatus.Token;
-            EncodingType = EnctypeMethod.JSON;
+            token = appStatus.SystemStatus.Token;
+            encodingType = EnctypeMethod.JSON;
+            needSave = true;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -42,7 +43,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(exceptionRecordRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            var mr = await this.GetAsync(dic, ctoken);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

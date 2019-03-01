@@ -31,9 +31,12 @@ namespace LOBApp.Services
         /// <summary>
         /// WebAPI方法網址
         /// </summary>
-        public string url { get; set; }
-        public EnctypeMethod EncodingType { get; set; }
-        public string Token { get; set; } = "";
+        public string url = "";
+        public EnctypeMethod encodingType;
+        public string token ="";
+        public string routeUrl = "";
+        public bool needSave = false;
+        public bool isCollection = true;
         /// <summary>
         /// 資料夾名稱
         /// </summary>
@@ -65,7 +68,8 @@ namespace LOBApp.Services
         /// <summary>
         /// 透過Http取得的資料，也許是一個物件，也許是List
         /// </summary>
-        public T Items { get; set; }
+        public List<T> Items { get; set; }
+        public T SingleItem { get; set; }
         /// <summary>
         /// 此次呼叫的處理結果
         /// </summary>
@@ -83,7 +87,7 @@ namespace LOBApp.Services
         public BaseWebAPI()
         {
             SetWebAccessCondition("/api/", this.GetType().Name, "Datas", this.GetType().Name);
-            EncodingType = EnctypeMethod.FORMURLENCODED;
+            encodingType = EnctypeMethod.FORMURLENCODED;
             現在資料夾名稱 = 最上層資料夾名稱;
             url = "";
             資料檔案名稱 = this.GetType().Name;
@@ -142,14 +146,14 @@ namespace LOBApp.Services
                 {
                     //client.Timeout = TimeSpan.FromMinutes(3);
                     string fooQueryString = dic.ToQueryString();
-                    string fooUrl = $"{host}{url}" + fooQueryString;
+                    string fooUrl = $"{host}{url}{routeUrl}" + fooQueryString;
                     UriBuilder ub = new UriBuilder(fooUrl);
                     HttpResponseMessage response = null;
 
-                    if(string.IsNullOrEmpty(Token)==false)
+                    if(string.IsNullOrEmpty(this.token)==false)
                     {
                         client.DefaultRequestHeaders.Authorization =
-                            new AuthenticationHeaderValue("Bearer", Token);
+                            new AuthenticationHeaderValue("Bearer", this.token);
                     }
 
                     #region  Get Or Post
@@ -161,12 +165,12 @@ namespace LOBApp.Services
                     else if (httpMethod == HttpMethod.Post)
                     {
                         // 使用 Post 方式來呼叫
-                        if (EncodingType == EnctypeMethod.FORMURLENCODED)
+                        if (encodingType == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
                             response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent(), token);
                         }
-                        else if (EncodingType == EnctypeMethod.JSON)
+                        else if (encodingType == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                             response = await client.PostAsync(ub.Uri, new StringContent(jsonPayload, Encoding.UTF8, "application/json"), token);
@@ -175,12 +179,12 @@ namespace LOBApp.Services
                     else if (httpMethod == HttpMethod.Put)
                     {
                         // 使用 Post 方式來呼叫
-                        if (EncodingType == EnctypeMethod.FORMURLENCODED)
+                        if (encodingType == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
                             response = await client.PutAsync(ub.Uri, dic.ToFormUrlEncodedContent(), token);
                         }
-                        else if (EncodingType == EnctypeMethod.JSON)
+                        else if (encodingType == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                             response = await client.PutAsync(ub.Uri, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
@@ -207,12 +211,30 @@ namespace LOBApp.Services
                             if (mr.Status == true)
                             {
                                 var fooDataString = mr.Payload.ToString();
-                                Items = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                                if (Items == null)
+                                if (isCollection == false)
                                 {
-                                    Items = (T)Activator.CreateInstance(typeof(T));
+                                    SingleItem = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                                    if (needSave == true)
+                                    {
+                                        if (SingleItem == null)
+                                        {
+                                            SingleItem = (T)Activator.CreateInstance(typeof(T));
+                                        }
+                                        await this.WriteToFileAsync();
+                                    }
                                 }
-                                await this.WriteToFileAsync();
+                                else
+                                {
+                                    Items = JsonConvert.DeserializeObject<List<T>>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                                    if (needSave == true)
+                                    {
+                                        if (Items == null)
+                                        {
+                                            Items = (List<T>)Activator.CreateInstance(typeof(List<T>));
+                                        }
+                                        await this.WriteToFileAsync();
+                                    }
+                                }
                             }
                         }
                         else
@@ -243,7 +265,14 @@ namespace LOBApp.Services
         /// </summary>
         public virtual async Task ReadFromFileAsync()
         {
-            Items = (T)Activator.CreateInstance(typeof(T));
+            if (isCollection == false)
+            {
+                SingleItem = (T)Activator.CreateInstance(typeof(T));
+            }
+            else
+            {
+                Items = (List<T>)Activator.CreateInstance(typeof(List<T>));
+            }
 
             string data = await StorageUtility.ReadFromDataFileAsync(this.現在資料夾名稱, this.資料檔案名稱);
             if (string.IsNullOrEmpty(data) == true)
@@ -254,7 +283,14 @@ namespace LOBApp.Services
             {
                 try
                 {
-                    this.Items = JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                    if (isCollection == false)
+                    {
+                        this.SingleItem = JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                    }
+                    else
+                    {
+                        this.Items = JsonConvert.DeserializeObject<List<T>>(data, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -269,7 +305,15 @@ namespace LOBApp.Services
         /// </summary>
         public virtual async Task WriteToFileAsync()
         {
-            string data = JsonConvert.SerializeObject(this.Items);
+            string data = "";
+            if (isCollection == false)
+            {
+                data = JsonConvert.SerializeObject(this.SingleItem);
+            }
+            else
+            {
+                data = JsonConvert.SerializeObject(this.Items);
+            }
             await StorageUtility.WriteToDataFileAsync(this.現在資料夾名稱, this.資料檔案名稱, data);
         }
 

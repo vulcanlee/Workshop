@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class SuggestionsManager : BaseWebAPI<SuggestionResponseDTO>
+    public class SuggestionsManager : CRUDBaseWebAPI<SuggestionResponseDTO>
     {
         public SuggestionsManager()
             : base()
@@ -24,7 +24,7 @@ namespace LOBApp.Services
 
         public async Task<APIResult> GetAsync(SuggestionRequestDTO suggestionRequestDTO)
         {
-            EncodingType = EnctypeMethod.JSON;
+            encodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();

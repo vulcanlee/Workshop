@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class SystemEnvironmentsManager : BaseWebAPI<SystemEnvironmentResponseDTO>
+    public class SystemEnvironmentsManager : CRUDBaseWebAPI<SystemEnvironmentResponseDTO>
     {
         public SystemEnvironmentsManager()
             : base()
@@ -20,11 +20,13 @@ namespace LOBApp.Services
             //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/SystemEnvironments";
             this.host = "https://lobworkshop.azurewebsites.net";
+            isCollection = false;
         }
 
-        public async Task<APIResult> GetAsync()
+        public async Task<APIResult> GetAsync(CancellationToken ctoken=default(CancellationToken))
         {
-            EncodingType = EnctypeMethod.JSON;
+            encodingType = EnctypeMethod.JSON;
+            needSave = true;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -37,7 +39,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            var mr = await this.GetAsync(dic, ctoken);
 
             return mr;
         }

@@ -30,14 +30,14 @@ namespace LOBApp.Helpers.ManagerHelps
                     await dialogService.DisplayAlertAsync("發生錯誤", fooResult.Message, "確定");
                     return false;
                 }
-                systemStatusManager.Items = appStatus.SystemStatus;
-                systemStatusManager.Items.IsLogin = true;
-                systemStatusManager.Items.LoginedTime = DateTime.Now;
-                systemStatusManager.Items.Token = refreshTokenManager.Items.Token;
-                systemStatusManager.Items.RefreshToken = refreshTokenManager.Items.RefreshToken;
-                systemStatusManager.Items.TokenExpireMinutes = refreshTokenManager.Items.TokenExpireMinutes;
-                systemStatusManager.Items.RefreshTokenExpireDays = refreshTokenManager.Items.RefreshTokenExpireDays;
-                systemStatusManager.Items.SetExpireDatetime();
+                systemStatusManager.SingleItem = appStatus.SystemStatus;
+                systemStatusManager.SingleItem.IsLogin = true;
+                systemStatusManager.SingleItem.LoginedTime = DateTime.Now;
+                systemStatusManager.SingleItem.Token = refreshTokenManager.SingleItem.Token;
+                systemStatusManager.SingleItem.RefreshToken = refreshTokenManager.SingleItem.RefreshToken;
+                systemStatusManager.SingleItem.TokenExpireMinutes = refreshTokenManager.SingleItem.TokenExpireMinutes;
+                systemStatusManager.SingleItem.RefreshTokenExpireDays = refreshTokenManager.SingleItem.RefreshTokenExpireDays;
+                systemStatusManager.SingleItem.SetExpireDatetime();
                 #endregion
             }
 

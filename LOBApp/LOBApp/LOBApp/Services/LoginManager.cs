@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class LoginManager : BaseWebAPI<LoginResponseDTO>
+    public class LoginManager : CRUDBaseWebAPI<LoginResponseDTO>
     {
         public LoginManager()
             : base()
@@ -21,11 +21,12 @@ namespace LOBApp.Services
             //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/Login";
             this.host = "https://lobworkshop.azurewebsites.net";
+            isCollection = false;
         }
 
         public async Task<APIResult> PostAsync(LoginRequestDTO loginRequestDTO)
         {
-            EncodingType = EnctypeMethod.JSON;
+            encodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -38,7 +39,7 @@ namespace LOBApp.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            var mr = await this.PostAsync(dic, CancellationToken.None);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

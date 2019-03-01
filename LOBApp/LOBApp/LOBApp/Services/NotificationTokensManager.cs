@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class NotificationTokensManager : BaseWebAPI<NotificationTokenResponseDTO>
+    public class NotificationTokensManager : CRUDBaseWebAPI<NotificationTokenResponseDTO>
     {
         public NotificationTokensManager()
             : base()
@@ -24,7 +24,7 @@ namespace LOBApp.Services
 
         public async Task<APIResult> GetAsync(NotificationTokenRequestDTO notificationTokenRequestDTO)
         {
-            EncodingType = EnctypeMethod.JSON;
+            encodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();

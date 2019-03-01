@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class CommUserGroupItemsManager : BaseWebAPI<CommUserGroupItemResponseDTO>
+    public class CommUserGroupItemsManager : CRUDBaseWebAPI<CommUserGroupItemResponseDTO>
     {
         public CommUserGroupItemsManager()
             : base()
@@ -22,9 +22,9 @@ namespace LOBApp.Services
             this.host = "https://lobworkshop.azurewebsites.net";
         }
 
-        public async Task<APIResult> GetAsync(CommUserGroupItemRequestDTO commUserGroupItemRequestDTO)
+        public async Task<APIResult> GetAsync(CommUserGroupItemRequestDTO commUserGroupItemRequestDTO, CancellationToken ctoken = default(CancellationToken))
         {
-            EncodingType = EnctypeMethod.JSON;
+            encodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -37,7 +37,7 @@ namespace LOBApp.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(commUserGroupItemRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            var mr = await this.GetAsync(dic, ctoken);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

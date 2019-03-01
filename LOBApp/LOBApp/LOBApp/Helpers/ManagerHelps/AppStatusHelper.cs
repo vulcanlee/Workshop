@@ -12,13 +12,13 @@ namespace LOBApp.Helpers.ManagerHelps
         public static async Task<bool> ReadAndUpdateAppStatus(SystemStatusManager systemStatusManager, AppStatus appStatus)
         {
             await systemStatusManager.ReadFromFileAsync();
-            appStatus.SystemStatus = systemStatusManager.Items;
+            appStatus.SystemStatus = systemStatusManager.SingleItem;
             return true;
         }
         public static async Task<bool> WriteAndUpdateAppStatus(SystemStatusManager systemStatusManager, AppStatus appStatus)
         {
             await systemStatusManager.WriteToFileAsync();
-            appStatus.SystemStatus = systemStatusManager.Items;
+            appStatus.SystemStatus = systemStatusManager.SingleItem;
             return true;
         }
     }
