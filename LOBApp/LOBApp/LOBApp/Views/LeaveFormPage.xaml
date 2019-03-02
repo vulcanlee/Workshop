@@ -1,10 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behavior="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="LOBApp.Views.LeaveFormPage"
              Title="請假單清單">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="新增" Command="{Binding AddCommand}"/>
+    </ContentPage.ToolbarItems>
 
     <Grid
         RowSpacing="0" ColumnSpacing="0"
@@ -13,8 +18,13 @@
             ItemsSource="{Binding LeaveFormItemsSource}"
             HasUnevenRows="True"
             SelectedItem="{Binding LeaveFormSelectedItem}"
-            SeparatorVisibility="None"
+            SeparatorVisibility="None" 
             >
+            <ListView.Behaviors>
+                <behavior:EventToCommandBehavior
+                    EventName="ItemTapped"
+                    Command="{Binding ItemTappedCommand}"/>
+            </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -26,6 +36,8 @@
                             <StackLayout
                                 Spacing="0"
                                 >
+                                <Label
+                                    Text="{Binding BeginTime, StringFormat='{0:yyyy-MM-dd}'}"/>
                                 <Label
                                     Text="{Binding Description}"/>
                                 <Label

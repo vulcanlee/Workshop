@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="LOBApp.Views.LeaveFormDetailPage"
+             Title="請假單紀錄">
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0"
+        >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollView
+            Grid.ColumnSpan="2"
+            >
+            <StackLayout
+                Orientation="Vertical"
+                Spacing="0"
+                >
+                <Picker
+                    Title="請假類別"
+                    ItemsSource="{Binding LeaveFormTypeItemsSource}"
+                    SelectedItem="{Binding LeaveFormTypeSelectedItem}"
+                    ItemDisplayBinding="{Binding Name}"
+                    />
+                <DatePicker
+                    Date="{Binding LeaveFormItemModel.BeginDate}"
+                    Format="yyyy-MM-dd"/>
+                <TimePicker
+                    Time="{Binding LeaveFormItemModel.BeginTime}"
+                    Format="HH:mm"/>
+                <DatePicker
+                    Date="{Binding LeaveFormItemModel.EndDate}"
+                    Format="yyyy-MM-dd"/>
+                <TimePicker
+                    Time="{Binding LeaveFormItemModel.EndTime}"
+                    Format="HH:mm"/>
+                <Entry
+                    Text="{Binding LeaveFormItemModel.TotalHours}"
+                    />
+                <Editor
+                    Text="{Binding LeaveFormItemModel.Description}"
+                    HeightRequest="300"/>
+
+            </StackLayout>
+        </ScrollView>
+        <Button
+            Grid.Row="1" Grid.ColumnSpan="2"
+            Text="儲存"
+            BackgroundColor="LightGreen"
+            Command="{Binding SaveCommand}"
+            IsVisible="{Binding IsAddMode}"/>
+        <Button
+            Grid.Row="1" Grid.Column="0"
+            Text="刪除"
+            BackgroundColor="Red"
+            TextColor="White"
+            Command="{Binding DeleteCommand}"
+            IsVisible="{Binding IsEditMode}"/>
+        <Button
+            Grid.Row="1" Grid.Column="1"
+            Text="儲存"
+            BackgroundColor="LightGreen"
+            Command="{Binding SaveCommand}"
+            IsVisible="{Binding IsEditMode}"/>
+    </Grid>
+</ContentPage>

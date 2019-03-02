@@ -6,8 +6,8 @@ using System.Text;
 
 namespace LOBApp.Models
 {
-    
-        public class LeaveFormModel : INotifyPropertyChanged
+
+    public class LeaveFormModel : INotifyPropertyChanged
     {
         public int Id { get; set; }
         public UserDTO user { get; set; }
@@ -18,5 +18,13 @@ namespace LOBApp.Models
         public string Description { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public LeaveFormModel Clone()
+        {
+            LeaveFormModel leaveFormModel = (LeaveFormModel)this.MemberwiseClone();
+            leaveFormModel.user = new UserDTO() { Id = this.user.Id };
+            leaveFormModel.leaveFormType = new LeaveFormTypeModel() { Id = this.leaveFormType.Id, Name = this.leaveFormType.Name };
+            return leaveFormModel;
+        }
     }
 }
