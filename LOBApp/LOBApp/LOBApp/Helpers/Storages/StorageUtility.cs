@@ -54,7 +54,7 @@ namespace LOBApp.Helpers.Storages
                 byte[] encodedText = Encoding.UTF8.GetBytes(content);
 
                 using (FileStream sourceStream = new FileStream(fooPath,
-                    FileMode.OpenOrCreate, FileAccess.Write, FileShare.None,
+                    FileMode.Create, FileAccess.Write, FileShare.None,
                     bufferSize: 4096, useAsync: true))
                 {
                     await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);

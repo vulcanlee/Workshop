@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class NotificationTokensManager : CRUDBaseWebAPI<NotificationTokenResponseDTO>
+    public class NotificationTokensManager : BaseWebAPI<NotificationTokenResponseDTO>
     {
         public NotificationTokensManager()
             : base()

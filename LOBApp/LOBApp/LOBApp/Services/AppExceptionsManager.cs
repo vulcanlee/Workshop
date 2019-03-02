@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class AppExceptionsManager : CRUDBaseWebAPI<ExceptionRecordResponseDTO>
+    public class AppExceptionsManager : BaseWebAPI<ExceptionRecordResponseDTO>
     {
         public AppExceptionsManager()
             : base()

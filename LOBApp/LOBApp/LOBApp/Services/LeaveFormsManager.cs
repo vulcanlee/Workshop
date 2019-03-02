@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class LeaveFormsManager : CRUDBaseWebAPI<LeaveFormResponseDTO>
+    public class LeaveFormsManager : BaseWebAPI<LeaveFormResponseDTO>
     {
         private readonly AppStatus appStatus;
 

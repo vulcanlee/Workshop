@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class SuggestionsManager : CRUDBaseWebAPI<SuggestionResponseDTO>
+    public class SuggestionsManager : BaseWebAPI<SuggestionResponseDTO>
     {
         public SuggestionsManager()
             : base()

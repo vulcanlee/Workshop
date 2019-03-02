@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class RefreshTokenManager : CRUDBaseWebAPI<LoginResponseDTO>
+    public class RefreshTokenManager : BaseWebAPI<LoginResponseDTO>
     {
         private readonly AppStatus appStatus;
 
@@ -44,7 +44,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.GetAsync(dic, CancellationToken.None);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

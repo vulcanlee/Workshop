@@ -27,9 +27,11 @@ namespace LOBApp.ViewModels
         private readonly RefreshTokenManager refreshTokenManager;
         private readonly SystemStatusManager systemStatusManager;
         private readonly AppStatus appStatus;
+        public bool IsRefreshing { get; set; }
 
         public DelegateCommand ItemTappedCommand { get; set; }
         public DelegateCommand AddCommand { get; set; }
+        public DelegateCommand RefreshCommand { get; set; }
 
         public LeaveFormPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LeaveFormsManager leaveFormsManager, LeaveFormTypesManager leaveFormTypesManager,
@@ -43,6 +45,12 @@ namespace LOBApp.ViewModels
             this.refreshTokenManager = refreshTokenManager;
             this.systemStatusManager = systemStatusManager;
             this.appStatus = appStatus;
+            RefreshCommand = new DelegateCommand(async () =>
+            {
+                IsRefreshing = true;
+                await LoadDataAsync();
+                IsRefreshing = false;
+            });
             AddCommand = new DelegateCommand(async () =>
             {
                 LeaveFormModel leaveFormModel = new LeaveFormModel()
@@ -77,7 +85,9 @@ namespace LOBApp.ViewModels
             var naviMode = parameters.GetNavigationMode();
             if (naviMode == NavigationMode.New)
             {
-                await LoadDataAsync();
+                await leaveFormTypesManager.ReadFromFileAsync();
+                await leaveFormsManager.ReadFromFileAsync();
+                await LoadDataAsync(false);
             }
             else
             {
@@ -87,17 +97,19 @@ namespace LOBApp.ViewModels
             }
         }
 
-        private async System.Threading.Tasks.Task LoadDataAsync()
+        private async System.Threading.Tasks.Task LoadDataAsync(bool isDownload = true)
         {
-            await leaveFormTypesManager.ReadFromFileAsync();
-            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            if (isDownload)
             {
-                bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenManager, systemStatusManager, appStatus);
-                if (fooRefreshTokenResult == false)
+                using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
                 {
-                    return;
+                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenManager, systemStatusManager, appStatus);
+                    if (fooRefreshTokenResult == false)
+                    {
+                        return;
+                    }
+                    var fooResult = await leaveFormsManager.GetAsync();
                 }
-                var fooResult = await leaveFormsManager.GetAsync();
             }
             //await leaveFormsManager.ReadFromFileAsync();
             LeaveFormItemsSource.Clear();

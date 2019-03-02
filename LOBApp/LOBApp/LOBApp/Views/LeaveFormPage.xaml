@@ -8,6 +8,7 @@
              Title="請假單清單">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="更新" Command="{Binding RefreshCommand}"/>
         <ToolbarItem Text="新增" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>
 
@@ -19,6 +20,9 @@
             HasUnevenRows="True"
             SelectedItem="{Binding LeaveFormSelectedItem}"
             SeparatorVisibility="None" 
+            IsPullToRefreshEnabled="True"
+            IsRefreshing="{Binding IsRefreshing}"
+            RefreshCommand="{Binding RefreshCommand}"
             >
             <ListView.Behaviors>
                 <behavior:EventToCommandBehavior
@@ -32,16 +36,33 @@
                             RowSpacing="0" ColumnSpacing="0"
                             >
                             <BoxView
-                                Color="White"/>
+                                Color="#FFFFFF"/>
+                            <BoxView
+                                Margin="2"
+                                Color="#EEEEEE"/>
                             <StackLayout
                                 Spacing="0"
+                                Margin="10"
                                 >
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    Spacing="0"
+                                >
+                                    <Label
+                                        Text="{Binding BeginTime, StringFormat='{0:yyyy-MM-dd}'}"
+                                        FontSize="18"
+                                        TextColor="Green"/>
+                                    <Label
+                                        Text="{Binding EndTime, StringFormat=' - {0:yyyy-MM-dd}'}"
+                                        FontSize="18"
+                                        TextColor="Green"/>
+                                </StackLayout>
+
                                 <Label
-                                    Text="{Binding BeginTime, StringFormat='{0:yyyy-MM-dd}'}"/>
+                                    Text="{Binding TotalHours , StringFormat='{0} 小時'}"
+                                    FontSize="24"/>
                                 <Label
                                     Text="{Binding Description}"/>
-                                <Label
-                                    Text="{Binding TotalHours}"/>
                             </StackLayout>
                         </Grid>
                     </ViewCell>

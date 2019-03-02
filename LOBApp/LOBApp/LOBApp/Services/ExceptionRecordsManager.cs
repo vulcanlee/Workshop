@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class ExceptionRecordsManager : CRUDBaseWebAPI<ExceptionRecordResponseDTO>
+    public class ExceptionRecordsManager : BaseWebAPI<ExceptionRecordResponseDTO>
     {
         private readonly AppStatus appStatus;
 
@@ -42,7 +42,7 @@ namespace LOBApp.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(exceptionRecordRequestDTO));
             #endregion
 
-            var mr = await this.PostAsync(dic, ctoken);
+            var mr = await this.SendAsync(dic, HttpMethod.Post, ctoken);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

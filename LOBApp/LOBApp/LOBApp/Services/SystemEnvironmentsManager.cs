@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class SystemEnvironmentsManager : CRUDBaseWebAPI<SystemEnvironmentResponseDTO>
+    public class SystemEnvironmentsManager : BaseWebAPI<SystemEnvironmentResponseDTO>
     {
         public SystemEnvironmentsManager()
             : base()
@@ -39,7 +39,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.GetAsync(dic, ctoken);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, ctoken);
 
             return mr;
         }

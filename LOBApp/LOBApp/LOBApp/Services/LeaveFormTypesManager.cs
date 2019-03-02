@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class LeaveFormTypesManager : CRUDBaseWebAPI<LeaveFormTypeResponseDTO>
+    public class LeaveFormTypesManager : BaseWebAPI<LeaveFormTypeResponseDTO>
     {
         private readonly AppStatus appStatus;
 
@@ -43,7 +43,7 @@ namespace LOBApp.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(leaveFormRequestDTO));
             #endregion
 
-            var mr = await this.GetAsync(dic, ctoken);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, ctoken);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";

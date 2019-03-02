@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LOBApp.Services
 {
-    public class LoginManager : CRUDBaseWebAPI<LoginResponseDTO>
+    public class LoginManager : BaseWebAPI<LoginResponseDTO>
     {
         public LoginManager()
             : base()
@@ -39,7 +39,7 @@ namespace LOBApp.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.PostAsync(dic, CancellationToken.None);
+            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
 
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";
