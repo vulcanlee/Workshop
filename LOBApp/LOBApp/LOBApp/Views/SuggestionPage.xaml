@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="LOBApp.Views.SuggestionPage"
+             Title="意見回報">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="確定" Command="{Binding OKCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <StackLayout
+        Orientation="Vertical"
+        Spacing="0"
+        Margin="15,10"
+        >
+        <Label
+            Text="主題"
+            TextColor="#333333"
+            FontSize="14"/>
+        <Entry
+            Text="{Binding SuggestionModel.Subject}"/>
+        <Label
+            Text="內容"
+            TextColor="#333333"
+            FontSize="14"/>
+        <Editor
+            Text="{Binding SuggestionModel.Message}"
+            HorizontalOptions="Fill"
+            VerticalOptions="FillAndExpand"/>
+
+    </StackLayout>
+  
+</ContentPage>

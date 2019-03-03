@@ -18,10 +18,10 @@ namespace LOBApp.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-            {
-                var foo = 1;
-            };
+            //AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            //{
+            //    var foo = 1;
+            //};
             //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.OnCreate(bundle);

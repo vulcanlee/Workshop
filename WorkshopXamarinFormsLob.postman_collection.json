@@ -616,6 +616,49 @@
 					"response": []
 				},
 				{
+					"name": "Suggestions/Clean 清空",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Suggestions/Clean",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Suggestions",
+								"Clean"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Suggestions 新增",
 					"request": {
 						"auth": {
@@ -691,6 +734,49 @@
 							"path": [
 								"api",
 								"ExceptionRecords"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExceptionRecords/Clean 清空",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecords/Clean",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecords",
+								"Clean"
 							]
 						}
 					},
@@ -1031,26 +1117,26 @@
 	],
 	"variable": [
 		{
-			"id": "ca9149f1-7bd0-4d69-ab44-813181318b46",
+			"id": "835bccc8-88f5-4316-b0ff-90516dc7a066",
 			"key": "Host",
 			"value": "https://localhost:5001",
-			"type": "string"
-		},
-		{
-			"id": "d1694931-c0ec-46a5-a595-6f2f9b081ecc",
-			"key": "Host",
-			"value": "https://lobworkshop.azurewebsites.net",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "377b3476-3f81-4637-af26-138fac6998ae",
+			"id": "01792fd0-dcd8-4a82-9ebc-7b39d28ec7fe",
+			"key": "Host",
+			"value": "https://lobworkshop.azurewebsites.net",
+			"type": "string"
+		},
+		{
+			"id": "f8b8304e-f786-4188-b463-29184b8ec4d0",
 			"key": "Token",
 			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
 			"type": "string"
 		},
 		{
-			"id": "6bfde439-cfa7-437c-9bd4-57e9fc2a5990",
+			"id": "0e7fe833-d1b1-4a80-aa81-cf551c334e34",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"

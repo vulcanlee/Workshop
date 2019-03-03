@@ -7,6 +7,7 @@ using System.Linq;
 namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
+    using Acr.UserDialogs;
     using LOBApp.Helpers.ManagerHelps;
     using LOBApp.Models;
     using LOBApp.Services;
@@ -22,23 +23,35 @@ namespace LOBApp.ViewModels
         private readonly LoginManager loginManager;
         private readonly SystemStatusManager systemStatusManager;
         private readonly AppStatus appStatus;
+        private readonly LogoutCleanHelper logoutCleanHelper;
 
-         public DelegateCommand HomeCommand { get; set; }
-       public DelegateCommand UserGroupCommand { get; set; }
+        public DelegateCommand HomeCommand { get; set; }
+        public DelegateCommand UserGroupCommand { get; set; }
         public DelegateCommand LeaveFormCommand { get; set; }
         public DelegateCommand LogoutCommand { get; set; }
+        public DelegateCommand SuggestionCommand { get; set; }
+        public DelegateCommand ExceptionCommand { get; set; }
         public MDPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            LoginManager loginManager, SystemStatusManager systemStatusManager,
-            AppStatus appStatus)
+             LoginManager loginManager, SystemStatusManager systemStatusManager,
+             AppStatus appStatus, LogoutCleanHelper logoutCleanHelper)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
             this.loginManager = loginManager;
             this.systemStatusManager = systemStatusManager;
             this.appStatus = appStatus;
+            this.logoutCleanHelper = logoutCleanHelper;
             HomeCommand = new DelegateCommand(async () =>
             {
                 await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
+            });
+            SuggestionCommand = new DelegateCommand(async () =>
+            {
+                await navigationService.NavigateAsync("/MDPage/NaviPage/SuggestionPage");
+            });
+            ExceptionCommand = new DelegateCommand(() =>
+            {
+                throw new Exception("發生了一個自訂的例外異常");
             });
             UserGroupCommand = new DelegateCommand(async () =>
             {
@@ -50,10 +63,15 @@ namespace LOBApp.ViewModels
             });
             LogoutCommand = new DelegateCommand(async () =>
             {
-                var fooResult = await LoginUpdateTokenHelper.UserLogoutAsync(dialogService, loginManager, systemStatusManager,
-                    appStatus);
-                if (fooResult == true)
-                    await navigationService.NavigateAsync("/LoginPage");
+                using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+                {
+                    await logoutCleanHelper.LogoutCleanAsync(fooIProgressDialog);
+                    var fooResult = await LoginUpdateTokenHelper.UserLogoutAsync(dialogService, loginManager, systemStatusManager, appStatus);
+                    if (fooResult == true)
+                    {
+                        await navigationService.NavigateAsync("/LoginPage");
+                    }
+                }
             });
         }
 

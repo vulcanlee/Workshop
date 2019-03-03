@@ -24,27 +24,55 @@
                 Orientation="Vertical"
                 Spacing="0"
                 >
+                <Label
+                    Text="請假類別"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <Picker
-                    Title="請假類別"
+                    Title="請選擇 請假類別"
                     ItemsSource="{Binding LeaveFormTypeItemsSource}"
                     SelectedItem="{Binding LeaveFormTypeSelectedItem}"
                     ItemDisplayBinding="{Binding Name}"
                     />
+                <Label
+                    Text="請假開始日期"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <DatePicker
                     Date="{Binding LeaveFormItemModel.BeginDate}"
                     Format="yyyy-MM-dd"/>
+                <Label
+                    Text="請假開始時間"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <TimePicker
                     Time="{Binding LeaveFormItemModel.BeginTime}"
                     Format="HH:mm"/>
+                <Label
+                    Text="請假結束日期"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <DatePicker
                     Date="{Binding LeaveFormItemModel.EndDate}"
                     Format="yyyy-MM-dd"/>
+                <Label
+                    Text="請假結束時間"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <TimePicker
                     Time="{Binding LeaveFormItemModel.EndTime}"
                     Format="HH:mm"/>
+                <Label
+                    Text="請假時數"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <Entry
                     Text="{Binding LeaveFormItemModel.TotalHours}"
                     />
+                <Label
+                    Text="請假理由"
+                    TextColor="#333333"
+                    FontSize="14"/>
                 <Editor
                     Text="{Binding LeaveFormItemModel.Description}"
                     HeightRequest="300"/>

@@ -26,10 +26,14 @@ namespace LOBApp.Services
             this.appStatus = appStatus;
         }
 
+       
         public async Task<APIResult> PostAsync(List<ExceptionRecordRequestDTO> exceptionRecordRequestDTO, CancellationToken ctoken = default(CancellationToken))
         {
             token = appStatus.SystemStatus.Token;
             encodingType = EnctypeMethod.JSON;
+            needSave = false;
+            isCollection = true;
+            routeUrl = $"";
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -47,6 +51,23 @@ namespace LOBApp.Services
             //mr.Success = false;
             //mr.Message = "測試用的錯誤訊息";
             return mr;
+        }
+
+        public override async Task ReadFromFileAsync()
+        {
+            needSave = true;
+            isCollection = true;
+            await base.ReadFromFileAsync();
+        }
+
+        /// <summary>
+        /// 將物件資料寫入到檔案中
+        /// </summary>
+        public override async Task WriteToFileAsync()
+        {
+            needSave = true;
+            isCollection = true;
+            await base.WriteToFileAsync();
         }
     }
 }

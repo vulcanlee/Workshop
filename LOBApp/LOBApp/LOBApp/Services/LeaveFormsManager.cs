@@ -129,5 +129,22 @@ namespace LOBApp.Services
             //mr.Message = "測試用的錯誤訊息";
             return mr;
         }
+
+        public override async Task ReadFromFileAsync()
+        {
+            needSave = true;
+            isCollection = true;
+            await base.ReadFromFileAsync();
+        }
+
+        /// <summary>
+        /// 將物件資料寫入到檔案中
+        /// </summary>
+        public override async Task WriteToFileAsync()
+        {
+            needSave = true;
+            isCollection = true;
+            await base.WriteToFileAsync();
+        }
     }
 }

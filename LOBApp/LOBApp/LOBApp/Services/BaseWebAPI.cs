@@ -33,7 +33,7 @@ namespace LOBApp.Services
         /// </summary>
         public string url = "";
         public EnctypeMethod encodingType;
-        public string token ="";
+        public string token = "";
         public string routeUrl = "";
         public bool needSave = false;
         public bool isCollection = true;
@@ -150,7 +150,7 @@ namespace LOBApp.Services
                     UriBuilder ub = new UriBuilder(fooUrl);
                     HttpResponseMessage response = null;
 
-                    if(string.IsNullOrEmpty(this.token)==false)
+                    if (string.IsNullOrEmpty(this.token) == false)
                     {
                         client.DefaultRequestHeaders.Authorization =
                             new AuthenticationHeaderValue("Bearer", this.token);
@@ -239,8 +239,16 @@ namespace LOBApp.Services
                         }
                         else
                         {
-                            mr.Status = false;
-                            mr.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content);
+                            APIResult fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            if (fooAPIResult != null)
+                            {
+                                mr = fooAPIResult;
+                            }
+                            else
+                            {
+                                mr.Status = false;
+                                mr.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.Content);
+                            }
                         }
                     }
                     else

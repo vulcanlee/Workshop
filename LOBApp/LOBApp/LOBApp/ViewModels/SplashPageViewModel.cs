@@ -9,6 +9,7 @@ namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
     using Acr.UserDialogs;
+    using LOBApp.DTOs;
     using LOBApp.Helpers.ManagerHelps;
     using LOBApp.Helpers.Utilities;
     using LOBApp.Models;
@@ -26,10 +27,12 @@ namespace LOBApp.ViewModels
         private readonly SystemEnvironmentsManager systemEnvironmentsManager;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly AppStatus appStatus;
+        private readonly ExceptionRecordsManager exceptionRecordsManager;
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             SystemStatusManager systemStatusManager, SystemEnvironmentsManager systemEnvironmentsManager,
-            RecordCacheHelper recordCacheHelper, AppStatus appStatus)
+            RecordCacheHelper recordCacheHelper, AppStatus appStatus,
+            ExceptionRecordsManager exceptionRecordsManager)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
@@ -37,6 +40,7 @@ namespace LOBApp.ViewModels
             this.systemEnvironmentsManager = systemEnvironmentsManager;
             this.recordCacheHelper = recordCacheHelper;
             this.appStatus = appStatus;
+            this.exceptionRecordsManager = exceptionRecordsManager;
             CancellationCommand = new DelegateCommand(() =>
             {
 
@@ -66,6 +70,36 @@ namespace LOBApp.ViewModels
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
                 await recordCacheHelper.RefreshAsync(fooIProgressDialog);
+
+                fooIProgressDialog.Title = "請稍後，上傳例外異常";
+                await exceptionRecordsManager.ReadFromFileAsync();
+                if (exceptionRecordsManager.Items.Count > 0)
+                {
+                    var fooExceptions = exceptionRecordsManager.Items;
+                    var fooExceptionRecordRequestDTOs = new List<ExceptionRecordRequestDTO>();
+
+                    foreach (var item in fooExceptions)
+                    {
+                        var fooExceptionRecordRequestDTO = new ExceptionRecordRequestDTO()
+                        {
+                            CallStack = item.CallStack,
+                            DeviceModel = item.DeviceModel,
+                            DeviceName = item.DeviceName,
+                            ExceptionTime = item.ExceptionTime,
+                            Message = item.Message,
+                            OSType = item.OSType,
+                            OSVersion = item.OSVersion,
+                            User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
+                        };
+                        fooExceptionRecordRequestDTOs.Add(fooExceptionRecordRequestDTO);
+                    }
+                    var fooResult = await exceptionRecordsManager.PostAsync(fooExceptionRecordRequestDTOs);
+                    if(fooResult.Status == true)
+                    {
+                        exceptionRecordsManager.Items.Clear();
+                        await exceptionRecordsManager.WriteToFileAsync();
+                    }
+                }
             }
             await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
             #endregion

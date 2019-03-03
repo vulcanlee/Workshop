@@ -1,6 +1,7 @@
 ﻿using LOBApp.DTOs;
 using LOBApp.Helpers;
 using LOBApp.Helpers.WebAPIs;
+using LOBApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,25 @@ namespace LOBApp.Services
 {
     public class SuggestionsManager : BaseWebAPI<SuggestionResponseDTO>
     {
-        public SuggestionsManager()
+        private readonly AppStatus appStatus;
+
+        public SuggestionsManager(AppStatus appStatus)
             : base()
         {
             //資料檔案名稱 = "SampleRepository.txt";
             //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/Suggestions";
             this.host = "https://lobworkshop.azurewebsites.net";
+            this.appStatus = appStatus;
         }
 
-        public async Task<APIResult> GetAsync(SuggestionRequestDTO suggestionRequestDTO)
+        public async Task<APIResult> PostAsync(SuggestionRequestDTO suggestionRequestDTO)
         {
+            token = appStatus.SystemStatus.Token;
             encodingType = EnctypeMethod.JSON;
+            needSave = false;
+            isCollection = false;
+            routeUrl = $"";
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();

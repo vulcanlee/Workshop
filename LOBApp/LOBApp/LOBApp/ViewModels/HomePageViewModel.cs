@@ -7,6 +7,7 @@ using System.Linq;
 namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
+    using LOBApp.Models;
     using LOBApp.Services;
     using Prism.Events;
     using Prism.Navigation;
@@ -23,15 +24,18 @@ namespace LOBApp.ViewModels
         public string iOSUrl { get; set; }
         public bool IsAndroidPlatform { get; set; } = true;
         public bool IsiOSPlatform { get; set; } = false;
+        public string UserName { get; set; }
 
         private readonly INavigationService navigationService;
         private readonly SystemEnvironmentsManager systemEnvironmentsManager;
+        private readonly AppStatus appStatus;
 
         public HomePageViewModel(INavigationService navigationService,
-            SystemEnvironmentsManager systemEnvironmentsManager)
+            SystemEnvironmentsManager systemEnvironmentsManager, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.systemEnvironmentsManager = systemEnvironmentsManager;
+            this.appStatus = appStatus;
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -56,6 +60,8 @@ namespace LOBApp.ViewModels
             AndroidUrl = systemEnvironmentsManager.SingleItem.AndroidUrl;
             iOSVersion = systemEnvironmentsManager.SingleItem.iOSVersion;
             iOSUrl = systemEnvironmentsManager.SingleItem.iOSUrl;
+
+            UserName = appStatus.SystemStatus.Account;
         }
 
         public void OnNavigatingTo(INavigationParameters parameters)

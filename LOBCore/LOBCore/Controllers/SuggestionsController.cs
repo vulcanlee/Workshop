@@ -70,6 +70,34 @@ namespace LOBCore.Controllers
             return Ok(apiResult);
         }
 
+        // GET: api/Suggestions/Clean
+        [Route("Clean")]
+        [HttpGet]
+        public async Task<IActionResult> Clean()
+        {
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
+            }
+            UserID = Convert.ToInt32(claimSID);
+            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
+            if (fooUser == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
+            }
+
+            _context.Suggestions.RemoveRange(_context.Suggestions.ToList());
+            await _context.SaveChangesAsync();
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None);
+            return Ok(apiResult);
+        }
+
         // POST: api/Suggestions
         [HttpPost]
         public async Task<IActionResult> PostSuggestion([FromBody] SuggestionRequestDTO suggestionRequestDTO)

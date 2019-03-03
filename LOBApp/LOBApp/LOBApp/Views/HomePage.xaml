@@ -17,6 +17,12 @@
             FontSize="24"
             TextColor="#868686"
             />
+        <Label
+            Text="{Binding UserName}"
+            HorizontalOptions="Center"
+            FontSize="24"
+            TextColor="Pink"
+            />
         <StackLayout
             Orientation="Vertical"
             Spacing="0"

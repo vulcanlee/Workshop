@@ -9,6 +9,7 @@ using LOBApp.Helpers.ManagerHelps;
 using LOBApp.Models;
 using System;
 using LOBApp.DTOs;
+using System.Threading.Tasks;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace LOBApp
@@ -30,7 +31,31 @@ namespace LOBApp
 
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
                 {
-                    var foo = 1;
+                    AppStatus appStatus = Container.Resolve<AppStatus>();
+                    if (e is AggregateException)
+                    {
+                        var foo = 1;
+                    }
+                    else
+                    {
+                        var fooException = e.ExceptionObject as Exception;
+                        ExceptionRecordsManager fooExceptionRecordsManager = Container.Resolve<ExceptionRecordsManager>();
+                        Task.Run(async () =>
+                        {
+                            await fooExceptionRecordsManager.ReadFromFileAsync();
+                            fooExceptionRecordsManager.Items.Add(new ExceptionRecordResponseDTO()
+                            {
+                                CallStack = fooException.StackTrace,
+                                DeviceModel = "",
+                                DeviceName = "",
+                                ExceptionTime = DateTime.Now,
+                                Message = fooException.Message,
+                                OSType = Device.RuntimePlatform,
+                                OSVersion = ""
+                            });
+                            await fooExceptionRecordsManager.WriteToFileAsync();
+                        }).Wait();
+                    }
                 };
 
             await NavigationService.NavigateAsync("/SplashPage");
@@ -64,6 +89,7 @@ namespace LOBApp
             containerRegistry.RegisterForNavigation<CommUsePage, CommUsePageViewModel>();
             containerRegistry.RegisterForNavigation<LeaveFormPage, LeaveFormPageViewModel>();
             containerRegistry.RegisterForNavigation<LeaveFormDetailPage, LeaveFormDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<SuggestionPage, SuggestionPageViewModel>();
         }
     }
 }

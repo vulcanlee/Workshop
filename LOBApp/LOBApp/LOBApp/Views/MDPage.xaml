@@ -11,6 +11,8 @@
                 <Button Text="首頁" Command="{Binding HomeCommand}" />
                 <Button Text="群組通訊清單" Command="{Binding UserGroupCommand}" />
                 <Button Text="請假單" Command="{Binding LeaveFormCommand}" />
+                <Button Text="我的回應" Command="{Binding SuggestionCommand}" />
+                <Button Text="強制發生例外異常" Command="{Binding ExceptionCommand}" />
                 <Button Text="登出" Command="{Binding LogoutCommand}" />
             </StackLayout>
         </ContentPage>
