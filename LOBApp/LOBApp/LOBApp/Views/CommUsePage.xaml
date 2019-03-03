@@ -4,7 +4,8 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="LOBApp.Views.CommUsePage"
-             Title="通訊群組">
+             Title="通訊群組"
+             x:Name="ThisPage">
 
     <Grid
         RowSpacing="0" ColumnSpacing="0"
@@ -33,20 +34,50 @@
                     <ViewCell>
                         <Grid
                             RowSpacing="0" ColumnSpacing="0"
+                            Margin="15"
                             >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="180"/>
+                            </Grid.ColumnDefinitions>
                             <BoxView
+                                Grid.ColumnSpan="2"
                                 Color="White"/>
                             <StackLayout
+                                Grid.Column="0"
                                 Spacing="0"
                                 >
                                 <Label
-                                    Text="{Binding Name}"/>
+                                    Text="{Binding Name}"
+                                    FontSize="16"
+                                    TextColor="#666666"/>
                                 <Label
-                                    Text="{Binding Mobile}"/>
+                                    Text="{Binding Mobile}"
+                                    FontSize="16"
+                                    TextColor="#666666"/>
                                 <Label
-                                    Text="{Binding Phone}"/>
+                                    Text="{Binding Phone}"
+                                    FontSize="16"
+                                    TextColor="#666666"/>
                                 <Label
-                                    Text="{Binding Email}"/>
+                                    Text="{Binding Email}"
+                                    FontSize="16"
+                                    TextColor="#666666"/>
+                            </StackLayout>
+                            <StackLayout
+                                Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="0">
+                                <Button
+                                    HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                                    Text="打電話"
+                                    Command="{Binding BindingContext.PhoneDialerCommand, Source={Reference ThisPage}}"
+                                    CommandParameter="{Binding .}"/>
+                                <Button
+                                    HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                                    Text="打手機"
+                                    Command="{Binding BindingContext.MobileDialerCommand, Source={Reference ThisPage}}"
+                                    CommandParameter="{Binding .}"/>
                             </StackLayout>
                         </Grid>
                     </ViewCell>

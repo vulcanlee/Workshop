@@ -50,33 +50,33 @@ namespace LOBApp.Helpers.ManagerHelps
             {
                 return false;
             }
-            progressDialog.Title = $"回報例外異常資料中";
-            await exceptionRecordsManager.ReadFromFileAsync();
-            if (exceptionRecordsManager.Items.Count > 0)
-            {
-                List<ExceptionRecordRequestDTO> fooExceptionRecordRequestDTOList = new List<ExceptionRecordRequestDTO>();
-                foreach (var item in exceptionRecordsManager.Items)
-                {
-                    ExceptionRecordRequestDTO fooExceptionRecordRequestDTO = new ExceptionRecordRequestDTO()
-                    {
-                        CallStack = item.CallStack,
-                        DeviceModel = item.DeviceModel,
-                        DeviceName = item.DeviceName,
-                        ExceptionTime = item.ExceptionTime,
-                        Message = item.Message,
-                        OSType = item.OSType,
-                        OSVersion = item.OSVersion,
-                        User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
-                    };
-                    fooExceptionRecordRequestDTOList.Add(fooExceptionRecordRequestDTO);
-                }
-                fooAPIResult = await exceptionRecordsManager.PostAsync(fooExceptionRecordRequestDTOList);
-                if (fooAPIResult.Status != true)
-                {
-                    await dialogService.DisplayAlertAsync("回報例外異常資料中 發生錯誤", fooAPIResult.Message, "確定");
-                    return false;
-                }
-            }
+            //progressDialog.Title = $"回報例外異常資料中";
+            //await exceptionRecordsManager.ReadFromFileAsync();
+            //if (exceptionRecordsManager.Items.Count > 0)
+            //{
+            //    List<ExceptionRecordRequestDTO> fooExceptionRecordRequestDTOList = new List<ExceptionRecordRequestDTO>();
+            //    foreach (var item in exceptionRecordsManager.Items)
+            //    {
+            //        ExceptionRecordRequestDTO fooExceptionRecordRequestDTO = new ExceptionRecordRequestDTO()
+            //        {
+            //            CallStack = item.CallStack,
+            //            DeviceModel = item.DeviceModel,
+            //            DeviceName = item.DeviceName,
+            //            ExceptionTime = item.ExceptionTime,
+            //            Message = item.Message,
+            //            OSType = item.OSType,
+            //            OSVersion = item.OSVersion,
+            //            User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
+            //        };
+            //        fooExceptionRecordRequestDTOList.Add(fooExceptionRecordRequestDTO);
+            //    }
+            //    fooAPIResult = await exceptionRecordsManager.PostAsync(fooExceptionRecordRequestDTOList);
+            //    if (fooAPIResult.Status != true)
+            //    {
+            //        await dialogService.DisplayAlertAsync("回報例外異常資料中 發生錯誤", fooAPIResult.Message, "確定");
+            //        return false;
+            //    }
+            //}
             progressDialog.Title = $"更新系統最新狀態資料中";
             fooAPIResult = await systemEnvironmentsManager.GetAsync();
             if (fooAPIResult.Status != true)

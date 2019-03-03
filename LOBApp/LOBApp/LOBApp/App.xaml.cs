@@ -10,6 +10,7 @@ using LOBApp.Models;
 using System;
 using LOBApp.DTOs;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace LOBApp
@@ -46,12 +47,12 @@ namespace LOBApp
                             fooExceptionRecordsManager.Items.Add(new ExceptionRecordResponseDTO()
                             {
                                 CallStack = fooException.StackTrace,
-                                DeviceModel = "",
-                                DeviceName = "",
+                                DeviceModel = $"{DeviceInfo.Manufacturer} / {DeviceInfo.Model} / {DeviceInfo.DeviceType} / {DeviceInfo.Idiom}",
+                                DeviceName = DeviceInfo.Name,
                                 ExceptionTime = DateTime.Now,
                                 Message = fooException.Message,
-                                OSType = Device.RuntimePlatform,
-                                OSVersion = ""
+                                OSType = DeviceInfo.Platform.ToString(),
+                                OSVersion = DeviceInfo.VersionString
                             });
                             await fooExceptionRecordsManager.WriteToFileAsync();
                         }).Wait();

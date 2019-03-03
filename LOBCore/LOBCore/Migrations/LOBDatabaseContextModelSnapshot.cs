@@ -14,7 +14,7 @@ namespace LOBCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
 
             modelBuilder.Entity("LOBCore.DataAccesses.Entities.CommUserGroup", b =>
                 {
@@ -79,7 +79,7 @@ namespace LOBCore.Migrations
 
                     b.Property<string>("Message");
 
-                    b.Property<int>("OSType");
+                    b.Property<string>("OSType");
 
                     b.Property<string>("OSVersion");
 

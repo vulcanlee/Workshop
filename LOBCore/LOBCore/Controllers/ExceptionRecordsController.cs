@@ -63,7 +63,7 @@ namespace LOBCore.Controllers
                     DeviceName = item.DeviceName,
                     ExceptionTime = item.ExceptionTime,
                     Message = item.Message,
-                    OSType = (OSTypeDTO)Enum.Parse(typeof(OSTypeDTO), item.OSType.ToString()),
+                    OSType = item.OSType,
                     OSVersion = item.OSVersion,
                 };
                 ExceptionRecordResponseDTOs.Add(fooNode);
@@ -131,7 +131,7 @@ namespace LOBCore.Controllers
                     DeviceName = item.DeviceName,
                     ExceptionTime = item.ExceptionTime,
                     Message = item.Message,
-                    OSType = (OSType)Enum.Parse(typeof(OSType), item.OSType.ToString()),
+                    OSType = item.OSType,
                     OSVersion = item.OSVersion,
                 };
                 _context.ExceptionRecords.Add(fooExceptionRecordObject);

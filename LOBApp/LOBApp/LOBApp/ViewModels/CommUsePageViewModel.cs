@@ -16,6 +16,8 @@ namespace LOBApp.ViewModels
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
+    using Xamarin.Essentials;
+
     public class CommUsePageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,6 +25,8 @@ namespace LOBApp.ViewModels
         public ObservableCollection<CommUserGroupItemModel> CommUserItemItemsSource { get; set; } = new ObservableCollection<CommUserGroupItemModel>();
         public CommUserGroupModel CommUserSelectedItem { get; set; }
         public CommUserGroupItemModel CommUserItemSelectedItem { get; set; }
+        public DelegateCommand<CommUserGroupItemModel> PhoneDialerCommand { get; set; }
+        public DelegateCommand<CommUserGroupItemModel> MobileDialerCommand { get; set; }
         private readonly INavigationService navigationService;
         private readonly CommUserGroupsManager commUserGroupsManager;
         private readonly CommUserGroupItemsManager commUserGroupItemsManager;
@@ -33,6 +37,15 @@ namespace LOBApp.ViewModels
             this.navigationService = navigationService;
             this.commUserGroupsManager = commUserGroupsManager;
             this.commUserGroupItemsManager = commUserGroupItemsManager;
+
+            PhoneDialerCommand = new DelegateCommand<CommUserGroupItemModel>(x =>
+            {
+                PhoneDialer.Open(x.Phone);
+            });
+            MobileDialerCommand = new DelegateCommand<CommUserGroupItemModel>(x =>
+            {
+                PhoneDialer.Open(x.Mobile);
+            });
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -45,7 +58,7 @@ namespace LOBApp.ViewModels
             {
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
                 {
-                   var fooResult= await commUserGroupItemsManager.PostAsync(new CommUserGroupItemRequestDTO()
+                    var fooResult = await commUserGroupItemsManager.PostAsync(new CommUserGroupItemRequestDTO()
                     {
                         Id = CommUserSelectedItem.Id
                     });
