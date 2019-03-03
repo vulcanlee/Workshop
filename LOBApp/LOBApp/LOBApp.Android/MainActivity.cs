@@ -5,8 +5,6 @@ using Android.OS;
 using Prism;
 using Prism.Ioc;
 using System;
-using LOBApp.DTOs;
-using LOBApp.Services;
 
 namespace LOBApp.Droid
 {

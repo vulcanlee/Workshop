@@ -10,9 +10,9 @@ namespace LOBApp.ViewModels
     using System.ComponentModel;
     using System.Threading.Tasks;
     using Acr.UserDialogs;
-    using LOBApp.DTOs;
+    using LOBApp.Common.DTOs;
     using LOBApp.Models;
-    using LOBApp.Services;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;

@@ -8,12 +8,15 @@ namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
     using Acr.UserDialogs;
-    using LOBApp.Helpers.ManagerHelps;
+    using LOBApp.Common.Helpers.ManagerHelps;
     using LOBApp.Models;
-    using LOBApp.Services;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
+    using LOBApp.Common.Models;
+    using LOBApp.Common.DTOs;
+
     public class SuggestionPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -46,12 +49,12 @@ namespace LOBApp.ViewModels
                     {
                         return;
                     }
-                    var fooResult = await suggestionsManager.PostAsync(new DTOs.SuggestionRequestDTO()
+                    var fooResult = await suggestionsManager.PostAsync(new SuggestionRequestDTO()
                     {
                         Subject = SuggestionModel.Subject,
                         Message = SuggestionModel.Message,
                         SubmitTime = DateTime.Now,
-                        User = new DTOs.UserDTO() { Id = appStatus.SystemStatus.UserID },
+                        User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
                     });
                     if(fooResult.Status==true)
                     {

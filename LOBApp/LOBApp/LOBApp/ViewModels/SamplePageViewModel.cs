@@ -7,8 +7,9 @@ using System.Linq;
 namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
-    using LOBApp.Helpers.Storages;
-    using LOBApp.Services;
+    using LOBApp.Common.DTOs;
+    using LOBApp.Common.Helpers.Storages;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
@@ -29,7 +30,7 @@ namespace LOBApp.ViewModels
                 // var foo = await StorageUtility.ReadFromDataFileAsync("MyFolder/Data", "MyFile.txt");
 
                 LoginManager loginManager = new LoginManager();
-                var foo = await loginManager.PostAsync(new DTOs.LoginRequestDTO { Account = "user1", Password = "password1" });
+                var foo = await loginManager.PostAsync(new LoginRequestDTO { Account = "user1", Password = "password1" });
             });
         }
 

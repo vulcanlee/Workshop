@@ -9,14 +9,16 @@ namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
     using Acr.UserDialogs;
-    using LOBApp.DTOs;
-    using LOBApp.Helpers.ManagerHelps;
-    using LOBApp.Helpers.Utilities;
+    using LOBApp.Common.DTOs;
+    using LOBApp.Common.Helpers.ManagerHelps;
+    using LOBApp.Common.Helpers.Utilities;
     using LOBApp.Models;
-    using LOBApp.Services;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
+    using LOBApp.Common.Models;
+
     public class SplashPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;

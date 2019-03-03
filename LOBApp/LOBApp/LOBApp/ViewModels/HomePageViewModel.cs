@@ -8,11 +8,12 @@ namespace LOBApp.ViewModels
 {
     using System.ComponentModel;
     using LOBApp.Models;
-    using LOBApp.Services;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
     using Xamarin.Forms;
+    using LOBApp.Common.Models;
 
     public class HomePageViewModel : INotifyPropertyChanged, INavigationAware
     {

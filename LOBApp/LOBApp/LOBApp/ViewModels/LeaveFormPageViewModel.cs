@@ -9,12 +9,15 @@ namespace LOBApp.ViewModels
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using Acr.UserDialogs;
-    using LOBApp.Helpers.ManagerHelps;
+    using LOBApp.Common.Helpers.ManagerHelps;
     using LOBApp.Models;
-    using LOBApp.Services;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
+    using LOBApp.Common.Models;
+    using LOBApp.Common.DTOs;
+
     public class LeaveFormPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -59,7 +62,7 @@ namespace LOBApp.ViewModels
                     EndTime = DateTime.Today + new TimeSpan(18, 00, 00),
                     Id = 0,
                     TotalHours = 8,
-                    user = new DTOs.UserDTO() { Id = appStatus.SystemStatus.UserID },
+                    user = new UserDTO() { Id = appStatus.SystemStatus.UserID },
                     Description = "請假原因",
                     leaveFormType = new LeaveFormTypeModel() { Id = leaveFormTypesManager.Items[0].Id, Name = leaveFormTypesManager.Items[0].Name },
                 };
@@ -118,7 +121,7 @@ namespace LOBApp.ViewModels
                 LeaveFormModel leaveFormModel = new LeaveFormModel()
                 {
                     Id = item.Id,
-                    user = new DTOs.UserDTO() { Id = item.user.Id },
+                    user = new UserDTO() { Id = item.user.Id },
                     BeginTime = item.BeginTime,
                     EndTime = item.EndTime,
                     TotalHours = item.TotalHours,

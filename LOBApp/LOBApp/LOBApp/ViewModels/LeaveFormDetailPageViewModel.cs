@@ -9,12 +9,15 @@ namespace LOBApp.ViewModels
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using Acr.UserDialogs;
-    using LOBApp.Helpers.ManagerHelps;
+    using LOBApp.Common.Helpers.ManagerHelps;
     using LOBApp.Models;
-    using LOBApp.Services;
+    using LOBApp.Common.Services;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
+    using LOBApp.Common.DTOs;
+    using LOBApp.Common.Models;
+
     public class LeaveFormDetailPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -51,14 +54,14 @@ namespace LOBApp.ViewModels
                         {
                             return;
                         }
-                        var fooResult = await leaveFormsManager.PostAsync(new DTOs.LeaveFormRequestDTO()
+                        var fooResult = await leaveFormsManager.PostAsync(new LeaveFormRequestDTO()
                         {
                             id = 0,
                             BeginTime = LeaveFormItemModel.BeginDate + LeaveFormItemModel.BeginTime,
                             EndTime = LeaveFormItemModel.EndDate + LeaveFormItemModel.EndTime,
                             Description = LeaveFormItemModel.Description,
                             TotalHours = LeaveFormItemModel.TotalHours,
-                            leaveFormType = new DTOs.LeaveFormTypeDTO() { Id = LeaveFormTypeSelectedItem.Id }
+                            leaveFormType = new LeaveFormTypeDTO() { Id = LeaveFormTypeSelectedItem.Id }
                         });
                     }
                 }
@@ -71,14 +74,14 @@ namespace LOBApp.ViewModels
                         {
                             return;
                         }
-                        var fooResult = await leaveFormsManager.PutAsync(LeaveFormSelectedItem.Id,new DTOs.LeaveFormRequestDTO()
+                        var fooResult = await leaveFormsManager.PutAsync(LeaveFormSelectedItem.Id,new LeaveFormRequestDTO()
                         {
                             id = LeaveFormSelectedItem.Id,
                             BeginTime = LeaveFormItemModel.BeginDate + LeaveFormItemModel.BeginTime,
                             EndTime = LeaveFormItemModel.EndDate + LeaveFormItemModel.EndTime,
                             Description = LeaveFormItemModel.Description,
                             TotalHours = LeaveFormItemModel.TotalHours,
-                            leaveFormType = new DTOs.LeaveFormTypeDTO() { Id = LeaveFormTypeSelectedItem.Id }
+                            leaveFormType = new LeaveFormTypeDTO() { Id = LeaveFormTypeSelectedItem.Id }
                         });
                     }
                 }

@@ -4,13 +4,14 @@ using LOBApp.ViewModels;
 using LOBApp.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using LOBApp.Services;
-using LOBApp.Helpers.ManagerHelps;
+using LOBApp.Common.Services;
+using LOBApp.Common.Helpers.ManagerHelps;
 using LOBApp.Models;
 using System;
-using LOBApp.DTOs;
+using LOBApp.Common.DTOs;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using LOBApp.Common.Models;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace LOBApp

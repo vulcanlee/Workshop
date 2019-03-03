@@ -1,4 +1,4 @@
-﻿using LOBApp.DTOs;
+﻿using LOBApp.Common.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
