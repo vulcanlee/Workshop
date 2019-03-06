@@ -1052,6 +1052,79 @@
 					"response": []
 				},
 				{
+					"name": "RemoteSource/ResponAndAwait1/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/ResponAndAwait1/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"ResponAndAwait1",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/ResponAndAwait2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/ResponAndAwait2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"ResponAndAwait2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/Add/{Value1}/{Value2}/{Delay}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Add/5/3/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Add",
+								"5",
+								"3",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "JWTToken 練習用",
 					"request": {
 						"auth": {
@@ -1117,26 +1190,26 @@
 	],
 	"variable": [
 		{
-			"id": "835bccc8-88f5-4316-b0ff-90516dc7a066",
+			"id": "6ebd0bd7-36c6-4afe-8123-f12359fb8ba5",
 			"key": "Host",
 			"value": "https://localhost:5001",
+			"type": "string"
+		},
+		{
+			"id": "44cb2a9d-521e-4da6-9a5f-a4f692221b31",
+			"key": "Host",
+			"value": "https://lobworkshop.azurewebsites.net",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "01792fd0-dcd8-4a82-9ebc-7b39d28ec7fe",
-			"key": "Host",
-			"value": "https://lobworkshop.azurewebsites.net",
-			"type": "string"
-		},
-		{
-			"id": "f8b8304e-f786-4188-b463-29184b8ec4d0",
+			"id": "bbbe02ee-34b8-4232-8859-09b192bd132e",
 			"key": "Token",
 			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
 			"type": "string"
 		},
 		{
-			"id": "0e7fe833-d1b1-4a80-aa81-cf551c334e34",
+			"id": "98b96ed8-4478-4961-a13e-f8564994a29f",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"

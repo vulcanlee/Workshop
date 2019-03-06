@@ -62,5 +62,27 @@ namespace LOBCore.Controllers
             await Task.Delay(10000);
             return $"Come from Source4 : 23.7 (延遲 10000 ms)";
         }
+
+        [HttpGet("Add/{value1}/{value2}/{delay}")]
+        public async Task<int> Add(int value1, int value2, int delay)
+        {
+            await Task.Delay(delay * 1000);
+            var fooUrl = Url.Action("ResponAndAwait2");
+            return value1+value2;
+        }
+
+        [HttpGet("ResponAndAwait1/{id}")]
+        public async Task<string> ResponAndAwait1(int id)
+        {
+            await Task.Delay(id * 1000);
+            var fooUrl = Url.Action("ResponAndAwait2");
+            return fooUrl;
+        }
+
+        [HttpGet("ResponAndAwait2")]
+        public string ResponAndAwait2()
+        {
+            return "最後結果內容";
+        }
     }
 }
