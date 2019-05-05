@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LOBCore.Migrations
 {
     [DbContext(typeof(LOBDatabaseContext))]
-    [Migration("20190303121703_InitialCreate")]
+    [Migration("20190505094408_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,6 +146,8 @@ namespace LOBCore.Migrations
                     b.Property<string>("Name");
 
                     b.Property<string>("Password");
+
+                    b.Property<int>("TokenVersion");
 
                     b.HasKey("Id");
 

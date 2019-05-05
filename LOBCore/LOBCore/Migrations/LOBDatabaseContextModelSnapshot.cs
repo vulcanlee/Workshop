@@ -145,6 +145,8 @@ namespace LOBCore.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<int>("TokenVersion");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");

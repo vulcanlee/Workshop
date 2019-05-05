@@ -31,6 +31,8 @@ namespace LOBCore.Helpers
             ErrorMessages.Add(ErrorMessageEnum.紀錄更新時_發生同時存取衝突, "紀錄更新時，發生同時存取衝突");
             ErrorMessages.Add(ErrorMessageEnum.紀錄更新所指定ID不一致, "紀錄更新所指定 ID 不一致");
             ErrorMessages.Add(ErrorMessageEnum.使用者需要強制登出並重新登入以便進行身分驗證, "系統存取政策違反，使用者需要強制登出，並重新登入，以便進行身分驗證");
+            ErrorMessages.Add(ErrorMessageEnum.原有密碼不正確, "原有密碼不正確");
+            ErrorMessages.Add(ErrorMessageEnum.新密碼不能為空白, "新密碼不能為空白");
             ErrorMessages.Add(ErrorMessageEnum.Exception, "發生例外異常：");
         }
 

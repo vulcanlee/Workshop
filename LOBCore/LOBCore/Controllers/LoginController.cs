@@ -67,7 +67,7 @@ namespace LOBCore.Controllers
         public async Task<IActionResult> RefreshToken()
         {
             UserID = Convert.ToInt32(User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value);
-            TokenVersion = Convert.ToInt32(User.FindFirst(ClaimTypes.Sid)?.Value);
+            TokenVersion = Convert.ToInt32(User.FindFirst(ClaimTypes.Version)?.Value);
             var fooUser = await context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
             if (fooUser == null)
             {

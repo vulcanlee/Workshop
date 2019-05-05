@@ -97,6 +97,7 @@ namespace LOBCore.Migrations
                     Password = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Image = table.Column<string>(nullable: true),
+                    TokenVersion = table.Column<int>(nullable: false),
                     DepartmentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
