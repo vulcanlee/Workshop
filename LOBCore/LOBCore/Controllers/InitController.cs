@@ -148,6 +148,7 @@ namespace LOBCore.Controllers
                     Image = $"",
                     Name = $"Account{i}",
                     Department = fooDepartment,
+                    TokenVersion = 0
                 };
                 lobDatabaseContext.LobUsers.Add(fooUser);
             }

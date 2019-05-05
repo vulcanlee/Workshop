@@ -15,6 +15,7 @@ namespace LOBCore.DataAccesses.Entities
         public string Password { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
+        public int TokenVersion { get; set; }
         public virtual Department Department { get; set; }
     }
 }
