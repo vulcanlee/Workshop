@@ -92,6 +92,56 @@ namespace LOBCore.Migrations
                     b.ToTable("ExceptionRecords");
                 });
 
+            modelBuilder.Entity("LOBCore.DataAccesses.Entities.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Memo");
+
+                    b.Property<int?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("LOBCore.DataAccesses.Entities.InvoiceDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Cnt");
+
+                    b.Property<bool>("Flag");
+
+                    b.Property<int?>("InvoiceId");
+
+                    b.Property<string>("Memo");
+
+                    b.Property<string>("PictureName");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<int>("Qty");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<DateTime>("TDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("InvoiceDetails");
+                });
+
             modelBuilder.Entity("LOBCore.DataAccesses.Entities.LeaveForm", b =>
                 {
                     b.Property<int>("Id")
@@ -228,6 +278,20 @@ namespace LOBCore.Migrations
                     b.HasOne("LOBCore.DataAccesses.Entities.LobUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("LOBCore.DataAccesses.Entities.Invoice", b =>
+                {
+                    b.HasOne("LOBCore.DataAccesses.Entities.LobUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("LOBCore.DataAccesses.Entities.InvoiceDetail", b =>
+                {
+                    b.HasOne("LOBCore.DataAccesses.Entities.Invoice", "Invoice")
+                        .WithMany("Details")
+                        .HasForeignKey("InvoiceId");
                 });
 
             modelBuilder.Entity("LOBCore.DataAccesses.Entities.LeaveForm", b =>

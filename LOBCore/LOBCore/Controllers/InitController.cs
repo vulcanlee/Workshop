@@ -49,6 +49,8 @@ namespace LOBCore.Controllers
 
         private async Task CleanDB()
         {
+            lobDatabaseContext.InvoiceDetails.RemoveRange(lobDatabaseContext.InvoiceDetails);
+            lobDatabaseContext.Invoices.RemoveRange(lobDatabaseContext.Invoices);
             lobDatabaseContext.SystemEnvironment.RemoveRange(lobDatabaseContext.SystemEnvironment);
             lobDatabaseContext.Suggestions.RemoveRange(lobDatabaseContext.Suggestions);
             lobDatabaseContext.ExceptionRecords.RemoveRange(lobDatabaseContext.ExceptionRecords);

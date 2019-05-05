@@ -138,6 +138,27 @@ namespace LOBCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invoices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Memo = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoices_LobUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "LobUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LeaveForms",
                 columns: table => new
                 {
@@ -212,6 +233,33 @@ namespace LOBCore.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InvoiceDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    InvoiceId = table.Column<int>(nullable: true),
+                    TDate = table.Column<DateTime>(nullable: false),
+                    Cnt = table.Column<string>(nullable: true),
+                    Qty = table.Column<int>(nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    SubTotal = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
+                    PictureName = table.Column<string>(nullable: true),
+                    Flag = table.Column<bool>(nullable: false),
+                    Memo = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InvoiceDetails_Invoices_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CommUserGroupItems_CommUserGroupId",
                 table: "CommUserGroupItems",
@@ -220,6 +268,16 @@ namespace LOBCore.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ExceptionRecords_UserId",
                 table: "ExceptionRecords",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceDetails_InvoiceId",
+                table: "InvoiceDetails",
+                column: "InvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_UserId",
+                table: "Invoices",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -257,6 +315,9 @@ namespace LOBCore.Migrations
                 name: "ExceptionRecords");
 
             migrationBuilder.DropTable(
+                name: "InvoiceDetails");
+
+            migrationBuilder.DropTable(
                 name: "LeaveForms");
 
             migrationBuilder.DropTable(
@@ -270,6 +331,9 @@ namespace LOBCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "CommUserGroups");
+
+            migrationBuilder.DropTable(
+                name: "Invoices");
 
             migrationBuilder.DropTable(
                 name: "LeaveFormTypes");

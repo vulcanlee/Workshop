@@ -14,5 +14,4 @@ namespace LOBCore.DataTransferObject.DTOs
         public LeaveFormTypeDTO leaveFormType { get; set; }
         public string Description { get; set; }
     }
-
 }
