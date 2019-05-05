@@ -99,6 +99,8 @@ namespace LOBCore.Migrations
 
                     b.Property<DateTime>("Date");
 
+                    b.Property<string>("InvoiceNo");
+
                     b.Property<string>("Memo");
 
                     b.Property<int?>("UserId");

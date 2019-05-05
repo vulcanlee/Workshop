@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LOBCore.Migrations
 {
     [DbContext(typeof(LOBDatabaseContext))]
-    [Migration("20190505121219_InitialCreate")]
+    [Migration("20190505133514_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,8 @@ namespace LOBCore.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Date");
+
+                    b.Property<string>("InvoiceNo");
 
                     b.Property<string>("Memo");
 

@@ -8,6 +8,7 @@ namespace LOBCore.DataTransferObject.DTOs
     public class InvoiceResponseDTO
     {
         public int Id { get; set; }
+        public string InvoiceNo { get; set; }
         public UserDTO user { get; set; }
         public DateTime Date { get; set; }
         public string Memo { get; set; }

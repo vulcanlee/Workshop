@@ -143,6 +143,7 @@ namespace LOBCore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    InvoiceNo = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     Memo = table.Column<string>(nullable: true)

@@ -11,6 +11,7 @@ namespace LOBCore.DataAccesses.Entities
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string InvoiceNo { get; set; }
         public virtual LobUser User { get; set; }
         public DateTime Date { get; set; }
         public string Memo { get; set; }

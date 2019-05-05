@@ -61,6 +61,7 @@ namespace LOBCore.Controllers
                 InvoiceResponseDTO fooObject = new InvoiceResponseDTO()
                 {
                     Id = item.Id,
+                    InvoiceNo = item.InvoiceNo,
                     Date = item.Date,
                     Memo = item.Memo,
                     user = new UserDTO() { Id = item.User.Id }
@@ -72,57 +73,9 @@ namespace LOBCore.Controllers
             return Ok(apiResult);
         }
 
-        // GET: api/Invoices/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
-        {
-            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
-            if (claimSID == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
-                return BadRequest(apiResult);
-            }
-            UserID = Convert.ToInt32(claimSID);
-            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的該使用者資料);
-                return NotFound(apiResult);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.傳送過來的資料有問題, exceptionMessage: $"傳送過來的資料有問題 {ModelState}");
-                return BadRequest(apiResult);
-            }
-
-            var leaveForm = await _context.Invoices.Include(x => x.LeaveFormType)
-                .Include(x => x.User).ThenInclude(x => x.Department)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (leaveForm == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的請假單);
-                return NotFound(apiResult);
-            }
-            else if (leaveForm.User.Id != UserID)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.權杖Token上標示的使用者與傳送過來的使用者不一致);
-                return BadRequest(apiResult);
-            }
-
-            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
-                ErrorMessageEnum.None, payload: leaveForm.ToInvoiceResponseDTO());
-            return Ok(apiResult);
-        }
-
         // PUT: api/Invoices/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] InvoiceRequestDTO leaveForm)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] InvoiceRequestDTO invoiceRequestDTO)
         {
             var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
             if (claimSID == null)
@@ -147,44 +100,34 @@ namespace LOBCore.Controllers
                 return BadRequest(apiResult);
             }
 
-            if (leaveForm.id != id)
+            if (invoiceRequestDTO.Id != id)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
                  ErrorMessageEnum.紀錄更新所指定ID不一致);
                 return BadRequest(apiResult);
             }
 
-            var fooLeaveFormType = await _context.LeaveFormTypes.FindAsync(leaveForm.leaveFormType.Id);
-            if (fooLeaveFormType == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                    ErrorMessageEnum.沒有發現指定的請假單類別);
-                return NotFound(apiResult);
-            }
-
-            var leaveFormOnDB = await _context.Invoices.Include(x => x.LeaveFormType)
+            var invoiceOnDB = await _context.Invoices
                 .Include(x => x.User).ThenInclude(x => x.Department)
-                .FirstOrDefaultAsync(x => x.Id == leaveForm.id);
+                .FirstOrDefaultAsync(x => x.Id == invoiceRequestDTO.Id);
 
-            if (leaveFormOnDB == null)
+            if (invoiceOnDB == null)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的請假單);
+                 ErrorMessageEnum.沒有發現指定的發票);
                 return NotFound(apiResult);
             }
-            else if (leaveFormOnDB.User.Id != UserID)
+            else if (invoiceOnDB.User.Id != UserID)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
                  ErrorMessageEnum.權杖Token上標示的使用者與傳送過來的使用者不一致);
                 return BadRequest(apiResult);
             }
 
-            leaveFormOnDB.BeginTime = leaveForm.BeginTime;
-            leaveFormOnDB.Description = leaveForm.Description;
-            leaveFormOnDB.EndTime = leaveForm.EndTime;
-            leaveFormOnDB.TotalHours = leaveForm.TotalHours;
-            leaveFormOnDB.LeaveFormType = fooLeaveFormType;
-            _context.Entry(leaveFormOnDB).State = EntityState.Modified;
+            invoiceOnDB.InvoiceNo = invoiceRequestDTO.InvoiceNo;
+            invoiceOnDB.Date = invoiceRequestDTO.Date;
+            invoiceOnDB.Memo = invoiceRequestDTO.Memo;
+            _context.Entry(invoiceOnDB).State = EntityState.Modified;
 
             try
             {
@@ -192,7 +135,7 @@ namespace LOBCore.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await InvoiceExists(leaveForm.id))
+                if (!await InvoiceExists(invoiceRequestDTO.Id))
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status409Conflict,
                         ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
@@ -214,13 +157,13 @@ namespace LOBCore.Controllers
             }
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: leaveForm);
+               ErrorMessageEnum.None, payload: invoiceRequestDTO);
             return Accepted(apiResult);
         }
 
         // POST: api/Invoices
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] InvoiceRequestDTO leaveForm)
+        public async Task<IActionResult> Post([FromBody] InvoiceRequestDTO invoiceRequestDTO)
         {
             var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
             if (claimSID == null)
@@ -245,20 +188,18 @@ namespace LOBCore.Controllers
                 return BadRequest(apiResult);
             }
 
-            var fooLeaveFormType = await _context.LeaveFormTypes.FindAsync(leaveForm.leaveFormType.Id);
-            if (fooLeaveFormType == null)
+            Invoice fooInvoice = new Invoice()
             {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                    ErrorMessageEnum.沒有發現指定的請假單類別);
-                return NotFound(apiResult);
-            }
-
-            LeaveForm fooLeaveForm = leaveForm.ToLeaveForm(fooUser, fooLeaveFormType);
-            _context.Invoices.Add(fooLeaveForm);
+                InvoiceNo = invoiceRequestDTO.InvoiceNo,
+                Date = invoiceRequestDTO.Date,
+                Memo = invoiceRequestDTO.Memo,
+                User = fooUser
+            };
+            _context.Invoices.Add(fooInvoice);
             await _context.SaveChangesAsync();
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: leaveForm);
+               ErrorMessageEnum.None, payload: invoiceRequestDTO);
             return Accepted(apiResult);
         }
 
@@ -282,27 +223,35 @@ namespace LOBCore.Controllers
                 return BadRequest(apiResult);
             }
 
-            var leaveForm = await _context.Invoices.Include(x => x.LeaveFormType)
+            var invoiceResponseDTO = await _context.Invoices
                 .Include(x => x.User).ThenInclude(x => x.Department)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if (leaveForm == null)
+            if (invoiceResponseDTO == null)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的請假單);
+                 ErrorMessageEnum.沒有發現指定的發票);
                 return NotFound(apiResult);
             }
-            else if (leaveForm.User.Id != UserID)
+            else if (invoiceResponseDTO.User.Id != UserID)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
                  ErrorMessageEnum.權杖Token上標示的使用者與傳送過來的使用者不一致);
                 return BadRequest(apiResult);
             }
 
-            _context.Invoices.Remove(leaveForm);
+            _context.Invoices.Remove(invoiceResponseDTO);
             await _context.SaveChangesAsync();
 
+            InvoiceResponseDTO fooInvoiceResponseDTO = new InvoiceResponseDTO()
+            {
+                Id = invoiceResponseDTO.Id,
+                Date = invoiceResponseDTO.Date,
+                InvoiceNo = invoiceResponseDTO.InvoiceNo,
+                Memo = invoiceResponseDTO.Memo,
+                user = new UserDTO() { Id = fooUser.Id }
+            };
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: leaveForm.ToInvoiceResponseDTO());
+               ErrorMessageEnum.None, payload: fooInvoiceResponseDTO);
             return Accepted(apiResult);
         }
 
