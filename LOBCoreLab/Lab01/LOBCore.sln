@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOBApp", "LOBApp\LOBApp.csproj", "{D225CF9B-C59D-4A89-A211-AF6F05277055}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOBCore", "LOBCore\LOBCore.csproj", "{9A4234DF-8B8F-4B2B-B2CC-A2C28D64A5A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D225CF9B-C59D-4A89-A211-AF6F05277055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D225CF9B-C59D-4A89-A211-AF6F05277055}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D225CF9B-C59D-4A89-A211-AF6F05277055}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D225CF9B-C59D-4A89-A211-AF6F05277055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A4234DF-8B8F-4B2B-B2CC-A2C28D64A5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4234DF-8B8F-4B2B-B2CC-A2C28D64A5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4234DF-8B8F-4B2B-B2CC-A2C28D64A5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4234DF-8B8F-4B2B-B2CC-A2C28D64A5A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {28E5B76C-B3B6-4A6F-B915-8919407EE691}
+		SolutionGuid = {C36487A8-9238-492B-A73F-4D2CBB8A93BD}
 	EndGlobalSection
 EndGlobal
