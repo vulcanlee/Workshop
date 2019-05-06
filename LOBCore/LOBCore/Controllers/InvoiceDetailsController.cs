@@ -23,60 +23,20 @@ namespace LOBCore.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class InvoicesController : ControllerBase
+    public class InvoiceDetailsController : ControllerBase
     {
         private readonly LOBDatabaseContext _context;
         int UserID;
         APIResult apiResult;
 
-        public InvoicesController(LOBDatabaseContext context)
+        public InvoiceDetailsController(LOBDatabaseContext context)
         {
             _context = context;
         }
 
-        // GET: api/Invoices
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
-            if (claimSID == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
-                return BadRequest(apiResult);
-            }
-            UserID = Convert.ToInt32(claimSID);
-            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的該使用者資料);
-                return NotFound(apiResult);
-            }
-
-            List<InvoiceResponseDTO> fooInvoiceResponseDTO = new List<InvoiceResponseDTO>();
-            foreach (var item in _context.Invoices
-                .Include(x => x.User).ThenInclude(x => x.Department)
-                .Where(x => x.User.Id == UserID))
-            {
-                InvoiceResponseDTO fooObject = new InvoiceResponseDTO()
-                {
-                    Id = item.Id,
-                    InvoiceNo = item.InvoiceNo,
-                    Date = item.Date,
-                    Memo = item.Memo,
-                    user = new UserDTO() { Id = item.User.Id }
-                };
-                fooInvoiceResponseDTO.Add(fooObject);
-            }
-            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
-                ErrorMessageEnum.None, payload: fooInvoiceResponseDTO);
-            return Ok(apiResult);
-        }
-
-        // PUT: api/Invoices/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] InvoiceRequestDTO invoiceRequestDTO)
+        // GET: api/InvoiceDetails/5
+        [HttpGet("{invoiceid}")]
+        public async Task<IActionResult> Get([FromRoute] int invoiceid)
         {
             var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
             if (claimSID == null)
@@ -101,16 +61,9 @@ namespace LOBCore.Controllers
                 return BadRequest(apiResult);
             }
 
-            if (invoiceRequestDTO.Id != id)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.紀錄更新所指定ID不一致);
-                return BadRequest(apiResult);
-            }
-
             var invoiceOnDB = await _context.Invoices
-                .Include(x => x.User).ThenInclude(x => x.Department)
-                .FirstOrDefaultAsync(x => x.Id == invoiceRequestDTO.Id);
+                .Include(x=>x.Details)
+                .FirstOrDefaultAsync(x => x.Id == invoiceid);
 
             if (invoiceOnDB == null)
             {
@@ -118,16 +71,93 @@ namespace LOBCore.Controllers
                  ErrorMessageEnum.沒有發現指定的發票);
                 return NotFound(apiResult);
             }
-            else if (invoiceOnDB.User.Id != UserID)
+
+            List<InvoiceDetailResponseDTO> fooInvoiceDetailResponseDTO = new List<InvoiceDetailResponseDTO>();
+            foreach (var item in invoiceOnDB.Details)
+            {
+                InvoiceDetailResponseDTO fooObject = new InvoiceDetailResponseDTO()
+                {
+                    Id = item.Id,
+                    Invoice = new InvoiceDTO() { Id = item.Invoice.Id },
+                    Cnt = item.Cnt,
+                    Flag = item.Flag,
+                    Memo = item.Memo,
+                    PictureName = item.PictureName,
+                    Price = item.Price,
+                    Qty = item.Qty,
+                    SubTotal = item.SubTotal,
+                    TDate = item.TDate,
+                };
+                fooInvoiceDetailResponseDTO.Add(fooObject);
+            }
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: fooInvoiceDetailResponseDTO);
+            return Ok(apiResult);
+        }
+
+        // PUT: api/InvoiceDetails/5/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] InvoiceDetailRequestDTO invoiceDetailRequestDTO)
+        {
+            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            if (claimSID == null)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.權杖Token上標示的使用者與傳送過來的使用者不一致);
+                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+                return BadRequest(apiResult);
+            }
+            UserID = Convert.ToInt32(claimSID);
+            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
+            if (fooUser == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的該使用者資料);
+                return NotFound(apiResult);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.傳送過來的資料有問題, exceptionMessage: $"傳送過來的資料有問題 {ModelState}");
                 return BadRequest(apiResult);
             }
 
-            invoiceOnDB.InvoiceNo = invoiceRequestDTO.InvoiceNo;
-            invoiceOnDB.Date = invoiceRequestDTO.Date;
-            invoiceOnDB.Memo = invoiceRequestDTO.Memo;
+            if (invoiceDetailRequestDTO.Id != id)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+                 ErrorMessageEnum.紀錄更新所指定ID不一致);
+                return BadRequest(apiResult);
+            }
+
+            var invoiceOnDB = await _context.Invoices
+                .FirstOrDefaultAsync(x => x.Id == invoiceDetailRequestDTO.Invoice.Id);
+
+            if (invoiceOnDB == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的發票);
+                return NotFound(apiResult);
+            }
+
+            var invoiceDetailOnDB = await _context.InvoiceDetails
+                .Include(x=>x.Invoice)
+                .FirstOrDefaultAsync(x => x.Id == invoiceDetailRequestDTO.Id);
+
+            if (invoiceDetailOnDB == null)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的發票明細項目);
+                return NotFound(apiResult);
+            }
+
+            invoiceDetailOnDB.Cnt = invoiceDetailRequestDTO.Cnt;
+            invoiceDetailOnDB.Flag = invoiceDetailRequestDTO.Flag;
+            invoiceDetailOnDB.Memo = invoiceDetailRequestDTO.Memo;
+            invoiceDetailOnDB.PictureName = invoiceDetailRequestDTO.PictureName;
+            invoiceDetailOnDB.Price = invoiceDetailRequestDTO.Price;
+            invoiceDetailOnDB.Qty = invoiceDetailRequestDTO.Qty;
+            invoiceDetailOnDB.SubTotal = invoiceDetailRequestDTO.SubTotal;
+            invoiceDetailOnDB.TDate = invoiceDetailRequestDTO.TDate;
             _context.Entry(invoiceOnDB).State = EntityState.Modified;
 
             try
@@ -136,7 +166,7 @@ namespace LOBCore.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await InvoiceExists(invoiceRequestDTO.Id))
+                if (!await InvoiceDetailExists(invoiceDetailRequestDTO.Id))
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status409Conflict,
                         ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
@@ -158,13 +188,13 @@ namespace LOBCore.Controllers
             }
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: invoiceRequestDTO);
+               ErrorMessageEnum.None, payload: invoiceDetailRequestDTO);
             return Accepted(apiResult);
         }
 
-        // POST: api/Invoices
+        // POST: api/InvoiceDetails
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] InvoiceRequestDTO invoiceRequestDTO)
+        public async Task<IActionResult> Post([FromBody] InvoiceDetailRequestDTO invoiceDetailRequestDTO)
         {
             var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
             if (claimSID == null)
@@ -189,22 +219,37 @@ namespace LOBCore.Controllers
                 return BadRequest(apiResult);
             }
 
-            Invoice fooInvoice = new Invoice()
+            var invoiceOnDB = await _context.Invoices
+                .FirstOrDefaultAsync(x => x.Id == invoiceDetailRequestDTO.Invoice.Id);
+
+            if (invoiceOnDB == null)
             {
-                InvoiceNo = invoiceRequestDTO.InvoiceNo,
-                Date = invoiceRequestDTO.Date,
-                Memo = invoiceRequestDTO.Memo,
-                User = fooUser
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+                 ErrorMessageEnum.沒有發現指定的發票);
+                return NotFound(apiResult);
+            }
+
+            InvoiceDetail fooInvoiceDetail = new InvoiceDetail()
+            {
+                Cnt = invoiceDetailRequestDTO.Cnt,
+                Flag = invoiceDetailRequestDTO.Flag,
+                Memo = invoiceDetailRequestDTO.Memo,
+                PictureName = invoiceDetailRequestDTO.PictureName,
+                Price = invoiceDetailRequestDTO.Price,
+                Qty = invoiceDetailRequestDTO.Qty,
+                SubTotal = invoiceDetailRequestDTO.SubTotal,
+                TDate = invoiceDetailRequestDTO.TDate,
+                Invoice = invoiceOnDB
             };
-            _context.Invoices.Add(fooInvoice);
+            _context.InvoiceDetails.Add(fooInvoiceDetail);
             await _context.SaveChangesAsync();
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: invoiceRequestDTO);
+               ErrorMessageEnum.None, payload: invoiceDetailRequestDTO);
             return Accepted(apiResult);
         }
 
-        // DELETE: api/Invoices/5
+        // DELETE: api/InvoiceDetails/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -224,41 +269,40 @@ namespace LOBCore.Controllers
                 return BadRequest(apiResult);
             }
 
-            var invoiceResponseDTO = await _context.Invoices
-                .Include(x => x.User).ThenInclude(x => x.Department)
+            var fooInvoiceDetail = await _context.InvoiceDetails
+                .Include(x => x.Invoice)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if (invoiceResponseDTO == null)
+            if (fooInvoiceDetail == null)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的發票);
+                 ErrorMessageEnum.沒有發現指定的發票明細項目);
                 return NotFound(apiResult);
             }
-            else if (invoiceResponseDTO.User.Id != UserID)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.權杖Token上標示的使用者與傳送過來的使用者不一致);
-                return BadRequest(apiResult);
-            }
 
-            _context.Invoices.Remove(invoiceResponseDTO);
+            _context.InvoiceDetails.Remove(fooInvoiceDetail);
             await _context.SaveChangesAsync();
 
-            InvoiceResponseDTO fooInvoiceResponseDTO = new InvoiceResponseDTO()
+            InvoiceDetailResponseDTO fooInvoiceDetailResponseDTO = new InvoiceDetailResponseDTO()
             {
-                Id = invoiceResponseDTO.Id,
-                Date = invoiceResponseDTO.Date,
-                InvoiceNo = invoiceResponseDTO.InvoiceNo,
-                Memo = invoiceResponseDTO.Memo,
-                user = new UserDTO() { Id = fooUser.Id }
+                Id = fooInvoiceDetail.Id,
+                Cnt = fooInvoiceDetail.Cnt,
+                Flag = fooInvoiceDetail.Flag,
+                PictureName = fooInvoiceDetail.PictureName,
+                Price = fooInvoiceDetail.Price,
+                Qty = fooInvoiceDetail.Qty,
+                SubTotal = fooInvoiceDetail.SubTotal,
+                TDate = fooInvoiceDetail.TDate,
+                Memo = fooInvoiceDetail.Memo,
+                Invoice = new InvoiceDTO() { Id = fooUser.Id }
             };
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: fooInvoiceResponseDTO);
+               ErrorMessageEnum.None, payload: fooInvoiceDetailResponseDTO);
             return Accepted(apiResult);
         }
 
-        private async Task<bool> InvoiceExists(int id)
+        private async Task<bool> InvoiceDetailExists(int id)
         {
-            return await _context.Invoices.AnyAsync(e => e.Id == id);
+            return await _context.InvoiceDetails.AnyAsync(e => e.Id == id);
         }
     }
 }

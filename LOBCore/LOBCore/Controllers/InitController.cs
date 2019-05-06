@@ -150,10 +150,23 @@ namespace LOBCore.Controllers
                     Image = $"",
                     Name = $"Account{i}",
                     Department = fooDepartment,
-                    TokenVersion = 0
+                    TokenVersion = 0,
+                    Level = 0,
                 };
                 lobDatabaseContext.LobUsers.Add(fooUser);
             }
+            var fooAdminDepartment = lobDatabaseContext.Departments.FirstOrDefault(x => x.Name == $"Department1");
+            LobUser fooAdminUser = new LobUser()
+            {
+                Account = $"admin",
+                Password = $"admin",
+                Image = $"",
+                Name = $"Administrator",
+                Department = fooAdminDepartment,
+                TokenVersion = 0,
+                Level = 5,
+            };
+            lobDatabaseContext.LobUsers.Add(fooAdminUser);
             await lobDatabaseContext.SaveChangesAsync();
         }
     }

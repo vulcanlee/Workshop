@@ -24,6 +24,7 @@ namespace LOBCore.Helpers
         原有密碼不正確,
         新密碼不能為空白,
         沒有發現指定的發票,
+        沒有發現指定的發票明細項目,
         Exception = 2147483647,
     }
 }

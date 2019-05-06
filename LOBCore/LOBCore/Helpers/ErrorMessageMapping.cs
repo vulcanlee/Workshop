@@ -34,7 +34,8 @@ namespace LOBCore.Helpers
             ErrorMessages.Add(ErrorMessageEnum.原有密碼不正確, "原有密碼不正確");
             ErrorMessages.Add(ErrorMessageEnum.新密碼不能為空白, "新密碼不能為空白");
             ErrorMessages.Add(ErrorMessageEnum.沒有發現指定的發票, "沒有發現指定的發票");
-            ErrorMessages.Add(ErrorMessageEnum.Exception, "發生例外異常：");
+             ErrorMessages.Add(ErrorMessageEnum.沒有發現指定的發票明細項目, "沒有發現指定的發票明細項目");
+           ErrorMessages.Add(ErrorMessageEnum.Exception, "發生例外異常：");
         }
 
         public static ErrorMessageMapping Instance

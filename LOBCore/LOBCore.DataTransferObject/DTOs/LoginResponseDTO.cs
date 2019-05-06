@@ -15,6 +15,7 @@ namespace LOBCore.DataTransferObject.DTOs
         public string RefreshToken { get; set; }
         public int RefreshTokenExpireDays { get; set; }
         public string Image { get; set; }
+        public int Level { get; set; }
         public virtual DepartmentDTO Department { get; set; }
     }
 }

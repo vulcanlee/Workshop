@@ -26,6 +26,7 @@ namespace LOBCore.Extensions
                 TokenExpireMinutes = Convert.ToInt32(tokenExpireMinutes),
                 RefreshToken = refreshToken,
                 RefreshTokenExpireDays = Convert.ToInt32(refreshTokenExpireDays),
+                Level = lobUser.Level,
             };
             return LoginResponseDTO;
         }

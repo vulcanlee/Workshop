@@ -193,6 +193,8 @@ namespace LOBCore.Migrations
 
                     b.Property<string>("Image");
 
+                    b.Property<int>("Level");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Password");

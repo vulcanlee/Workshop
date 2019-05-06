@@ -76,7 +76,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NTA5MjMxMTUsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.fVzH4ZO1Y_slL0zKGFHMqu9v7a0WmMXa3UWNcyacnGbXEJbbcQw15qM9nZtgQCyXqqRa6rfmKOFq6n4l_SQe9g",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJSZWZyZXNoVG9rZW4iXSwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMiIsImV4cCI6MTU1NzY1Njk0OCwiaXNzIjoiWGFtYXJpbkZvcm1zV1MudnVsY2FuLm5ldCIsImF1ZCI6IlhhbWFyaW4uRm9ybXMgQXBwIn0.yPwR80KuePwEVyf0jRkckG6RsthEjBrcpkvhhen8Ytecx8ayE_LA23lqPELC8JtG2lFpFgKAmkkd_9ALyBjJPA",
 									"type": "string"
 								}
 							]
@@ -103,6 +103,45 @@
 								"api",
 								"Login",
 								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword 變更密碼",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"OldPassword\":\"password1\",\r\n   \"NewPassword\":\"password1\"\r\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/ChangePassword",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ChangePassword"
 							]
 						}
 					},
@@ -913,7 +952,31 @@
 			"name": "練習用",
 			"item": [
 				{
-					"name": "{{Host}}/api/RemoteSource/Source2",
+					"name": "RemoteSource/Source1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source1"
+							]
+						},
+						"description": "取得原端資料1 (延遲 1 秒)"
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/Source2",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -930,6 +993,52 @@
 								"api",
 								"RemoteSource",
 								"Source2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/Source3",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoteSource/Source4",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/RemoteSource/Source4",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"RemoteSource",
+								"Source4"
 							]
 						}
 					},
@@ -976,76 +1085,6 @@
 								"api",
 								"RemoteSource",
 								"DemoUnauthorized"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "{{Host}}/api/RemoteSource/Source1",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{Host}}/api/RemoteSource/Source1",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"RemoteSource",
-								"Source1"
-							]
-						},
-						"description": "取得原端資料1 (延遲 1 秒)"
-					},
-					"response": []
-				},
-				{
-					"name": "{{Host}}/api/RemoteSource/Source3",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{Host}}/api/RemoteSource/Source3",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"RemoteSource",
-								"Source3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "{{Host}}/api/RemoteSource/Source4",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{Host}}/api/RemoteSource/Source4",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"RemoteSource",
-								"Source4"
 							]
 						}
 					},
@@ -1164,6 +1203,334 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "發票",
+			"item": [
+				{
+					"name": "Invoices 列出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Invoices",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invoices 新增",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Id\":0,\n\t\"InvoiceNo\":\"A1234B\",\n\t\"user\": {\n                \"id\": 1,\n                \"department\": {\n                    \"id\": 1\n                }\n            },\n\t\"Date\":\"2019-05-06T00:00:00\",\n\t\"Memo\":\"購買的發票B\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/Invoices",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invoices 刪除",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/Invoices/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Invoices",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invoices 修改",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"id\": 1,\n            \"invoiceNo\": \"A12349999\",\n            \"user\": {\n                \"id\": 1,\n                \"department\": null\n            },\n            \"date\": \"2019-11-06T00:00:00\",\n            \"memo\": \"購買9999的發票\"\n        }\n"
+						},
+						"url": {
+							"raw": "{{Host}}/api/Invoices/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Invoices",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InvoiceDetails 修改",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Id\":1,\n\t\"Invoice\": {\n                \"id\": 1\n            },\n\t\"TDate\":\"2019-05-20T00:00:00\",\n\t\"Cnt\":\"白板\",\n\t\"Qty\":8,\n\t\"Price\":5.0,\n\t\"SubTotal\":40.0,\n\t\"PictureName\":\"\",\n\t\"Flag\":false,\n\t\"Memo\":\"!!教育訓練教室使用\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/InvoiceDetails/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"InvoiceDetails",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InvoiceDetails 列出",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/InvoiceDetails/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"InvoiceDetails",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InvoiceDetails 新增",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Id\":0,\n\t\"Invoice\": {\n                \"id\": 1\n            },\n\t\"TDate\":\"2019-05-20T00:00:00\",\n\t\"Cnt\":\"白板筆\",\n\t\"Qty\":100,\n\t\"Price\":5.0,\n\t\"SubTotal\":500.0,\n\t\"PictureName\":\"\",\n\t\"Flag\":false,\n\t\"Memo\":\"教育訓練教室使用\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/InvoiceDetails",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"InvoiceDetails"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InvoiceDetails 刪除",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{Host}}/api/InvoiceDetails/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"InvoiceDetails",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -1190,26 +1557,26 @@
 	],
 	"variable": [
 		{
-			"id": "6ebd0bd7-36c6-4afe-8123-f12359fb8ba5",
+			"id": "df39009e-d400-4c50-bb0a-151ddd57da51",
 			"key": "Host",
 			"value": "https://localhost:5001",
 			"type": "string"
 		},
 		{
-			"id": "44cb2a9d-521e-4da6-9a5f-a4f692221b31",
+			"id": "86c2aab5-970b-4395-ad73-8fd279e80db8",
 			"key": "Host",
 			"value": "https://lobworkshop.azurewebsites.net",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "bbbe02ee-34b8-4232-8859-09b192bd132e",
+			"id": "f2b0d548-59b7-4d41-bba1-4aaa07684e15",
 			"key": "Token",
 			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
 			"type": "string"
 		},
 		{
-			"id": "98b96ed8-4478-4961-a13e-f8564994a29f",
+			"id": "3ea9f635-3148-459b-8d64-ff0254ce8246",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"
