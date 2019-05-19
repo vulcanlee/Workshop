@@ -157,8 +157,20 @@ namespace LOBCore.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, apiResult);
             }
 
+            var fooItem = await _context.Invoices.FirstOrDefaultAsync(x => x.Id == invoiceRequestDTO.Id);
+            InvoiceResponseDTO invoiceResponseDTO = new InvoiceResponseDTO()
+            {
+                Id = fooItem.Id,
+                InvoiceNo = fooItem.InvoiceNo,
+                Date = fooItem.Date,
+                Memo = fooItem.Memo,
+                user = new UserDTO()
+                {
+                    Id = fooUser.Id
+                }
+            };
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: invoiceRequestDTO);
+               ErrorMessageEnum.None, payload: invoiceResponseDTO);
             return Accepted(apiResult);
         }
 
@@ -198,9 +210,21 @@ namespace LOBCore.Controllers
             };
             _context.Invoices.Add(fooInvoice);
             await _context.SaveChangesAsync();
+            var fooItem = await _context.Invoices.FirstOrDefaultAsync(x => x.InvoiceNo == invoiceRequestDTO.InvoiceNo);
+            InvoiceResponseDTO invoiceResponseDTO = new InvoiceResponseDTO()
+            {
+                Id = fooItem.Id,
+                InvoiceNo = fooItem.InvoiceNo,
+                Date = fooItem.Date,
+                Memo = fooItem.Memo,
+                user = new UserDTO()
+                {
+                    Id = fooUser.Id
+                }
+            };
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: invoiceRequestDTO);
+               ErrorMessageEnum.None, payload: invoiceResponseDTO);
             return Accepted(apiResult);
         }
 
