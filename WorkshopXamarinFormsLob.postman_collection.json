@@ -13,10 +13,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/Init",
 							"host": [
@@ -431,10 +427,6 @@
 								"value": "application/json"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/LeaveForms/2",
 							"host": [
@@ -471,10 +463,6 @@
 								"value": "application/json"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/LeaveForms/1",
 							"host": [
@@ -956,10 +944,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/Source1",
 							"host": [
@@ -980,10 +964,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/Source2",
 							"host": [
@@ -1003,10 +983,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/Source3",
 							"host": [
@@ -1026,10 +1002,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/Source4",
 							"host": [
@@ -1049,10 +1021,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/DemoBadRequest",
 							"host": [
@@ -1072,10 +1040,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/DemoUnauthorized",
 							"host": [
@@ -1095,10 +1059,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/ResponAndAwait1/2",
 							"host": [
@@ -1119,10 +1079,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/ResponAndAwait2",
 							"host": [
@@ -1142,10 +1098,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/RemoteSource/Add/5/3/1",
 							"host": [
@@ -1310,10 +1262,6 @@
 								"value": "application/json"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/Invoices/2",
 							"host": [
@@ -1512,10 +1460,6 @@
 								"value": "application/json"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{Host}}/api/InvoiceDetails/2",
 							"host": [
@@ -1525,6 +1469,49 @@
 								"api",
 								"InvoiceDetails",
 								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "圖片",
+			"item": [
+				{
+					"name": "上傳圖片",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/D:/Vulcan/GitHub/Workshop/LOBApp/LOBApp/LOBApp.Android/Resources/mipmap-xxxhdpi/ic_launcher.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Host}}/api/UploadImage",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"UploadImage"
 							]
 						}
 					},
@@ -1557,26 +1544,26 @@
 	],
 	"variable": [
 		{
-			"id": "abc6ba23-2ffb-4481-8b34-378a96c50a6a",
+			"id": "602c662d-6863-4310-a759-68ef22f0e936",
 			"key": "Host",
 			"value": "https://localhost:5001",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "c92893eb-b628-459d-a2c1-1ba39b9f7a5f",
+			"id": "efed80a2-2827-4ba3-b64d-0513967a0eb2",
 			"key": "Host",
 			"value": "https://lobworkshop.azurewebsites.net",
 			"type": "string"
 		},
 		{
-			"id": "e5e35020-f773-4666-9acb-541aa3160a63",
+			"id": "0dd9856b-9e83-4418-95ab-e99bc9a16643",
 			"key": "Token",
 			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
 			"type": "string"
 		},
 		{
-			"id": "d16ba098-e2d2-4611-8428-bdea2963def3",
+			"id": "dc6ebbbf-274f-428b-9356-3db153ea3b55",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"
