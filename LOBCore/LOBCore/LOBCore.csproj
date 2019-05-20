@@ -2,20 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>c0d839ca-b06b-4310-ac4a-907200c217cc</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Domains\" />
     <Folder Include="Models\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" PrivateAssets="All" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
 
   <ItemGroup>

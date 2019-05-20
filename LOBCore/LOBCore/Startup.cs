@@ -130,6 +130,7 @@ namespace LOBCore
 
             app.UseExceptionMiddleware();
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
         }
