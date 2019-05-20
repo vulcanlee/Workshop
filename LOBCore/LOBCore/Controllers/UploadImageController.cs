@@ -17,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LOBCore.Controllers
 {
+    //[Authorize(Roles = "User")]
+    [AllowAnonymous]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
@@ -30,32 +32,26 @@ namespace LOBCore.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            return Accepted("");
-        }
-
         [HttpPost]
-        //[RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
-        //[RequestSizeLimit(209715200)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
+        [RequestSizeLimit(209715200)]
         public async Task<IActionResult> Post(IFormFile file, [FromServices] IHostingEnvironment env)
         {
-            var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
-            if (claimSID == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
-                 ErrorMessageEnum.權杖中沒有發現指定使用者ID);
-                return BadRequest(apiResult);
-            }
-            UserID = Convert.ToInt32(claimSID);
-            var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
-            if (fooUser == null)
-            {
-                apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
-                 ErrorMessageEnum.沒有發現指定的該使用者資料);
-                return NotFound(apiResult);
-            }
+            //var claimSID = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value;
+            //if (claimSID == null)
+            //{
+            //    apiResult = APIResultFactory.Build(false, StatusCodes.Status400BadRequest,
+            //     ErrorMessageEnum.權杖中沒有發現指定使用者ID);
+            //    return BadRequest(apiResult);
+            //}
+            //UserID = Convert.ToInt32(claimSID);
+            //var fooUser = await _context.LobUsers.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == UserID);
+            //if (fooUser == null)
+            //{
+            //    apiResult = APIResultFactory.Build(false, StatusCodes.Status404NotFound,
+            //     ErrorMessageEnum.沒有發現指定的該使用者資料);
+            //    return NotFound(apiResult);
+            //}
 
             if (!ModelState.IsValid)
             {
@@ -85,7 +81,7 @@ namespace LOBCore.Controllers
             UriHelper.GetDisplayUrl(Request);
             var foo = Request.GetDisplayUrl();
 
-            var bar = $"{Request.Scheme}://{Request.Host}/Images/";
+            var bar = $"{Request.Scheme}://{Request.Host}/Images/{file.FileName}";
 
 
             //try
@@ -101,7 +97,7 @@ namespace LOBCore.Controllers
             //}
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-               ErrorMessageEnum.None, payload: new UploadImageResponseDTO() { });
+               ErrorMessageEnum.None, payload: new UploadImageResponseDTO() { ImageUrl = bar });
             return Accepted(apiResult);
         }
     }
