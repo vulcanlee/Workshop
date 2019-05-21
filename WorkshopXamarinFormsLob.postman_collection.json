@@ -1544,26 +1544,26 @@
 	],
 	"variable": [
 		{
-			"id": "602c662d-6863-4310-a759-68ef22f0e936",
+			"id": "93641a8c-ac42-4a14-b33e-1c426c9006b9",
 			"key": "Host",
 			"value": "https://localhost:5001",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "efed80a2-2827-4ba3-b64d-0513967a0eb2",
+			"id": "43163d7d-4870-492c-9ae6-7e4a19f28720",
 			"key": "Host",
 			"value": "https://lobworkshop.azurewebsites.net",
 			"type": "string"
 		},
 		{
-			"id": "0dd9856b-9e83-4418-95ab-e99bc9a16643",
+			"id": "32e58831-95b4-41e7-9dfa-3160daedc318",
 			"key": "Token",
 			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InVzZXIxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlVzZXIiLCJEZXB0MSJdLCJleHAiOjE1NDk4ODM5MzQsImlzcyI6IlhhbWFyaW5Gb3Jtc1dTLnZ1bGNhbi5uZXQiLCJhdWQiOiJYYW1hcmluLkZvcm1zIEFwcCJ9.8A6_hpLC03nJzYOOdvxo0_5LdzVTIa8EklwUAVqY3GfDtPCj3FEmtDaQT-sxLJ3MOqoY3eHcE4EFD9rjd4SKiA",
 			"type": "string"
 		},
 		{
-			"id": "dc6ebbbf-274f-428b-9356-3db153ea3b55",
+			"id": "ac2986b9-54df-45a4-9e3e-3052ba619d6e",
 			"key": "RefreshToken",
 			"value": "",
 			"type": "string"

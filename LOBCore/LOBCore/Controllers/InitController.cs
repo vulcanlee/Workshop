@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LOBCore.DataAccesses;
 using LOBCore.DataAccesses.Entities;
 using LOBCore.DataTransferObject.DTOs;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +26,7 @@ namespace LOBCore.Controllers
             this.lobDatabaseContext = lobDatabaseContext;
         }
         [HttpGet]
-        public async Task<APIResult> Get()
+        public async Task<APIResult> Get([FromServices] IHostingEnvironment env)
         {
             //var foo = lobDatabaseContext.LobUsers.First();
             //var foo1 = lobDatabaseContext.LobUsers.ToList();
@@ -37,6 +39,7 @@ namespace LOBCore.Controllers
             await LobUserReset();
             await LeaveFormTypeReset();
             await SystemEnvironmentReset();
+            CleanImages(env);
 
             var fooReslut = new APIResult()
             {
@@ -45,6 +48,25 @@ namespace LOBCore.Controllers
                 Payload = lobDatabaseContext.LobUsers
             };
             return fooReslut;
+        }
+
+        private void CleanImages(IHostingEnvironment env)
+        {
+            string webRootPath = env.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+            string workPath = Path.Combine(webRootPath, "Images");
+            if (Directory.Exists(workPath) == true)
+            {
+                string[] files = Directory.GetFiles(workPath);
+                foreach (var item in files)
+                {
+                    System.IO.File.Delete(item);
+                }
+            }
+            return;
         }
 
         private async Task CleanDB()
