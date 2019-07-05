@@ -84,7 +84,7 @@ namespace LOBCore.Controllers
             ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
             ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
             ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
-            await Task.Delay(delay * 1000);
+            await Task.Delay(delay);
             var fooUrl = Url.Action("ResponAndAwait2");
             DateTime Complete = DateTime.Now;
             return $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
@@ -104,7 +104,7 @@ namespace LOBCore.Controllers
             ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
             ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
             ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
-            Thread.Sleep(delay * 1000);
+            Thread.Sleep(delay);
             var fooUrl = Url.Action("ResponAndAwait2");
             DateTime Complete = DateTime.Now;
             return $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
