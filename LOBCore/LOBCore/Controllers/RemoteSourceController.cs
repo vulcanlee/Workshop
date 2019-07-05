@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LOBCore.DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -68,7 +69,47 @@ namespace LOBCore.Controllers
         {
             await Task.Delay(delay * 1000);
             var fooUrl = Url.Action("ResponAndAwait2");
-            return value1+value2;
+            return value1 + value2;
+        }
+        [HttpGet("AddAsync/{value1}/{value2}/{delay}")]
+        public async Task<string> AddAsync(int value1, int value2, int delay)
+        {
+            DateTime Begin = DateTime.Now;
+            int workerThreadsAvailable;
+            int completionPortThreadsAvailable;
+            int workerThreadsMax;
+            int completionPortThreadsMax;
+            int workerThreadsMin;
+            int completionPortThreadsMin;
+            ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
+            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
+            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
+            await Task.Delay(delay * 1000);
+            var fooUrl = Url.Action("ResponAndAwait2");
+            DateTime Complete = DateTime.Now;
+            return $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+                $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
+                $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ({Begin.TimeOfDay} - {Complete.TimeOfDay})";
+        }
+        [HttpGet("AddSync/{value1}/{value2}/{delay}")]
+        public string AddSync(int value1, int value2, int delay)
+        {
+            DateTime Begin = DateTime.Now;
+            int workerThreadsAvailable;
+            int completionPortThreadsAvailable;
+            int workerThreadsMax;
+            int completionPortThreadsMax;
+            int workerThreadsMin;
+            int completionPortThreadsMin;
+            ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
+            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
+            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
+            Thread.Sleep(delay * 1000);
+            var fooUrl = Url.Action("ResponAndAwait2");
+            DateTime Complete = DateTime.Now;
+            return $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+                $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
+                $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ({Begin.TimeOfDay} - {Complete.TimeOfDay})";
         }
 
         [HttpGet("ResponAndAwait1/{id}")]
