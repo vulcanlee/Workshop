@@ -112,6 +112,29 @@ namespace LOBCore.Controllers
                 $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ({Begin.TimeOfDay} - {Complete.TimeOfDay})";
         }
 
+        [HttpGet("SetThreadPool/{value1}/{value2}")]
+        public string SetThreadPool(int value1, int value2)
+        {
+            ThreadPool.SetMinThreads(value1, value2);
+
+            string result = "OK";
+            int workerThreadsAvailable;
+            int completionPortThreadsAvailable;
+            int workerThreadsMax;
+            int completionPortThreadsMax;
+            int workerThreadsMin;
+            int completionPortThreadsMin;
+            ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
+            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
+            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
+
+            DateTime Complete = DateTime.Now;
+            result = "OK "+ $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+                $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
+                $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ";
+
+            return result;
+        }
         [HttpGet("ResponAndAwait1/{id}")]
         public async Task<string> ResponAndAwait1(int id)
         {
