@@ -129,7 +129,54 @@ namespace LOBCore.Controllers
             ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
 
             DateTime Complete = DateTime.Now;
-            result = "OK "+ $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+            result = "OK " + $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+                $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
+                $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ";
+
+            return result;
+        }
+
+        [HttpGet("SetMaxThreadPool/{value1}/{value2}")]
+        public string SetMaxThreadPool(int value1, int value2)
+        {
+            ThreadPool.SetMaxThreads(value1, value2);
+
+            string result = "OK";
+            int workerThreadsAvailable;
+            int completionPortThreadsAvailable;
+            int workerThreadsMax;
+            int completionPortThreadsMax;
+            int workerThreadsMin;
+            int completionPortThreadsMin;
+            ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
+            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
+            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
+
+            DateTime Complete = DateTime.Now;
+            result = "OK " + $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+                $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
+                $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ";
+
+            return result;
+        }
+
+
+        [HttpGet("GetThreadPool")]
+        public string GetThreadPool()
+        {
+            string result = "";
+            int workerThreadsAvailable;
+            int completionPortThreadsAvailable;
+            int workerThreadsMax;
+            int completionPortThreadsMax;
+            int workerThreadsMin;
+            int completionPortThreadsMin;
+            ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
+            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
+            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
+
+            DateTime Complete = DateTime.Now;
+            result = " " + $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
                 $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
                 $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ";
 
