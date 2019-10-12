@@ -22,4 +22,10 @@
     <ProjectReference Include="..\LOBCore.DataTransferObject\LOBCore.DataTransferObject.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\open.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
